@@ -9,6 +9,7 @@ using MainLib.Api.Controller;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RisingNotesLib.Constant;
 using RisingNotesLib.Exceptions;
 using RisingNotesLib.Helper;
 
@@ -40,7 +41,13 @@ public class SongController : PublicController
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastAuthor)]
     public async Task<IActionResult> UploadAsync([FromForm] UploadSongRequest request)
     {
-        var authorId = Guid.Parse(User.Identity!.Name!);
+        var claim = User.Claims.FirstOrDefault(x => x.Type == ClaimTypeConstants.AuthorId);
+        if (claim == null)
+        {
+            return Unauthorized();
+        }
+
+        var authorId = Guid.Parse(claim.Value);
         var response = await _songPremanager.CreateAsync(request, authorId);
 
         return CreatedAtAction("GetInfo", new {songId = response.Id}, response);
@@ -93,5 +100,17 @@ public class SongController : PublicController
         var contentType = ContentTypeHelper.GetContentTypeByFileExtension(logo.Extension);
 
         return File(resized, contentType);
+    }
+
+    /// <summary>
+    /// Получить список песен по фильтрам
+    /// </summary>
+    [HttpGet("list")]
+    [ProducesResponseType(typeof(GetSongListResponse), 200)]
+    public async Task<IActionResult> GetListAsync([FromQuery] GetSongListRequest request)
+    {
+        var response = await _songPremanager.GetSongListAsync(request);
+
+        return Ok(response);
     }
 }

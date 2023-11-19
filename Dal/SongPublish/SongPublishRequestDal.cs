@@ -52,6 +52,26 @@ public record SongPublishRequestDal : DalModel<Guid>
     /// Текст песни
     /// </summary>
     public string Lyrics { get; set; }
+    
+    /// <summary>
+    /// Является ли инструментальной
+    /// </summary>
+    public bool Instrumental { get; set; }
+    
+    /// <summary>
+    /// Список жанров песни
+    /// </summary>
+    public string[] GenreList { get; set; } = Array.Empty<string>();
+
+    /// <summary>
+    /// Список настроений
+    /// </summary>
+    public string[] VibeList { get; set; } = Array.Empty<string>();
+
+    /// <summary>
+    /// Список языков
+    /// </summary>
+    public string[] LanguageList { get; set; } = Array.Empty<string>();
 
     /// <summary>
     /// Идентификатор файла трека

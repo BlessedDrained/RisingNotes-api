@@ -3,6 +3,7 @@ using Dal.File;
 using Dal.Playlist;
 using Dal.Song;
 using MainLib.Dal.Model.Base;
+using RisingNotesLib.Enums;
 using RisingNotesLib.Models;
 
 namespace Dal.BaseUser;
@@ -16,7 +17,12 @@ public record UserDal : DalModel<Guid>
     /// Имя пользователя
     /// </summary>
     public string UserName { get; set; }
-    
+
+    /// <summary>
+    /// Пол
+    /// </summary>
+    public Gender Gender { get; set; }
+
     /// <summary>
     /// Избранные треки
     /// </summary>
@@ -36,7 +42,7 @@ public record UserDal : DalModel<Guid>
     /// Нав свойство
     /// </summary>
     public FileDal LogoFile { get; set; }
-    
+
     /// <summary>
     /// Нав свойство
     /// </summary>
@@ -46,7 +52,7 @@ public record UserDal : DalModel<Guid>
     /// Является ли музыкантом
     /// </summary>
     public bool IsAuthor { get; set; }
-    
+
     /// <summary>  
     /// Нав свойство
     /// </summary>

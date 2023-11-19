@@ -22,4 +22,9 @@ public interface ISongPublishPremanager
     /// Получить список с краткой информацией о заявках
     /// </summary>
     Task<GetPublishRequestShortInfoListResponse> GetListAsync(GetPublishRequestListRequest request, bool isAdmin);
+
+    /// <summary>
+    /// Получить подробную информацию о заявке
+    /// </summary>
+    Task<GetPublishRequestInfoResponse> GetFullInfoAsync(Guid id);
 }

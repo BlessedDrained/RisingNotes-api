@@ -1,6 +1,8 @@
 ﻿using Dal.File.Enums;
 using Destructurama.Attributed;
 using MainLib.Dal.Model.Base;
+using Microsoft.AspNetCore.Mvc;
+using RisingNotesLib.Helper;
 
 namespace Dal.File;
 
@@ -29,4 +31,15 @@ public record FileDal : DalModel<Guid>
     /// </summary>
     [LogMasked(Text = "BINARY CONTENT")]
     public byte[] Content { get; set; }
+}
+
+public static class FileDalExtensions
+{
+    /// <summary>
+    /// Получить FileContentResult из <see cref="FileDal"/>
+    /// </summary>
+    public static FileContentResult ToFileContent(this FileDal file)
+    {
+        return new FileContentResult(file.Content, ContentTypeHelper.GetContentTypeByFileExtension(file.Extension));
+    }
 }

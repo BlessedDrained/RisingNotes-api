@@ -1,6 +1,5 @@
 ﻿using Api.Controllers.File.Dto.Request;
 using Api.Validation;
-using Dal.File;
 
 namespace Api.Controllers.SongPublish.Dto.Request;
 
@@ -18,6 +17,26 @@ public record CreateSongPublishRequestRequest
     /// Текст песни
     /// </summary>
     public string Lyrics { get; set; }
+    
+    /// <summary>
+    /// Является ли инструментальной
+    /// </summary>
+    public bool Instrumental { get; set; }
+
+    /// <summary>
+    /// Список жанров
+    /// </summary>
+    public string[] GenreList { get; init; } = Array.Empty<string>();
+
+    /// <summary>
+    /// Список настроений
+    /// </summary>
+    public string[] VibeList { get; init; } = Array.Empty<string>();
+
+    /// <summary>
+    /// Список языков
+    /// </summary>
+    public string[] LanguageList { get; init; } = Array.Empty<string>();
 
     /// <summary>
     /// Нав свойство

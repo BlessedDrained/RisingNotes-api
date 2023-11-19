@@ -18,32 +18,32 @@ public record AuthorDal : DalModel<Guid>
     /// Список песен
     /// </summary>
     public List<SongDal> SongList { get; set; }
-    
+
     /// <summary>
     /// Блок "О себе"
     /// </summary>
     public string About { get; set; }
-    
+
     /// <summary>
     /// Ссылка на Vk
     /// </summary>
     public string VkLink { get; set; }
-    
+
     /// <summary>
     /// Ссылка на яндекс музыку
     /// </summary>
     public string YaMusicLink { get; set; }
-    
+
     /// <summary>
     /// Ссылка на личный сайт
     /// </summary>
     public string WebSiteLink { get; set; }
-    
+
     /// <summary>
     /// Нав свойство
     /// </summary>
     public UserDal User { get; set; }
-    
+
     /// <summary>
     /// Нав свойство
     /// </summary>

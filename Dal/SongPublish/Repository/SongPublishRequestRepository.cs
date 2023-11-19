@@ -1,7 +1,6 @@
 ﻿using Dal.Context;
 using MainLib.Dal.Repository.Base;
 using Microsoft.EntityFrameworkCore;
-using RisingNotesLib.Enums;
 using RisingNotesLib.Models;
 
 namespace Dal.SongPublish.Repository;
@@ -42,16 +41,16 @@ public class SongPublishRequestRepository : Repository<SongPublishRequestDal, Gu
         // }
         result = result.Include(x => x.Author);
         
-        if (filter.OrderByStatus.HasValue)
+        if (filter.OrderByStatusDescending.HasValue)
         {
-            result = filter.OrderByStatus.Value
+            result = filter.OrderByStatusDescending.Value
                 ? result.OrderByDescending(x => x.Status)
                 : result.OrderBy(x => x.Status);
         }
 
-        if (filter.OrderByAuthorName.HasValue)
+        if (filter.OrderByAuthorNameDescending.HasValue)
         {
-            result = filter.OrderByAuthorName.Value
+            result = filter.OrderByAuthorNameDescending.Value
                 ? result.OrderByDescending(x => x.Status)
                 : result.OrderBy(x => x.Status);
         }

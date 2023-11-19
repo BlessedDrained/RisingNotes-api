@@ -15,28 +15,24 @@ public record UploadSongRequest
     public string SongName { get; init; }
 
     /// <summary>
-    /// Соавторы
+    /// Список жанров песни
     /// </summary>
-    public List<AddFeaturedAuthorRequest> FeatAuthorList { get; init; } = new();
+    public string[] GenreList { get; init; } = Array.Empty<string>();
 
-    // /// <summary>
-    // /// Список людей, с кем был фит
-    // /// </summary>
-    // public List<string> FeatList { get; init; }
+    /// <summary>
+    /// Список настроений
+    /// </summary>
+    public string[] VibeList { get; init; } = Array.Empty<string>();
 
-    // /// <summary>
-    // /// Список, на кого похож
-    // /// </summary>
-    // // [CorrectSimilarAuthor]
-    // // [Required]
-    // public List<string> SimilarAuthorList { get; init; } = new();
-
-    // /// <summary>
-    // /// Список настроений
-    // /// </summary>
-    // // [CorrectVibe]
-    // // [Required]
-    // public List<string> VibeList { get; init; } = new();
+    /// <summary>
+    /// Список языков
+    /// </summary>
+    public string[] LanguageList { get; init; } = Array.Empty<string>();
+    
+    /// <summary>
+    /// Является ли инструментальной
+    /// </summary>
+    public bool Instrumental { get; init; }
 
     /// <summary>
     /// Имеет ли текст

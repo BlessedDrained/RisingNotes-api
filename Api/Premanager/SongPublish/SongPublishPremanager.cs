@@ -5,6 +5,7 @@ using Dal.Author.Repository;
 using Dal.SongPublish;
 using Dal.SongPublish.Repository;
 using Logic.SongPublish;
+using MainLib.Logging;
 using RisingNotesLib.Enums;
 using RisingNotesLib.Models;
 
@@ -36,6 +37,7 @@ public class SongPublishPremanager : ISongPublishPremanager
     /// <inheritdoc />
     public async Task<CreateSongPublishRequestResponse> CreateAsync(Guid userId, CreateSongPublishRequestRequest request)
     {
+        using var log = new MethodLog(userId, request);
         var requestDal = new SongPublishRequestDal()
         {
             Status = PublishRequestStatus.Review
@@ -52,12 +54,14 @@ public class SongPublishPremanager : ISongPublishPremanager
         {
             Id = id
         };
+        log.ReturnsValue(response);
         return response;
     }
 
     /// <inheritdoc />
     public async Task ReplyRequestAsUserAsync(Guid requestId, ReplyToRequestAsUserRequest request)
     {
+        using var log = new MethodLog(requestId, request);
         var requestDal = _mapper.Map<SongPublishRequestDal>(request);
 
         await _songPublishManager.ReplyAsUserAsync(requestId, requestDal);
@@ -66,6 +70,7 @@ public class SongPublishPremanager : ISongPublishPremanager
     /// <inheritdoc />
     public async Task<GetPublishRequestShortInfoListResponse> GetListAsync(GetPublishRequestListRequest request, bool isAdmin)
     {
+        using var log = new MethodLog(request, isAdmin);
         var filter = _mapper.Map<GetPublishRequestListFilterModel>(request);
 
         var result = await _songPublishRequestRepository.GetListAsync(filter, isAdmin);
@@ -77,6 +82,19 @@ public class SongPublishPremanager : ISongPublishPremanager
             PublishRequestShortInfoList = responseList
         };
 
+        log.ReturnsValue(response);
+        return response;
+    }
+
+    /// <inheritdoc />
+    public async Task<GetPublishRequestInfoResponse> GetFullInfoAsync(Guid id)
+    {
+        using var log = new MethodLog(id);
+        var result = await _songPublishRequestRepository.GetAsync(id);
+
+        var response = _mapper.Map<GetPublishRequestInfoResponse>(result);
+
+        log.ReturnsValue(response);
         return response;
     }
 }

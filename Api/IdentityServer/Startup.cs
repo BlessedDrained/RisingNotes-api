@@ -1,4 +1,5 @@
-﻿using RisingNotesLib.Models;
+﻿using IdentityServer4.Services;
+using RisingNotesLib.Models;
 
 namespace Api.IdentityServer;
 
@@ -23,6 +24,14 @@ public static class Startup
             .AddInMemoryPersistedGrants()
             .AddInMemoryCaching()
             .AddDeveloperSigningCredential();
+        
+        services.AddSingleton<ICorsPolicyService>((container) => {
+            var logger = container.GetRequiredService<ILogger<DefaultCorsPolicyService>>();
+            return new DefaultCorsPolicyService(logger)
+            {
+                AllowedOrigins = { "http://localhost:3000" }
+            };
+        });
 
         return services;
     }

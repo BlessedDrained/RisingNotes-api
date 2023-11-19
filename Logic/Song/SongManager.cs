@@ -34,7 +34,7 @@ public class SongManager : ISongManager
         using var log = new MethodLog(model, songFile, logoFile);
 
         var file = TagLib.File.Create(new FileAbstraction($"{songFile.Name}.{songFile.Extension}", songFile.Content));
-        model.DurationMsec = file.Properties.Duration.TotalMilliseconds;
+        model.DurationMsec = Convert.ToInt32(file.Properties.Duration.TotalMilliseconds);
         
         var songFileId = await _fileManager.UploadAsync(songFile);
         var logoFileId = await _fileManager.UploadAsync(logoFile);

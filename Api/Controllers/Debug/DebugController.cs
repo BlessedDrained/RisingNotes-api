@@ -12,6 +12,7 @@ using MainLib.Dal.Exception;
 using MainLib.Logging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using RisingNotesLib.Enums;
 using RisingNotesLib.Exceptions;
 
 namespace Api.Controllers.Debug;
@@ -66,7 +67,11 @@ public class DebugController : PublicController
             UserName = "testuser"
         };
 
-        await _profilePremanager.RegisterAsync(userRegisterRequest);
+        var defaultUserResponse = await _profilePremanager.RegisterAsync(userRegisterRequest);
+
+        var defaultUser = await _userRepository.GetAsync(defaultUserResponse.UserId);
+        defaultUser.Gender = Gender.Male;
+        await _userRepository.UpdateAsync(defaultUser);
 
         var ziaRegisterRequest = new RegisterRequest()
         {
@@ -76,10 +81,12 @@ public class DebugController : PublicController
         };
 
         var ziaRegisterResponse = await _profilePremanager.RegisterAsync(ziaRegisterRequest);
-        
+
         await _profilePremanager.ChangeRoleAsync(ziaRegisterResponse.IdentityUserGuid.ToString(), RoleConstants.Author);
-        
+
         var ziaUser = await _userRepository.GetAsync(ziaRegisterResponse.UserId);
+        ziaUser.Gender = Gender.Female;
+        await _userRepository.UpdateAsync(ziaUser);
 
         var zia = new AuthorDal()
         {
@@ -89,7 +96,8 @@ public class DebugController : PublicController
             Name = "ZIA",
             VkLink = "https://vk.com/lizokshmelik",
             WebSiteLink = "Нету)",
-            YaMusicLink = "Нету)"
+            YaMusicLink = "Нету)",
+
         };
 
         await _authorManager.CreateAsync(ziaUser.Id, zia);
@@ -105,6 +113,9 @@ public class DebugController : PublicController
         await _profilePremanager.ChangeRoleAsync(adminRegisterResponse.IdentityUserGuid.ToString(), RoleConstants.Admin);
 
         var francisOwensUser = await _userRepository.GetAsync(adminRegisterResponse.UserId);
+        francisOwensUser.Gender = Gender.Male;
+        await _userRepository.UpdateAsync(francisOwensUser);
+
         var francisOwens = new AuthorDal()
         {
             UserId = francisOwensUser.Id,

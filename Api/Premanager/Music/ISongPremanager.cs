@@ -1,5 +1,6 @@
 ﻿using Api.Controllers.Song.Dto.Request;
 using Api.Controllers.Song.Dto.Response;
+using RisingNotesLib.Models;
 
 namespace Api.Premanager.Music;
 
@@ -25,4 +26,9 @@ public interface ISongPremanager
     /// Получить список информации об избранных треках
     /// </summary>
     Task<GetFavoriteSongInfoListResponse> GetFavoriteSongInfoList(Guid userId);
+
+    /// <summary>
+    /// Получить список треков по фильтрам
+    /// </summary>
+    Task<GetSongListResponse> GetSongListAsync(GetSongListFilterModel filter);
 }

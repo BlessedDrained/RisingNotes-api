@@ -87,4 +87,17 @@ public class SongPublishController : PublicController
 
         return Ok(response);
     }
+
+    /// <summary>
+    /// Получить подробную информацию о заявке
+    /// </summary>
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(GetPublishRequestInfoResponse), 200)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastAuthor)]
+    public async Task<IActionResult> GetFullInfoAsync(Guid id)
+    {
+        var response = await _songPublishPremanager.GetFullInfoAsync(id);
+
+        return Ok(response);
+    }
 }

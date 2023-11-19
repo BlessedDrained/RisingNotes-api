@@ -5,12 +5,13 @@ public record GetPublishRequestListFilterModel
     /// <summary>
     /// Сортировать по статусу
     /// </summary>
-    public bool? OrderByStatus { get; init; }
+    public bool? OrderByStatusDescending { get; init; }
 
     /// <summary>
     /// Сортировать по имени автора
     /// </summary>
-    public bool? OrderByAuthorName { get; init; }
+    /// <remarks>null - не сортировать, false - по возрастанию</remarks>
+    public bool? OrderByAuthorNameDescending { get; init; }
     
     /// <summary>
     /// Для пагинации

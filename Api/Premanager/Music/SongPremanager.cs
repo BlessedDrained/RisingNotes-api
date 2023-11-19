@@ -3,11 +3,10 @@ using Api.Controllers.Song.Dto.Response;
 using AutoMapper;
 using Dal.File;
 using Dal.Song;
+using Dal.Song.Repository;
 using Logic.Song;
-using MainLib.Extensions;
 using MainLib.Logging;
-using MainLib.TagLib;
-using File = TagLib.File;
+using RisingNotesLib.Models;
 
 namespace Api.Premanager.Music;
 
@@ -16,14 +15,17 @@ public class SongPremanager : ISongPremanager
 {
     private readonly ISongManager _songManager;
     private readonly IMapper _mapper;
+    private readonly ISongRepository _songRepository;
 
     ///
     public SongPremanager(
         ISongManager songManager,
-        IMapper mapper)
+        IMapper mapper,
+        ISongRepository songRepository)
     {
         _songManager = songManager;
         _mapper = mapper;
+        _songRepository = songRepository;
     }
 
     /// <inheritdoc />
@@ -86,6 +88,23 @@ public class SongPremanager : ISongPremanager
         var response = new GetFavoriteSongInfoListResponse()
         {
             SongInfoList = responseList
+        };
+
+        log.ReturnsValue(response);
+        return response;
+    }
+
+    /// <inheritdoc />
+    public async Task<GetSongListResponse> GetSongListAsync(GetSongListFilterModel filter)
+    {
+        using var log = new MethodLog(filter);
+
+        var songList = await _songRepository.GetListAsync(filter);
+
+        var responseList = _mapper.Map<List<GetSongInfoResponse>>(songList);
+        var response = new GetSongListResponse()
+        {
+            SongList = responseList
         };
 
         log.ReturnsValue(response);

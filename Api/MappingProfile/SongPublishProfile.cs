@@ -1,6 +1,7 @@
 ﻿using Api.Controllers.SongPublish.Dto.Request;
 using Api.Controllers.SongPublish.Dto.Response;
 using AutoMapper;
+using Dal.File;
 using Dal.Song;
 using Dal.SongPublish;
 using RisingNotesLib.Models;
@@ -24,11 +25,15 @@ public class SongPublishProfile : Profile
             .ForMember(d => d.SongFileId, o => o.Ignore())
             .ForMember(d => d.LogoFileId, o => o.Ignore())
             .ForMember(d => d.Id, o => o.Ignore())
-            .ForMember(d => d.Author, o => o.Ignore());
+            .ForMember(d => d.Author, o => o.Ignore())
+            .ForMember(d => d.GenreList, o => o.MapFrom(s => s.GenreList))
+            .ForMember(d => d.VibeList, o => o.MapFrom(s => s.VibeList))
+            .ForMember(d => d.LanguageList, o => o.MapFrom(s => s.LanguageList))
+            .ForMember(d => d.Instrumental, o => o.MapFrom(s => s.Instrumental));
 
         CreateMap<GetPublishRequestListRequest, GetPublishRequestListFilterModel>()
-            .ForMember(d => d.OrderByStatus, o => o.MapFrom(s => s.OrderByStatus))
-            .ForMember(d => d.OrderByAuthorName, o => o.MapFrom(s => s.OrderByAuthorName))
+            .ForMember(d => d.OrderByStatusDescending, o => o.MapFrom(s => s.OrderByStatusDescending))
+            .ForMember(d => d.OrderByAuthorNameDescending, o => o.MapFrom(s => s.OrderByAuthorNameDescending))
             .ForMember(d => d.Count, o => o.MapFrom(s => s.Count))
             .ForMember(d => d.Offset, o => o.MapFrom(s => s.Offset));
 
@@ -45,7 +50,11 @@ public class SongPublishProfile : Profile
             .ForMember(d => d.SongFile, o => o.MapFrom(s => s.SongFile))
             .ForMember(d => d.LogoFileId, o => o.MapFrom(s => s.LogoFileId))
             .ForMember(d => d.AddedToFavoriteUserList, o => o.Ignore())
-            .ForMember(d => d.Id, o => o.Ignore());
+            .ForMember(d => d.Id, o => o.Ignore())
+            .ForMember(d => d.VibeList, o => o.MapFrom(s => s.VibeList))
+            .ForMember(d => d.LanguageList, o => o.MapFrom(s => s.LanguageList))
+            .ForMember(d => d.GenreList, o => o.MapFrom(s => s.GenreList))
+            .ForMember(d => d.Instrumental, o => o.MapFrom(s => s.Instrumental));
 
         CreateMap<ReplyToRequestAsUserRequest, SongPublishRequestDal>()
             .ForMember(d => d.SongFile, o => o.MapFrom(s => s.SongFile))
@@ -60,12 +69,26 @@ public class SongPublishProfile : Profile
             .ForMember(d => d.SongFileId, o => o.Ignore())
             .ForMember(d => d.LogoFileId, o => o.Ignore())
             .ForMember(d => d.Id, o => o.Ignore())
-            .ForMember(d => d.Author, o => o.Ignore());
+            .ForMember(d => d.Author, o => o.Ignore())
+            .ForMember(d => d.VibeList, o => o.MapFrom(s => s.VibeList))
+            .ForMember(d => d.GenreList, o => o.MapFrom(s => s.GenreList))
+            .ForMember(d => d.LanguageList, o => o.MapFrom(s => s.LanguageList))
+            .ForMember(d => d.Instrumental, o => o.MapFrom(s => s.Instrumental));
 
         CreateMap<SongPublishRequestDal, GetPublishRequestShortInfoResponse>()
             .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
             .ForMember(d => d.Status, o => o.MapFrom(s => s.Status))
             .ForMember(d => d.AuthorName, o => o.MapFrom(s => s.Author.Name))
             .ForMember(d => d.AuthorId, o => o.MapFrom(s => s.AuthorId));
+
+        CreateMap<SongPublishRequestDal, GetPublishRequestInfoResponse>()
+            .ForMember(d => d.Lyrics, o => o.MapFrom(s => s.Lyrics))
+            .ForMember(d => d.SongName, o => o.MapFrom(s => s.Name))
+            .ForMember(d => d.LogoFile, o => o.MapFrom(s => s.LogoFile.ToFileContent()))
+            .ForMember(d => d.SongFile, o => o.MapFrom(s => s.SongFile.ToFileContent()))
+            .ForMember(d => d.GenreList, o => o.MapFrom(s => s.GenreList))
+            .ForMember(d => d.VibeList, o => o.MapFrom(s => s.VibeList))
+            .ForMember(d => d.LanguageList, o => o.MapFrom(s => s.LanguageList))
+            .ForMember(d => d.Instrumental, o => o.MapFrom(s => s.Instrumental));
     }
 }

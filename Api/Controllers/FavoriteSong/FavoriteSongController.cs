@@ -50,7 +50,7 @@ public class FavoriteSongController : PublicController
     /// <summary>
     /// Получить список информации об избранных треках
     /// </summary>
-    [HttpGet("favorite/list")]
+    [HttpGet("list")]
     [ProducesResponseType(typeof(GetFavoriteSongInfoListResponse), 200)]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastUser)]
     public async Task<IActionResult> GetFavoriteSongInfoListAsync([FromServices] ISongPremanager songPremanager)

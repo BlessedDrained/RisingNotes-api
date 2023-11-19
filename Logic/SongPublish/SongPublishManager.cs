@@ -90,7 +90,7 @@ public class SongPublishManager : ISongPublishManager
             var song = _mapper.Map<SongDal>(request);
             var songFile = await _fileManager.DownloadAsync(song.SongFileId);
             var file = TagLib.File.Create(new FileAbstraction($"{songFile.Name}.{songFile.Extension}", songFile.Content));
-            song.DurationMsec = file.Properties.Duration.TotalMilliseconds;
+            song.DurationMsec = Convert.ToInt32(file.Properties.Duration.TotalMilliseconds);
             
             await _songRepository.InsertAsync(song);
             request.Song = song;

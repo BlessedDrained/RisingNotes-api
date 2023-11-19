@@ -23,6 +23,26 @@ public record SongDal : DalModel<Guid>
     public Guid AuthorId { get; set; }
 
     /// <summary>
+    /// Список жанров песни
+    /// </summary>
+    public string[] GenreList { get; set; } = Array.Empty<string>();
+
+    /// <summary>
+    /// Список настроений
+    /// </summary>
+    public string[] VibeList { get; set; } = Array.Empty<string>();
+
+    /// <summary>
+    /// Список языков
+    /// </summary>
+    public string[] LanguageList { get; set; } = Array.Empty<string>();
+    
+    /// <summary>
+    /// Является ли инструментальной
+    /// </summary>
+    public bool Instrumental { get; set; }
+
+    /// <summary>
     /// Название трека
     /// </summary>
     public string Name { get; set; }
@@ -30,7 +50,7 @@ public record SongDal : DalModel<Guid>
     /// <summary>
     /// Продолжительность трека в миллисекундах
     /// </summary>
-    public double DurationMsec { get; set; }
+    public int DurationMsec { get; set; }
 
     /// <summary>
     /// Текст песни
