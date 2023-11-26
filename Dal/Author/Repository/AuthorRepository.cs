@@ -81,4 +81,15 @@ public class AuthorRepository : Repository<AuthorDal, Guid>, IAuthorRepository
         var result = authorList.ToListAsync();
         return result;
     }
+
+    /// <inheritdoc />
+    public Task<int> GetSubcriberCountAsync(Guid authorId)
+    {
+        var count = Set
+            .Where(x => x.Id == authorId)
+            .Select(x => x.SubscribedUserList)
+            .CountAsync();
+
+        return count;
+    }
 }

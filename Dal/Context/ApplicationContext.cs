@@ -47,6 +47,14 @@ public class ApplicationContext : IdentityDbContext<AppIdentityUser>
             .WithOne(x => x.Author)
             .HasForeignKey(x => x.AuthorId));
 
+        builder.Entity<AuthorDal>()
+            .HasOne(x => x.User)
+            .WithOne();
+        
+        builder.Entity<UserDal>()
+            .HasMany(x => x.SubscriptionList)
+            .WithMany(x => x.SubscribedUserList);
+        
         builder.Entity<SongPublishRequestDal>();
     }
 }

@@ -27,4 +27,16 @@ public interface IUserRepository : IRepository<UserDal, Guid>
     /// Получить пользователя, включая список его избранных треков
     /// </summary>
     Task<UserDal> GetWithFavoriteSongListAsync(Guid userId);
+
+    /// <summary>
+    /// Получить список идентификаторов авторов, на которых подписан пользователь
+    /// </summary>
+    Task<List<Guid>> GetSubscriptionListAsync(Guid userId);
+
+    /// <summary>
+    /// Получить пользователя со списком подписок
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    Task<UserDal> GetWithSubscriptionListAsync(Guid userId);
 }

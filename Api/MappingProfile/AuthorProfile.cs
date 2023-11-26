@@ -21,7 +21,8 @@ public class AuthorProfile : Profile
             .ForMember(d => d.Id, o => o.Ignore())
             .ForMember(d => d.User, o => o.Ignore())
             .ForMember(d => d.UserId, o => o.Ignore())
-            .ForMember(d => d.SongList, o => o.Ignore());
+            .ForMember(d => d.SongList, o => o.Ignore())
+            .ForMember(d => d.SubscribedUserList, o => o.Ignore());
 
         CreateMap<AuthorDal, GetAuthorInfoResponse>()
             .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))

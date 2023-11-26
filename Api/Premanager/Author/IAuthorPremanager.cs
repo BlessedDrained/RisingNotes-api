@@ -1,6 +1,7 @@
 ﻿using Api.Controllers.Author.Dto.Request;
 using Api.Controllers.Author.Dto.Response;
 using Api.Controllers.Song.Dto.Response;
+using Api.Controllers.Subscription.Dto.Response;
 
 namespace Api.Premanager.Author;
 
@@ -41,4 +42,9 @@ public interface IAuthorPremanager
     /// Получить список информации о треках автора
     /// </summary>
     Task<GetAuthorSongInfoListResponse> GetAuthorSongInfoListAsync(Guid authorId);
+
+    /// <summary>
+    /// Получить количество подписчиков автора
+    /// </summary>
+    Task<GetSubscriberCountResponse> GetSubscriberCountAsync(Guid authorId);
 }

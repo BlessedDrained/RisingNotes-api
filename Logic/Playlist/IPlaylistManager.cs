@@ -41,4 +41,9 @@ public interface IPlaylistManager
     /// Получить файл с логотипом
     /// </summary>
     Task<FileDal> GetLogoAsync(Guid playlistId);
+    
+    /// <summary>
+    /// Обновить логотип
+    /// </summary>
+    Task UpdateLogoAsync(Guid userId, Guid playlistId, FileDal file);
 }

@@ -58,4 +58,9 @@ public interface ISongManager
     /// Удалить трек из избранного
     /// </summary>
     Task RemoveFavoriteAsync(Guid userId, Guid songId);
+    
+    /// <summary>
+    /// Обновить логотип пользователя
+    /// </summary>
+    Task UpdateLogoAsync(Guid authorId, Guid songId, FileDal file);
 }

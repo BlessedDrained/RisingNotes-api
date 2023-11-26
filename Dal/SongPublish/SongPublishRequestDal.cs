@@ -24,7 +24,7 @@ public record SongPublishRequestDal : DalModel<Guid>
     /// <summary>
     /// Идентификатор автора
     /// </summary>
-    public Guid AuthorId { get; set; }
+    public Guid? AuthorId { get; set; }
     
     /// <summary>
     /// Нав свойство
@@ -76,7 +76,7 @@ public record SongPublishRequestDal : DalModel<Guid>
     /// <summary>
     /// Идентификатор файла трека
     /// </summary>
-    public Guid SongFileId { get; set; }
+    public Guid? SongFileId { get; set; }
 
     /// <summary>
     /// Нав свойство

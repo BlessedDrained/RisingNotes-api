@@ -47,7 +47,7 @@ public class SongPublishManager : ISongPublishManager
         {
             // кидать исключение, что заявка уже обработана и отдавать текущйи статус
         }
-        
+
         if (!string.IsNullOrWhiteSpace(newRequest.Lyrics))
         {
             request.Lyrics = newRequest.Lyrics;
@@ -80,7 +80,7 @@ public class SongPublishManager : ISongPublishManager
         var request = await _repository.GetAsync(requestId);
         if (request.Status is PublishRequestStatus.Approved or PublishRequestStatus.Rejected)
         {
-            // кидать исключение, что заявка уже обработана и отдавать текущйи статус
+            throw new Exception("Publish request has already been handled");
         }
 
         // Одобрили на данном этапе заявку
@@ -91,7 +91,7 @@ public class SongPublishManager : ISongPublishManager
             var songFile = await _fileManager.DownloadAsync(song.SongFileId);
             var file = TagLib.File.Create(new FileAbstraction($"{songFile.Name}.{songFile.Extension}", songFile.Content));
             song.DurationMsec = Convert.ToInt32(file.Properties.Duration.TotalMilliseconds);
-            
+
             await _songRepository.InsertAsync(song);
             request.Song = song;
             await _repository.UpdateAsync(request);
@@ -99,12 +99,17 @@ public class SongPublishManager : ISongPublishManager
             return;
         }
 
+        // Возможно, удалять не стоит, а хранить какое то время
         // Удаляем, чтобы место не занимать
         if (status is PublishRequestStatus.Rejected or PublishRequestStatus.Revoked)
         {
-            // TODO: нужно сделать метод DeleteAsync для FileManager. После этого раскомментить
-            // request.SongFile = null;
-            // request.LogoFile = null;
+            // // TODO: нужно сделать метод DeleteAsync для FileManager. После этого раскомментить
+            // await _fileManager.DeleteAsync(request.SongFileId.Value);
+            //
+            // if (request.LogoFileId.HasValue)
+            // {
+            //     await _fileManager.DeleteAsync(request.LogoFileId.Value);
+            // }
         }
 
         request.Status = status;

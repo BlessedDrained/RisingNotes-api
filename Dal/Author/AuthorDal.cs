@@ -17,7 +17,12 @@ public record AuthorDal : DalModel<Guid>
     /// <summary>
     /// Список песен
     /// </summary>
-    public List<SongDal> SongList { get; set; }
+    public List<SongDal> SongList { get; set; } = new();
+
+    /// <summary>
+    /// Список подписанных пользователей
+    /// </summary>
+    public List<UserDal> SubscribedUserList { get; set; } = new();
 
     /// <summary>
     /// Блок "О себе"

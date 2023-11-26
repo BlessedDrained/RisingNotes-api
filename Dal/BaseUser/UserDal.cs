@@ -1,4 +1,5 @@
-﻿using Dal.Comment;
+﻿using Dal.Author;
+using Dal.Comment;
 using Dal.File;
 using Dal.Playlist;
 using Dal.Song;
@@ -37,6 +38,11 @@ public record UserDal : DalModel<Guid>
     /// Список комментариев, оставленных пользователем
     /// </summary>
     public List<CommentDal> CommentList { get; set; } = new();
+
+    /// <summary>
+    /// Список подписок
+    /// </summary>
+    public List<AuthorDal> SubscriptionList { get; set; } = new();
 
     /// <summary>
     /// Нав свойство

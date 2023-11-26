@@ -1,4 +1,5 @@
-﻿using Api.Controllers.Song.Dto.Request;
+﻿using Api.Controllers.File.Dto.Request;
+using Api.Controllers.Song.Dto.Request;
 using Api.Controllers.Song.Dto.Response;
 using AutoMapper;
 using Dal.File;
@@ -109,5 +110,14 @@ public class SongPremanager : ISongPremanager
 
         log.ReturnsValue(response);
         return response;
+    }
+
+    /// <inheritdoc />
+    public async Task UpdateLogoAsync(Guid authorId, Guid songId, UploadFileRequest request)
+    {
+        using var log = new MethodLog(authorId, songId, request);
+
+        var file = _mapper.Map<FileDal>(request);
+        await _songManager.UpdateLogoAsync(authorId, songId, file);
     }
 }

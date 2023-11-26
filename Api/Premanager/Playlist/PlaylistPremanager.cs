@@ -1,7 +1,9 @@
-﻿using Api.Controllers.Playlist.Dto.Request;
+﻿using Api.Controllers.File.Dto.Request;
+using Api.Controllers.Playlist.Dto.Request;
 using Api.Controllers.Playlist.Dto.Response;
 using Api.Controllers.Song.Dto.Response;
 using AutoMapper;
+using Dal.File;
 using Dal.Playlist;
 using Logic.Playlist;
 using MainLib.Logging;
@@ -85,5 +87,14 @@ public class PlaylistPremanager : IPlaylistPremanager
 
         log.ReturnsValue(response);
         return response;
+    }
+
+    /// <inheritdoc />
+    public async Task UpdateLogoAsync(Guid userId, Guid playlistId, UploadFileRequest request)
+    {
+        using var log = new MethodLog(userId, playlistId, request);
+
+        var file = _mapper.Map<FileDal>(request);
+        await _playlistManager.UpdateLogoAsync(userId, playlistId, file);
     }
 }

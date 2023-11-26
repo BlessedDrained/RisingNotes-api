@@ -16,4 +16,9 @@ public interface IFileManager
     /// Скачать файл
     /// </summary>
     Task<FileDal> DownloadAsync(Guid id);
+
+    /// <summary>
+    /// Удалить файл
+    /// </summary>
+    Task DeleteAsync(Guid id);
 }

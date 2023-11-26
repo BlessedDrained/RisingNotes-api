@@ -1,6 +1,7 @@
 ﻿using Api.Controllers.Author.Dto.Request;
 using Api.Controllers.Author.Dto.Response;
 using Api.Controllers.Song.Dto.Response;
+using Api.Controllers.Subscription.Dto.Response;
 using AutoMapper;
 using Dal.Author;
 using Dal.Author.Repository;
@@ -98,6 +99,21 @@ public class AuthorPremanager : IAuthorPremanager
         };
 
         log.ReturnsValue(response);
+        return response;
+    }
+
+    /// <inheritdoc />
+    public async Task<GetSubscriberCountResponse> GetSubscriberCountAsync(Guid authorId)
+    {
+        using var log = new MethodLog(authorId);
+
+        var count = await _authorRepository.GetSubcriberCountAsync(authorId);
+
+        var response = new GetSubscriberCountResponse()
+        {
+            Count = count
+        };
+
         return response;
     }
 }

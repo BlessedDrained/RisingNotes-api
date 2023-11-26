@@ -29,4 +29,9 @@ public interface IAuthorRepository : IRepository<AuthorDal, Guid>
     /// Получить список авторов по фильтрам
     /// </summary>
     Task<List<AuthorDal>> GetListAsync(GetAuthorListFilterModel filter);
+
+    /// <summary>
+    /// Получить количество подписчиков автора
+    /// </summary>
+    Task<int> GetSubcriberCountAsync(Guid authorId);
 }

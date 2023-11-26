@@ -11,16 +11,16 @@ namespace Logic.Playlist;
 /// <inheritdoc />
 public class PlaylistManager : IPlaylistManager
 {
-    private readonly IPlaylistRepository _repository;
+    private readonly IPlaylistRepository _playlistRepository;
     private readonly ISongRepository _songRepository;
     private readonly IFileManager _fileManager;
 
     public PlaylistManager(
-        IPlaylistRepository repository,
+        IPlaylistRepository playlistRepository,
         ISongRepository songRepository,
         IFileManager fileManager)
     {
-        _repository = repository;
+        _playlistRepository = playlistRepository;
         _songRepository = songRepository;
         _fileManager = fileManager;
     }
@@ -30,7 +30,7 @@ public class PlaylistManager : IPlaylistManager
     {
         using var log = new MethodLog(playlist);
 
-        var id = await _repository.InsertAsync(playlist);
+        var id = await _playlistRepository.InsertAsync(playlist);
 
         log.ReturnsValue(id);
         return id;
@@ -40,7 +40,7 @@ public class PlaylistManager : IPlaylistManager
     public async Task<PlaylistDal> GetInfoAsync(Guid playlistId)
     {
         using var log = new MethodLog(playlistId);
-        var playlist = await _repository.GetAsync(playlistId);
+        var playlist = await _playlistRepository.GetAsync(playlistId);
 
         log.ReturnsValue(playlistId);
         return playlist;
@@ -51,7 +51,7 @@ public class PlaylistManager : IPlaylistManager
     {
         using var log = new MethodLog(userId);
 
-        var playlistInfoList = await _repository.GetListAsync(x => x.CreatorId == userId);
+        var playlistInfoList = await _playlistRepository.GetListAsync(x => x.CreatorId == userId);
 
         log.ReturnsValue(playlistInfoList);
         return playlistInfoList;
@@ -62,7 +62,7 @@ public class PlaylistManager : IPlaylistManager
     {
         using var log = new MethodLog(playlistId);
 
-        var playlistWithSongList = await _repository.GetWithSongListAsync(playlistId);
+        var playlistWithSongList = await _playlistRepository.GetWithSongListAsync(playlistId);
 
         log.ReturnsValue(playlistWithSongList.SongList);
         return playlistWithSongList.SongList;
@@ -73,12 +73,12 @@ public class PlaylistManager : IPlaylistManager
     {
         using var methodLog = new MethodLog(playlistId, songId);
 
-        var playlist = await _repository.GetAsync(playlistId);
+        var playlist = await _playlistRepository.GetAsync(playlistId);
         var song = await _songRepository.GetAsync(songId);
 
         playlist.SongList.Add(song);
 
-        await _repository.UpdateAsync(playlist);
+        await _playlistRepository.UpdateAsync(playlist);
     }
 
     /// <inheritdoc />
@@ -86,10 +86,35 @@ public class PlaylistManager : IPlaylistManager
     {
         using var log = new MethodLog(playlistId);
 
-        var playlist = await _repository.GetAsync(playlistId);
+        var playlist = await _playlistRepository.GetAsync(playlistId);
         var logo = await _fileManager.DownloadAsync(playlist.LogoFileId.Value);
 
         log.ReturnsValue(logo);
         return logo;
+    }
+
+    /// <inheritdoc />
+    public async Task UpdateLogoAsync(Guid userId, Guid playlistId, FileDal file)
+    {
+        using var log = new MethodLog(playlistId, file);
+
+        var playlist = await _playlistRepository.GetAsync(playlistId);
+
+        if (playlist.CreatorId != userId)
+        {
+            throw new Exception($"User with id={userId} is not a creator of playlist with id={playlistId}");
+        }
+
+        // if (playlist.LogoFileId.HasValue)
+        // {
+        //     await _fileManager.DeleteAsync(playlist.LogoFileId.Value);
+        // }
+
+        var fileId = await _fileManager.UploadAsync(file);
+
+        playlist.LogoFile = file;
+        playlist.LogoFileId = fileId;
+
+        await _playlistRepository.UpdateAsync(playlist);
     }
 }

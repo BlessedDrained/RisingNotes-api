@@ -1,4 +1,5 @@
-﻿using Api.Controllers.Song.Dto.Request;
+﻿using Api.Controllers.File.Dto.Request;
+using Api.Controllers.Song.Dto.Request;
 using Api.Controllers.Song.Dto.Response;
 using RisingNotesLib.Models;
 
@@ -31,4 +32,9 @@ public interface ISongPremanager
     /// Получить список треков по фильтрам
     /// </summary>
     Task<GetSongListResponse> GetSongListAsync(GetSongListFilterModel filter);
+
+    /// <summary>
+    /// Обновить логотип
+    /// </summary>
+    Task UpdateLogoAsync(Guid authorId, Guid songId, UploadFileRequest request);
 }

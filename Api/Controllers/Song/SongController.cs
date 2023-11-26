@@ -1,4 +1,5 @@
-﻿using Api.Controllers.Song.Dto.Request;
+﻿using Api.Controllers.File.Dto.Request;
+using Api.Controllers.Song.Dto.Request;
 using Api.Controllers.Song.Dto.Response;
 using Api.Premanager.Music;
 using Dal.Song;
@@ -112,5 +113,19 @@ public class SongController : PublicController
         var response = await _songPremanager.GetSongListAsync(request);
 
         return Ok(response);
+    }
+
+    /// <summary>
+    /// Обновить логотип
+    /// </summary>
+    [HttpPatch("{songId:guid}/logo")]
+    [ProducesResponseType(204)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastAuthor)]
+    public async Task<IActionResult> UpdateLogoAsync([FromRoute] Guid songId, [FromForm] UploadFileRequest logoFile)
+    {
+        var authorId = Guid.Parse(User.Claims.First(x => x.Type == ClaimTypeConstants.AuthorId).Value);
+        await _songPremanager.UpdateLogoAsync(authorId, songId, logoFile);
+
+        return NoContent();
     }
 }

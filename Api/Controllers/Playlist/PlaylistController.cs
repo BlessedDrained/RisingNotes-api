@@ -1,4 +1,5 @@
-﻿using Api.Controllers.Playlist.Dto.Request;
+﻿using Api.Controllers.File.Dto.Request;
+using Api.Controllers.Playlist.Dto.Request;
 using Api.Controllers.Playlist.Dto.Response;
 using Api.Premanager.Playlist;
 using Dal.Playlist.Repository;
@@ -127,11 +128,25 @@ public class PlaylistController : PublicController
     [HttpDelete("{playlistId:guid}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastUser)]
     public async Task<IActionResult> DeleteAsync(
-        [FromRoute] Guid playlistId, 
+        [FromRoute] Guid playlistId,
         [FromServices] IPlaylistRepository playlistRepository)
     {
         await playlistRepository.DeleteAsync(playlistId);
-        
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Обновить логотип
+    /// </summary>
+    [HttpPatch("{playlistId:guid}/logo")]
+    [ProducesResponseType(204)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastUser)]
+    public async Task<IActionResult> UpdateLogoAsync([FromRoute] Guid playlistId, [FromForm] UploadFileRequest logoFile)
+    {
+        var userId = Guid.Parse(User.Identity!.Name!);
+        await _playlistPremanager.UpdateLogoAsync(userId, playlistId, logoFile);
+
         return NoContent();
     }
 }

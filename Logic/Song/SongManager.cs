@@ -35,14 +35,14 @@ public class SongManager : ISongManager
 
         var file = TagLib.File.Create(new FileAbstraction($"{songFile.Name}.{songFile.Extension}", songFile.Content));
         model.DurationMsec = Convert.ToInt32(file.Properties.Duration.TotalMilliseconds);
-        
+
         var songFileId = await _fileManager.UploadAsync(songFile);
         var logoFileId = await _fileManager.UploadAsync(logoFile);
         model.SongFileId = songFileId;
         model.LogoFileId = logoFileId;
 
         var songId = await _songRepository.InsertAsync(model);
-        
+
         log.ReturnsValue(songId);
         return songId;
     }
@@ -150,5 +150,29 @@ public class SongManager : ISongManager
         user.FavoriteSongList.Remove(song);
 
         await _userRepository.UpdateAsync(user);
+    }
+
+    public async Task UpdateLogoAsync(Guid authorId, Guid songId, FileDal file)
+    {
+        using var log = new MethodLog(authorId, songId, file);
+
+        var song = await _songRepository.GetAsync(songId);
+
+        if (song.AuthorId != authorId)
+        {
+            throw new Exception($"Author with id={authorId} is not an author of track with id={songId}");
+        }
+
+        // if (song.LogoFileId.HasValue)
+        // {
+        //     await _fileManager.DeleteAsync(song.LogoFileId.Value);
+        // }
+
+        var fileId = await _fileManager.UploadAsync(file);
+
+        song.LogoFile = file;
+        song.LogoFileId = fileId;
+
+        await _songRepository.UpdateAsync(song);
     }
 }

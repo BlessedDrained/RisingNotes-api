@@ -15,4 +15,19 @@ public interface IUserManager
     /// Получить лого пользователя
     /// </summary>
     Task<FileDal> GetLogoAsync(Guid userId);
+
+    /// <summary>
+    /// Подписаться на автора
+    /// </summary>
+    Task SubscribeAsync(Guid userId, Guid authorId);
+
+    /// <summary>
+    /// Отписаться от автора
+    /// </summary>
+    Task UnsubscribeAsync(Guid userId, Guid authorId);
+
+    /// <summary>
+    /// Обновить логотип пользователя
+    /// </summary>
+    Task UpdateLogoAsync(Guid userId, FileDal file);
 }

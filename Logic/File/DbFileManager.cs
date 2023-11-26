@@ -65,4 +65,10 @@ public class DbFileManager : IFileManager
         // var fileStorage = _fileStorageFactory.CreateService(file.StorageType);
         // var fileContent = await fileStorage.DownloadFileAsync(id);
     }
+
+    /// <inheritdoc />
+    public Task DeleteAsync(Guid id)
+    {
+        return _fileRepository.DeleteAsync(id);
+    }
 }

@@ -80,4 +80,33 @@ public class UserRepository : Repository<UserDal, Guid>, IUserRepository
 
         return user;
     }
+
+    /// <inheritdoc />
+    public async Task<List<Guid>> GetSubscriptionListAsync(Guid userId)
+    {
+        var subList = await Set
+            .Where(x => x.Id == userId)
+            .Include(x => x.SubscriptionList)
+            .SelectMany(x => x.SubscriptionList)
+            .Select(x => x.Id)
+            .ToListAsync();
+
+        return subList;
+    }
+
+    /// <inheritdoc />
+    public async Task<UserDal> GetWithSubscriptionListAsync(Guid userId)
+    {
+        var user = await Set
+            .Where(x => x.Id == userId)
+            .Include(x => x.SubscriptionList)
+            .SingleOrDefaultAsync();
+
+        if (user == null)
+        {
+            throw new EntityNotFoundException<UserDal>(userId);
+        }
+
+        return user;
+    }
 }

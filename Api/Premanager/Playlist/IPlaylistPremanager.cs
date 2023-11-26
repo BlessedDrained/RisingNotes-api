@@ -1,4 +1,5 @@
-﻿using Api.Controllers.Playlist.Dto.Request;
+﻿using Api.Controllers.File.Dto.Request;
+using Api.Controllers.Playlist.Dto.Request;
 using Api.Controllers.Playlist.Dto.Response;
 
 namespace Api.Premanager.Playlist;
@@ -27,4 +28,9 @@ public interface IPlaylistPremanager
     /// Получить список песен в плейлисте
     /// </summary>
     Task<GetPlaylistSongListResponse> GetSongListAsync(Guid playlistId);
+    
+    /// <summary>
+    /// Обновить логотип
+    /// </summary>
+    Task UpdateLogoAsync(Guid userId, Guid playlistId, UploadFileRequest request);
 }
