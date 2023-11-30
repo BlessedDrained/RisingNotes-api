@@ -56,12 +56,11 @@ public class SubscriptionController : PublicController
     /// <summary>
     /// Получить список подписок пользователя
     /// </summary>
-    [HttpGet("list")]
+    [HttpGet("{userId:guid}/list")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastUser)]
     [ProducesResponseType(typeof(GetSubscriptionListResponse), 200)]
-    public async Task<IActionResult> GetListAsync()
+    public async Task<IActionResult> GetListAsync([FromRoute] Guid userId)
     {
-        var userId = Guid.Parse(User.Identity!.Name!);
         var subList = await _userPremanager.GetSubscriptionListAsync(userId);
 
         return Ok(subList);

@@ -83,12 +83,18 @@ public class AuthorRepository : Repository<AuthorDal, Guid>, IAuthorRepository
     }
 
     /// <inheritdoc />
-    public Task<int> GetSubcriberCountAsync(Guid authorId)
+    public async Task<int> GetSubcriberCountAsync(Guid authorId)
     {
-        var count = Set
+        var author = await Set.SingleOrDefaultAsync(x => x.Id == authorId);
+        if (author == null)
+        {
+            throw new EntityNotFoundException<AuthorDal>(authorId);
+        }
+
+        var count = await Set
             .Where(x => x.Id == authorId)
-            .Select(x => x.SubscribedUserList)
-            .CountAsync();
+            .Select(x => x.SubscribedUserList.Count)
+            .SingleAsync();
 
         return count;
     }

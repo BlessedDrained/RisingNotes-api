@@ -4,6 +4,7 @@ using Dal.BaseUser.Repository;
 using Dal.File;
 using Logic.File;
 using MainLib.Logging;
+using RisingNotesLib.Exceptions;
 
 namespace Logic.User;
 
@@ -34,6 +35,11 @@ public class UserManager : IUserManager
     {
         using var log = new MethodLog(userId);
         var user = await _userRepository.GetAsync(userId);
+        if (!user.LogoFileId.HasValue)
+        {
+            throw new UserHasNoLogoException(userId);
+        }
+        
         var file = await _fileManager.DownloadAsync(user.LogoFileId.Value);
 
         log.ReturnsValue(file);

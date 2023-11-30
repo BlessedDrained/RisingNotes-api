@@ -87,6 +87,12 @@ public class SongManager : ISongManager
         using var log = new MethodLog(songId);
 
         var song = await _songRepository.GetAsync(songId);
+
+        if (!song.LogoFileId.HasValue)
+        {
+            throw new SongHasNoLogoException(songId);
+        }
+        
         var file = await _fileManager.DownloadAsync(song.LogoFileId.Value);
 
         log.ReturnsValue(file);

@@ -5,6 +5,7 @@ using Dal.Song;
 using Dal.Song.Repository;
 using Logic.File;
 using MainLib.Logging;
+using RisingNotesLib.Exceptions;
 
 namespace Logic.Playlist;
 
@@ -87,6 +88,12 @@ public class PlaylistManager : IPlaylistManager
         using var log = new MethodLog(playlistId);
 
         var playlist = await _playlistRepository.GetAsync(playlistId);
+
+        if (!playlist.LogoFileId.HasValue)
+        {
+            throw new PlaylistHasNoLogoException(playlistId);
+        }
+
         var logo = await _fileManager.DownloadAsync(playlist.LogoFileId.Value);
 
         log.ReturnsValue(logo);
