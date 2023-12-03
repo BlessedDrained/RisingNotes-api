@@ -29,7 +29,8 @@ public class SongPublishProfile : Profile
             .ForMember(d => d.GenreList, o => o.MapFrom(s => s.GenreList))
             .ForMember(d => d.VibeList, o => o.MapFrom(s => s.VibeList))
             .ForMember(d => d.LanguageList, o => o.MapFrom(s => s.LanguageList))
-            .ForMember(d => d.Instrumental, o => o.MapFrom(s => s.Instrumental));
+            .ForMember(d => d.Instrumental, o => o.MapFrom(s => s.Instrumental))
+            .ForMember(d => d.VocalGenderList, o => o.MapFrom(s => s.VocalGenderList));
 
         CreateMap<GetPublishRequestListRequest, GetPublishRequestListFilterModel>()
             .ForMember(d => d.OrderByStatusDescending, o => o.MapFrom(s => s.OrderByStatusDescending))

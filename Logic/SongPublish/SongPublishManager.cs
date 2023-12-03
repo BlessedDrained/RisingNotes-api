@@ -58,6 +58,13 @@ public class SongPublishManager : ISongPublishManager
             request.Name = newRequest.Name;
         }
 
+        request.LanguageList = newRequest.LanguageList;
+        request.VocalGenderList = newRequest.VocalGenderList;
+        request.GenreList = newRequest.GenreList;
+        request.VibeList = newRequest.VibeList;
+        request.Instrumental = newRequest.Instrumental;
+
+
         if (newRequest.SongFile != null)
         {
             var songFileId = await _fileManager.UploadAsync(newRequest.SongFile);

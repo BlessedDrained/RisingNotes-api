@@ -1,6 +1,10 @@
 ﻿using Api.Controllers.Profile.Dto.Request;
+using Api.Controllers.Profile.Dto.Response;
 using Api.Premanager.Auth;
+using MainLib.Api.Auth.Constant;
 using MainLib.Api.Controller;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers.Profile;
@@ -31,5 +35,18 @@ public class ProfileController : PublicController
         await _profilePremanager.RegisterAsync(registerRequest);
 
         return Created("", null);
+    }
+
+    /// <summary>
+    /// Получить информацию профиля пользователя
+    /// </summary>
+    [HttpGet("{identityUserId:guid}")]
+    [ProducesResponseType(typeof(GetProfileResponse), 200)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastUser)]
+    public async Task<IActionResult> GetProfileAsync([FromRoute] Guid identityUserId)
+    {
+        var response = await _profilePremanager.GetProfileAsync(identityUserId);
+
+        return Ok(response);
     }
 }

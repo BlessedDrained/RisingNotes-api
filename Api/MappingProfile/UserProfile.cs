@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using Api.Controllers.Profile.Dto.Response;
+using AutoMapper;
+using RisingNotesLib.Models;
 
 namespace Api.MappingProfile;
 
@@ -22,5 +24,8 @@ public class UserProfile : Profile
         //     .ForMember(d => d.IdentityUserId, o => o.MapFrom(s => s.IdentityUserId))
         //     .ForMember(d => d.UserName, o => o.MapFrom(s => s.UserName))
         //     .ReverseMap();
+
+        CreateMap<AppIdentityUser, GetProfileResponse>()
+            .ForMember(d => d.Email, o => o.MapFrom(s => s.Email));
     }
 }

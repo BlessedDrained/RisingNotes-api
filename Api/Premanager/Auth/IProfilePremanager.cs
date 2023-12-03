@@ -17,4 +17,9 @@ public interface IProfilePremanager
     /// Поменять роль
     /// </summary>
     Task ChangeRoleAsync(string userId, string newRoleName);
+    
+    /// <summary>
+    /// Получить информацию профиля пользователя
+    /// </summary>
+    Task<GetProfileResponse> GetProfileAsync(Guid identityUserId);
 }

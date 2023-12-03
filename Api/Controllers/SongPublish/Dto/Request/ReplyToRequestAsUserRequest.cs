@@ -1,5 +1,6 @@
 ﻿using Api.Controllers.File.Dto.Request;
 using Api.Validation;
+using RisingNotesLib.Enums;
 
 namespace Api.Controllers.SongPublish.Dto.Request;
 
@@ -32,6 +33,11 @@ public record ReplyToRequestAsUserRequest
     /// Список языков
     /// </summary>
     public string[] LanguageList { get; set; } = Array.Empty<string>();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public Gender[] VocalGenderList { get; set; } = Array.Empty<Gender>();
     
     /// <summary>
     /// Является ли инструментальной

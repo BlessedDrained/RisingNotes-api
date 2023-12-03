@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RisingNotesLib.Enums;
 
 namespace Api.Controllers.SongPublish.Dto.Response;
 
@@ -16,7 +17,7 @@ public record GetPublishRequestInfoResponse
     /// Текст песни
     /// </summary>
     public string Lyrics { get; init; }
-    
+
     /// <summary>
     /// Является ли инструментальной
     /// </summary>
@@ -38,10 +39,15 @@ public record GetPublishRequestInfoResponse
     public string[] LanguageList { get; init; } = Array.Empty<string>();
 
     /// <summary>
+    /// 
+    /// </summary>
+    public Gender[] VocalGenderList { get; init; } = Array.Empty<Gender>();
+
+    /// <summary>
     /// Файл с песней
     /// </summary>
     public FileContentResult SongFile { get; init; }
-    
+
     /// <summary>
     /// Файл логотипа
     /// </summary>

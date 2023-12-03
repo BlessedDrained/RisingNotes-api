@@ -74,6 +74,11 @@ public record SongPublishRequestDal : DalModel<Guid>
     public string[] LanguageList { get; set; } = Array.Empty<string>();
 
     /// <summary>
+    /// 
+    /// </summary>
+    public Gender[] VocalGenderList { get; set; } = Array.Empty<Gender>();
+
+    /// <summary>
     /// Идентификатор файла трека
     /// </summary>
     public Guid? SongFileId { get; set; }

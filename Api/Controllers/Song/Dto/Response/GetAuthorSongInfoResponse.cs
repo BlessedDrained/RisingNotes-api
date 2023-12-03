@@ -1,4 +1,6 @@
-﻿namespace Api.Controllers.Song.Dto.Response;
+﻿using RisingNotesLib.Enums;
+
+namespace Api.Controllers.Song.Dto.Response;
 
 /// <summary>
 /// Модель ответа на получение информации о треке
@@ -44,4 +46,9 @@ public record GetAuthorSongInfoResponse
     /// Список настроений
     /// </summary>
     public List<string> VibeList { get; init; } = new();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public List<Gender> VocalGenderList { get; init; } = new();
 }

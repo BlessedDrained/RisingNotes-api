@@ -20,11 +20,6 @@ public record UserDal : DalModel<Guid>
     public string UserName { get; set; }
 
     /// <summary>
-    /// Пол
-    /// </summary>
-    public Gender Gender { get; set; }
-
-    /// <summary>
     /// Избранные треки
     /// </summary>
     public List<SongDal> FavoriteSongList { get; set; } = new();

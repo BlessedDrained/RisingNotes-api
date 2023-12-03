@@ -104,4 +104,18 @@ public class ProfilePremanager : IProfilePremanager
 
         await _userRepository.UpdateAsync(userModel);
     }
+
+    /// <inheritdoc />
+    public async Task<GetProfileResponse> GetProfileAsync(Guid identityUserId)
+    {
+        var user = await _identityUserManager.FindByIdAsync(identityUserId.ToString());
+        if (user == null)
+        {
+            throw new Exception("Profile not found");
+        }
+
+        var profile = _mapper.Map<GetProfileResponse>(user);
+        
+        return profile;
+    }
 }

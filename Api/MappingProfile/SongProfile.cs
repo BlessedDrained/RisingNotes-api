@@ -28,7 +28,8 @@ public class SongProfile : Profile
             .ForMember(d => d.LanguageList, o => o.MapFrom(s => s.LanguageList))
             .ForMember(d => d.VibeList, o => o.MapFrom(s => s.VibeList))
             .ForMember(d => d.Instrumental, o => o.MapFrom(s => s.Instrumental))
-            .ForMember(d => d.AuditionCount, o => o.Ignore());
+            .ForMember(d => d.AuditionCount, o => o.Ignore())
+            .ForMember(d => d.VocalGenderList, o => o.MapFrom(s => s.VocalGenderList));
 
         CreateMap<SongDal, GetAuthorSongInfoResponse>()
             .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
@@ -38,14 +39,16 @@ public class SongProfile : Profile
             .ForMember(d => d.AuditionCount, o => o.MapFrom(s => s.AuditionCount))
             .ForMember(d => d.GenreList, o => o.MapFrom(s => s.GenreList))
             .ForMember(d => d.VibeList, o => o.MapFrom(s => s.VibeList))
-            .ForMember(d => d.LanguageList, o => o.MapFrom(s => s.LanguageList));
+            .ForMember(d => d.LanguageList, o => o.MapFrom(s => s.LanguageList))
+            .ForMember(d => d.VocalGenderList, o => o.MapFrom(s => s.VocalGenderList));
 
         CreateMap<SongDal, GetWithAuthorSongInfoResponse>()
             .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
             .ForMember(d => d.AuthorId, o => o.MapFrom(s => s.AuthorId))
             .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
             .ForMember(d => d.DurationMs, o => o.MapFrom(s => s.DurationMsec))
-            .ForMember(d => d.AuthorName, o => o.MapFrom(s => s.Author.Name));
+            .ForMember(d => d.AuthorName, o => o.MapFrom(s => s.Author.Name))
+            .ForMember(d => d.VocalGenderList, o => o.MapFrom(s => s.VocalGenderList));
 
         CreateMap<GetSongListRequest, GetSongListFilterModel>()
             .ForMember(d => d.Gender, o => o.MapFrom(s => s.Gender))

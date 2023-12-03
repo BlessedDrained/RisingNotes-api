@@ -13,7 +13,7 @@ public class SongRepository : Repository<SongDal, Guid>, ISongRepository
     public SongRepository(ApplicationContext context) : base(context)
     {
     }
-    
+
     /// <inheritdoc />
     public async Task<SongDal> GetWithAuthorAsync(Guid songId)
     {
@@ -56,10 +56,7 @@ public class SongRepository : Repository<SongDal, Guid>, ISongRepository
 
         if (filter.Gender.HasValue)
         {
-            songList = songList
-                .Include(x => x.Author)
-                .ThenInclude(x => x.User)
-                .Where(x => x.Author.User.Gender == filter.Gender);
+            songList = songList.Where(x => x.VocalGenderList.Contains(filter.Gender.Value));
         }
 
         if (filter.TrackDurationRange != null)

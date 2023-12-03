@@ -4,6 +4,7 @@ using Dal.Comment;
 using Dal.File;
 using Dal.Playlist;
 using MainLib.Dal.Model.Base;
+using RisingNotesLib.Enums;
 
 namespace Dal.Song;
 
@@ -36,7 +37,12 @@ public record SongDal : DalModel<Guid>
     /// Список языков
     /// </summary>
     public string[] LanguageList { get; set; } = Array.Empty<string>();
-    
+
+    /// <summary>
+    /// Список полов исполнителей
+    /// </summary>
+    public Gender[] VocalGenderList { get; set; }
+
     /// <summary>
     /// Является ли инструментальной
     /// </summary>
