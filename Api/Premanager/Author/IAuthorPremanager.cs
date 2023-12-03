@@ -47,4 +47,9 @@ public interface IAuthorPremanager
     /// Получить количество подписчиков автора
     /// </summary>
     Task<GetSubscriberCountResponse> GetSubscriberCountAsync(Guid authorId);
+
+    /// <summary>
+    /// Обновить информацию об авторе
+    /// </summary>
+    Task UpdateAsync(Guid authorId, UpdateAuthorRequest request);
 }

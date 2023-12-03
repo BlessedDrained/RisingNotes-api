@@ -18,4 +18,9 @@ public interface ISongRepository : IRepository<SongDal, Guid>
     /// Получить список треков по фильтрам
     /// </summary>
     Task<List<SongDal>> GetListAsync(GetSongListFilterModel filter);
+
+    /// <summary>
+    /// Получить трек с информацией об авторе
+    /// </summary>
+    Task<SongDal> GetWithAuthorAsync(Guid songId);
 }

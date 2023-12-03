@@ -12,7 +12,7 @@ public interface IUserPremanager
     /// <summary>
     /// Получить список информации о плейлисте избранное
     /// </summary>
-    Task<List<GetSongInfoResponse>> GetFavoriteSongInfoListAsync(Guid userId);
+    Task<List<GetWithAuthorSongInfoResponse>> GetFavoriteSongInfoListAsync(Guid userId);
 
     /// <summary>
     /// Получить список подписок пользователя

@@ -26,7 +26,7 @@ public class UserPremanager : IUserPremanager
         _userManager = userManager;
     }
 
-    public Task<List<GetSongInfoResponse>> GetFavoriteSongInfoListAsync(Guid userId)
+    public Task<List<GetWithAuthorSongInfoResponse>> GetFavoriteSongInfoListAsync(Guid userId)
     {
         throw new NotImplementedException();
     }

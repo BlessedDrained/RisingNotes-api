@@ -30,4 +30,9 @@ public interface IUserManager
     /// Обновить логотип пользователя
     /// </summary>
     Task UpdateLogoAsync(Guid userId, FileDal file);
+
+    /// <summary>
+    /// Обновить имя пользователя
+    /// </summary>
+    Task UpdateUserNameAsync(Guid userId, string userName);
 }

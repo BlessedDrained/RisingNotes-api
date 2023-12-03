@@ -91,4 +91,9 @@ public record SongDal : DalModel<Guid>
     /// Список комментариев
     /// </summary>
     public List<CommentDal> CommentList { get; set; } = new();
+
+    /// <summary>
+    /// Количество прослушиваний
+    /// </summary>
+    public int AuditionCount { get; set; }
 }

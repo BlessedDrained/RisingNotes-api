@@ -27,13 +27,18 @@ public class SongProfile : Profile
             .ForMember(d => d.GenreList, o => o.MapFrom(s => s.GenreList))
             .ForMember(d => d.LanguageList, o => o.MapFrom(s => s.LanguageList))
             .ForMember(d => d.VibeList, o => o.MapFrom(s => s.VibeList))
-            .ForMember(d => d.Instrumental, o => o.MapFrom(s => s.Instrumental));
+            .ForMember(d => d.Instrumental, o => o.MapFrom(s => s.Instrumental))
+            .ForMember(d => d.AuditionCount, o => o.Ignore());
 
-        CreateMap<SongDal, GetSongInfoResponse>()
+        CreateMap<SongDal, GetAuthorSongInfoResponse>()
             .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
             .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
             .ForMember(d => d.DurationMs, o => o.MapFrom(s => s.DurationMsec))
-            .ForMember(d => d.AuthorId, o => o.MapFrom(s => s.AuthorId));
+            .ForMember(d => d.AuthorId, o => o.MapFrom(s => s.AuthorId))
+            .ForMember(d => d.AuditionCount, o => o.MapFrom(s => s.AuditionCount))
+            .ForMember(d => d.GenreList, o => o.MapFrom(s => s.GenreList))
+            .ForMember(d => d.VibeList, o => o.MapFrom(s => s.VibeList))
+            .ForMember(d => d.LanguageList, o => o.MapFrom(s => s.LanguageList));
 
         CreateMap<SongDal, GetWithAuthorSongInfoResponse>()
             .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))

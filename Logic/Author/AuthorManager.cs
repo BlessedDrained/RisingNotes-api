@@ -68,4 +68,34 @@ public class AuthorManager : IAuthorManager
         log.ReturnsValue(songInfoList);
         return songInfoList;
     }
+
+    /// <inheritdoc />
+    public async Task UpdateAsync(Guid authorId, AuthorDal newAuthor)
+    {
+        using var log = new MethodLog(authorId, newAuthor);
+
+        var author = await _authorRepository.GetAsync(authorId);
+
+        if (newAuthor.About != null)
+        {
+            author.About = newAuthor.About;
+        }
+
+        if (newAuthor.VkLink != null)
+        {
+            author.VkLink = newAuthor.VkLink;
+        }
+
+        if (newAuthor.YaMusicLink != null)
+        {
+            author.YaMusicLink = newAuthor.YaMusicLink;
+        }
+
+        if (newAuthor.WebSiteLink != null)
+        {
+            author.WebSiteLink = newAuthor.WebSiteLink;
+        }
+
+        await _authorRepository.UpdateAsync(author);
+    }
 }

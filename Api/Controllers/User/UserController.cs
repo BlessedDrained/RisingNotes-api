@@ -1,7 +1,6 @@
-﻿using System.Numerics;
-using Api.Controllers.File.Dto.Request;
+﻿using Api.Controllers.File.Dto.Request;
+using Api.Controllers.User.Dto.Request;
 using Api.Premanager.User;
-using Dal.Author;
 using Logic.Logo;
 using Logic.User;
 using MainLib.Api.Auth.Constant;
@@ -56,8 +55,6 @@ public class UserController : PublicController
     /// <summary>
     /// Обновить логотип
     /// </summary>
-    /// <param name="userId"></param>
-    /// <returns></returns>
     [HttpPatch("logo")]
     [ProducesResponseType(204)]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastUser)]
@@ -65,6 +62,20 @@ public class UserController : PublicController
     {
         var userId = Guid.Parse(User.Identity!.Name!);
         await _userPremanager.UpdateLogoAsync(userId, logoFile);
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Обновить информацию о пользователе
+    /// </summary>
+    [HttpPatch]
+    [ProducesResponseType(204)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastUser)]
+    public async Task<IActionResult> UpdateUserNameAsync([FromBody] UpdateUserNameRequest request)
+    {
+        var userId = Guid.Parse(User.Identity!.Name!);
+        await _userManager.UpdateUserNameAsync(userId, request.UserName);
 
         return NoContent();
     }

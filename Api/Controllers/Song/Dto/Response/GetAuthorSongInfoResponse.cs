@@ -3,7 +3,7 @@
 /// <summary>
 /// Модель ответа на получение информации о треке
 /// </summary>
-public record GetSongInfoResponse
+public record GetAuthorSongInfoResponse
 {
     /// <summary>
     /// Идентификатор
@@ -24,4 +24,24 @@ public record GetSongInfoResponse
     /// Продолжительность трека в секундах
     /// </summary>
     public int DurationMs { get; init; }
+    
+    /// <summary>
+    /// Количество прослушиваний
+    /// </summary>
+    public int AuditionCount { get; init; }
+
+    /// <summary>
+    /// Список жанров
+    /// </summary>
+    public List<string> GenreList { get; init; } = new();
+
+    /// <summary>
+    /// Список языков
+    /// </summary>
+    public List<string> LanguageList { get; init; } = new();
+
+    /// <summary>
+    /// Список настроений
+    /// </summary>
+    public List<string> VibeList { get; init; } = new();
 }

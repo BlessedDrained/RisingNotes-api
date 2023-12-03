@@ -27,6 +27,8 @@ public class UserManager : IUserManager
     /// <inheritdoc />
     public Task<Guid> CreateAsync(UserDal user)
     {
+        using var log = new MethodLog(user);
+        
         return _userRepository.InsertAsync(user);
     }
 
@@ -39,7 +41,7 @@ public class UserManager : IUserManager
         {
             throw new UserHasNoLogoException(userId);
         }
-        
+
         var file = await _fileManager.DownloadAsync(user.LogoFileId.Value);
 
         log.ReturnsValue(file);
@@ -85,7 +87,7 @@ public class UserManager : IUserManager
     public async Task UpdateLogoAsync(Guid userId, FileDal file)
     {
         using var log = new MethodLog(userId, file);
-        
+
         var user = await _userRepository.GetAsync(userId);
 
         // if (user.LogoFileId.HasValue)
@@ -98,6 +100,22 @@ public class UserManager : IUserManager
         user.LogoFile = file;
         user.LogoFileId = fileId;
 
+        await _userRepository.UpdateAsync(user);
+    }
+
+    /// <inheritdoc />
+    public async Task UpdateUserNameAsync(Guid userId, string userName)
+    {
+        using var log = new MethodLog(userId, userName);
+
+        var nameAlreadyUsed = await _userRepository.ExistsAsync(x => x.UserName == userName);
+        if (nameAlreadyUsed)
+        {
+            throw new Exception($"Username={userName} is already taken");
+        }
+
+        var user = await _userRepository.GetAsync(userId);
+        user.UserName = userName;
         await _userRepository.UpdateAsync(user);
     }
 }

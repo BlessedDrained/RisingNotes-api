@@ -8,5 +8,5 @@ public record GetAuthorSongInfoListResponse
     /// <summary>
     /// Список информации о песнях
     /// </summary>
-    public List<GetSongInfoResponse> SongInfoList { get; init; } = new();
+    public List<GetAuthorSongInfoResponse> SongInfoList { get; init; } = new();
 }

@@ -13,6 +13,21 @@ public class SongRepository : Repository<SongDal, Guid>, ISongRepository
     public SongRepository(ApplicationContext context) : base(context)
     {
     }
+    
+    /// <inheritdoc />
+    public async Task<SongDal> GetWithAuthorAsync(Guid songId)
+    {
+        var song = await Set
+            .Include(x => x.Author)
+            .SingleOrDefaultAsync(x => x.Id == songId);
+
+        if (song == null)
+        {
+            throw new EntityNotFoundException<SongDal>(songId);
+        }
+
+        return song;
+    }
 
     /// <inheritdoc />
     public async Task<SongDal> GetFullAsync(Guid songId)

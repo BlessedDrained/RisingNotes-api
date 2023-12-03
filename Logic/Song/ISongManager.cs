@@ -63,4 +63,9 @@ public interface ISongManager
     /// Обновить логотип пользователя
     /// </summary>
     Task UpdateLogoAsync(Guid authorId, Guid songId, FileDal file);
+
+    /// <summary>
+    /// Получить количество прослуишиваний трека
+    /// </summary>
+    Task<int> GetAuditionCountAsync(Guid songId);
 }

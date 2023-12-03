@@ -54,7 +54,8 @@ public class SongPublishProfile : Profile
             .ForMember(d => d.VibeList, o => o.MapFrom(s => s.VibeList))
             .ForMember(d => d.LanguageList, o => o.MapFrom(s => s.LanguageList))
             .ForMember(d => d.GenreList, o => o.MapFrom(s => s.GenreList))
-            .ForMember(d => d.Instrumental, o => o.MapFrom(s => s.Instrumental));
+            .ForMember(d => d.Instrumental, o => o.MapFrom(s => s.Instrumental))
+            .ForMember(d => d.AuditionCount, o => o.Ignore());
 
         CreateMap<ReplyToRequestAsUserRequest, SongPublishRequestDal>()
             .ForMember(d => d.SongFile, o => o.MapFrom(s => s.SongFile))

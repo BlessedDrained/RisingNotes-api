@@ -49,13 +49,13 @@ public class SongPremanager : ISongPremanager
     }
 
     /// <inheritdoc />
-    public async Task<GetSongInfoResponse> GetSongInfoAsync(Guid songId)
+    public async Task<GetWithAuthorSongInfoResponse> GetSongInfoAsync(Guid songId)
     {
         using var log = new MethodLog(songId);
 
         var songInfo = await _songManager.GetSongInfoAsync(songId);
 
-        var response = _mapper.Map<GetSongInfoResponse>(songInfo);
+        var response = _mapper.Map<GetWithAuthorSongInfoResponse>(songInfo);
 
         log.ReturnsValue(response);
         return response;
@@ -68,7 +68,7 @@ public class SongPremanager : ISongPremanager
 
         var authorSongInfoList = await _songManager.GetAuthorSongInfoListAsync(authorId);
 
-        var responseList = _mapper.Map<List<GetSongInfoResponse>>(authorSongInfoList);
+        var responseList = _mapper.Map<List<GetAuthorSongInfoResponse>>(authorSongInfoList);
         var response = new GetAuthorSongInfoListResponse()
         {
             SongInfoList = responseList
@@ -102,7 +102,7 @@ public class SongPremanager : ISongPremanager
 
         var songList = await _songRepository.GetListAsync(filter);
 
-        var responseList = _mapper.Map<List<GetSongInfoResponse>>(songList);
+        var responseList = _mapper.Map<List<GetWithAuthorSongInfoResponse>>(songList);
         var response = new GetSongListResponse()
         {
             SongList = responseList
@@ -119,5 +119,19 @@ public class SongPremanager : ISongPremanager
 
         var file = _mapper.Map<FileDal>(request);
         await _songManager.UpdateLogoAsync(authorId, songId, file);
+    }
+
+    /// <inheritdoc />
+    public async Task<GetAuditionCountResponse> GetAuditionCountAsync(Guid songId)
+    {
+        using var log = new MethodLog(songId);
+
+        var auditionCount = await _songManager.GetAuditionCountAsync(songId);
+
+        var response = new GetAuditionCountResponse()
+        {
+            AuditionCount = auditionCount
+        };
+        return response;
     }
 }

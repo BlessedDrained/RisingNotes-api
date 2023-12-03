@@ -16,7 +16,7 @@ public interface ISongPremanager
     /// <summary>
     /// Получить информацию о треке
     /// </summary>
-    Task<GetSongInfoResponse> GetSongInfoAsync(Guid songId);
+    Task<GetWithAuthorSongInfoResponse> GetSongInfoAsync(Guid songId);
 
     /// <summary>
     /// Получить список информации о треках автора
@@ -37,4 +37,9 @@ public interface ISongPremanager
     /// Обновить логотип
     /// </summary>
     Task UpdateLogoAsync(Guid authorId, Guid songId, UploadFileRequest request);
+
+    /// <summary>
+    /// Получить количество прослушиваний песни
+    /// </summary>
+    Task<GetAuditionCountResponse> GetAuditionCountAsync(Guid songId);
 }

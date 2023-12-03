@@ -92,7 +92,7 @@ public class AuthorPremanager : IAuthorPremanager
 
         var songInfoList = await _authorManager.GetAuthorSongInfoListAsync(authorId);
 
-        var responseList = _mapper.Map<List<GetSongInfoResponse>>(songInfoList);
+        var responseList = _mapper.Map<List<GetAuthorSongInfoResponse>>(songInfoList);
         var response = new GetAuthorSongInfoListResponse()
         {
             SongInfoList = responseList
@@ -115,5 +115,14 @@ public class AuthorPremanager : IAuthorPremanager
         };
 
         return response;
+    }
+
+    /// <inheritdoc />
+    public async Task UpdateAsync(Guid authorId, UpdateAuthorRequest request)
+    {
+        using var log = new MethodLog(request);
+
+        var author = _mapper.Map<AuthorDal>(request);
+        await _authorManager.UpdateAsync(authorId, author);
     }
 }

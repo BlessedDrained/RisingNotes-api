@@ -17,4 +17,9 @@ public interface IAuthorManager
     /// Получить список треков автора
     /// </summary>
     Task<List<SongDal>> GetAuthorSongInfoListAsync(Guid authorId);
+
+    /// <summary>
+    /// Обновить информацию об авторе
+    /// </summary>
+    Task UpdateAsync(Guid authorId, AuthorDal newAuthor);
 }

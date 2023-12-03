@@ -19,14 +19,34 @@ public record GetWithAuthorSongInfoResponse
     /// Продолжительность трека в секундах
     /// </summary>
     public int DurationMs { get; init; }
-    
+
     /// <summary>
     /// Идентификатор автора
     /// </summary>
     public Guid AuthorId { get; init; }
-    
+
     /// <summary>
     /// Имя автора
     /// </summary>
     public string AuthorName { get; init; }
+
+    /// <summary>
+    /// Количество прослушиваний
+    /// </summary>
+    public int AuditionCount { get; init; }
+
+    /// <summary>
+    /// Список жанров
+    /// </summary>
+    public List<string> GenreList { get; init; } = new();
+
+    /// <summary>
+    /// Список языков
+    /// </summary>
+    public List<string> LanguageList { get; init; } = new();
+
+    /// <summary>
+    /// Список настроений
+    /// </summary>
+    public List<string> VibeList { get; init; } = new();
 }

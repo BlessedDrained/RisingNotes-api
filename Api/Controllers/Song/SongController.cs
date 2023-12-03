@@ -58,7 +58,7 @@ public class SongController : PublicController
     /// Получить информацию о треке
     /// </summary>
     [HttpGet("{songId:guid}")]
-    [ProducesResponseType(typeof(GetSongInfoResponse), 200)]
+    [ProducesResponseType(typeof(GetWithAuthorSongInfoResponse), 200)]
     public async Task<IActionResult> GetInfoAsync([FromRoute] Guid songId)
     {
         var response = await _songPremanager.GetSongInfoAsync(songId);
@@ -127,5 +127,18 @@ public class SongController : PublicController
         await _songPremanager.UpdateLogoAsync(authorId, songId, logoFile);
 
         return NoContent();
+    }
+
+
+    /// <summary>
+    /// Получить количество прослушиваний песни
+    /// </summary>
+    [HttpGet("{songId:guid}/audition/count")]
+    [ProducesResponseType(typeof(GetAuditionCountResponse), 200)]
+    public async Task<IActionResult> GetAuditionCountAsync([FromRoute] Guid songId)
+    {
+        var response = await _songPremanager.GetAuditionCountAsync(songId);
+
+        return Ok(response);
     }
 }

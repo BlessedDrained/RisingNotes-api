@@ -52,7 +52,7 @@ public class SongManager : ISongManager
     {
         using var log = new MethodLog(songId);
 
-        var songInfo = await _songRepository.GetAsync(songId);
+        var songInfo = await _songRepository.GetWithAuthorAsync(songId);
 
         log.ReturnsValue(songInfo);
         return songInfo;
@@ -77,6 +77,10 @@ public class SongManager : ISongManager
         var song = await _songRepository.GetAsync(songId);
         var file = await _fileManager.DownloadAsync(song.SongFileId);
 
+        // добавляем прослушивание при получении
+        song.AuditionCount++;
+        await _songRepository.UpdateAsync(song);
+
         log.ReturnsValue(file);
         return file;
     }
@@ -92,7 +96,7 @@ public class SongManager : ISongManager
         {
             throw new SongHasNoLogoException(songId);
         }
-        
+
         var file = await _fileManager.DownloadAsync(song.LogoFileId.Value);
 
         log.ReturnsValue(file);
@@ -180,5 +184,14 @@ public class SongManager : ISongManager
         song.LogoFileId = fileId;
 
         await _songRepository.UpdateAsync(song);
+    }
+
+    /// <inheritdoc />
+    public async Task<int> GetAuditionCountAsync(Guid songId)
+    {
+        using var log = new MethodLog(songId);
+        var song = await _songRepository.GetAsync(songId);
+
+        return song.AuditionCount;
     }
 }

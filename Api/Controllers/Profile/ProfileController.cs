@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Api.Controllers.Profile.Dto.Request;
+﻿using Api.Controllers.Profile.Dto.Request;
 using Api.Premanager.Auth;
 using MainLib.Api.Controller;
 using Microsoft.AspNetCore.Mvc;
@@ -32,19 +31,5 @@ public class ProfileController : PublicController
         await _profilePremanager.RegisterAsync(registerRequest);
 
         return Created("", null);
-    }
-
-    /// <summary>
-    /// Изменить роль пользователя
-    /// </summary>
-    /// <returns></returns>
-    [HttpPatch("{identityUserId:guid}/role")]
-    [ProducesResponseType(204)]
-    [Obsolete]
-    public async Task<IActionResult> ChangeRoleAsync([FromRoute] Guid identityUserId, [FromBody, Required] ChangeRoleRequest request)
-    {
-        await _profilePremanager.ChangeRoleAsync(identityUserId.ToString(), request.NewRoleName);
-        
-        return NoContent();
     }
 }
