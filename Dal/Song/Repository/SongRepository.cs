@@ -54,6 +54,12 @@ public class SongRepository : Repository<SongDal, Guid>, ISongRepository
             return songList.ToListAsync();
         }
 
+        if (filter.NamePart != null)
+        {
+            var kek = filter.NamePart.ToLower();
+            songList = songList.Where(x => x.Name.ToLower().Contains(kek));
+        }
+
         if (filter.Gender.HasValue)
         {
             songList = songList.Where(x => x.VocalGenderList.Contains(filter.Gender.Value));

@@ -123,6 +123,20 @@ public class PlaylistController : PublicController
     }
 
     /// <summary>
+    /// Обновить плейлист
+    /// </summary>
+    /// <returns></returns>
+    [HttpPatch("{playlistId:guid}")]
+    [ProducesResponseType(204)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastUser)]
+    public async Task<IActionResult> UpdateAsync([FromRoute] Guid playlistId, [FromBody] UpdatePlaylistRequest request)
+    {
+        await _playlistPremanager.UpdateAsync(playlistId, request);
+        
+        return NoContent();
+    }
+    
+    /// <summary>
     /// Удалить плейлист
     /// </summary>
     [HttpDelete("{playlistId:guid}")]
@@ -148,5 +162,27 @@ public class PlaylistController : PublicController
         await _playlistPremanager.UpdateLogoAsync(userId, playlistId, logoFile);
 
         return NoContent();
+    }
+
+    /// <summary>
+    /// Получить список плейлистов по фильтрам
+    /// </summary>
+    [HttpGet("list")]
+    [ProducesResponseType(typeof(GetPlaylistListResponse), 200)]
+    public async Task<IActionResult> GetListAsync([FromQuery] GetPlaylistListRequest request)
+    {
+        Guid? userId;
+        if (User.Identity!.Name == null)
+        {
+            userId = null;
+        }
+        else
+        {
+            userId = Guid.Parse(User.Identity.Name);
+        }
+        
+        var response = await _playlistPremanager.GetListAsync(userId, request);
+
+        return Ok(response);
     }
 }

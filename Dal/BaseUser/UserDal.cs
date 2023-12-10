@@ -4,7 +4,6 @@ using Dal.File;
 using Dal.Playlist;
 using Dal.Song;
 using MainLib.Dal.Model.Base;
-using RisingNotesLib.Enums;
 using RisingNotesLib.Models;
 
 namespace Dal.BaseUser;

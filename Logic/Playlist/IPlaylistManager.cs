@@ -46,4 +46,9 @@ public interface IPlaylistManager
     /// Обновить логотип
     /// </summary>
     Task UpdateLogoAsync(Guid userId, Guid playlistId, FileDal file);
+
+    /// <summary>
+    /// Обновить плейлист
+    /// </summary>
+    Task UpdateAsync(Guid playlistId, PlaylistDal newPlaylist);
 }

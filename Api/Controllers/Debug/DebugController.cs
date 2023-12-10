@@ -12,7 +12,6 @@ using MainLib.Dal.Exception;
 using MainLib.Logging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using RisingNotesLib.Enums;
 using RisingNotesLib.Exceptions;
 
 namespace Api.Controllers.Debug;

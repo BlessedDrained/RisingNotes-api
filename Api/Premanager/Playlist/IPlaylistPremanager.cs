@@ -33,4 +33,14 @@ public interface IPlaylistPremanager
     /// Обновить логотип
     /// </summary>
     Task UpdateLogoAsync(Guid userId, Guid playlistId, UploadFileRequest request);
+
+    /// <summary>
+    /// Получить список плейлистов по фильтрам
+    /// </summary>
+    Task<GetPlaylistListResponse> GetListAsync(Guid? userId, GetPlaylistListRequest request);
+
+    /// <summary>
+    /// Обновить плейлист
+    /// </summary>
+    Task UpdateAsync(Guid playlistId, UpdatePlaylistRequest request);
 }

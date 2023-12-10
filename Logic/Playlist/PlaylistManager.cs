@@ -124,4 +124,22 @@ public class PlaylistManager : IPlaylistManager
 
         await _playlistRepository.UpdateAsync(playlist);
     }
+
+    /// <inheritdoc />
+    public async Task UpdateAsync(Guid playlistId, PlaylistDal newPlaylist)
+    {
+        var playlist = await _playlistRepository.GetAsync(playlistId);
+
+        if (newPlaylist.Name != null)
+        {
+            playlist.Name = newPlaylist.Name;
+        }
+
+        if (newPlaylist.IsPrivate != playlist.IsPrivate)
+        {
+            playlist.IsPrivate = newPlaylist.IsPrivate;
+        }
+
+        await _playlistRepository.UpdateAsync(playlist);
+    }
 }

@@ -2,6 +2,7 @@
 using MainLib.Dal.Exception;
 using MainLib.Dal.Repository.Base;
 using Microsoft.EntityFrameworkCore;
+using RisingNotesLib.Models;
 
 namespace Dal.Playlist.Repository;
 
@@ -28,5 +29,21 @@ public class PlaylistRepository : Repository<PlaylistDal, Guid>, IPlaylistReposi
         }
 
         return playlist;
+    }
+
+    /// <inheritdoc />
+    public Task<List<PlaylistDal>> GetListAsync(Guid? userId, GetPlaylistListFilterModel filterModel)
+    {
+        var playlistList = Set.AsQueryable();
+
+        if (filterModel.NamePart != null)
+        {
+            var kek = filterModel.NamePart.ToLower();
+            playlistList = playlistList.Where(x => x.Name.ToLower().Contains(kek));
+        }
+
+        playlistList = playlistList.Where(x => !x.IsPrivate || x.IsPrivate && x.CreatorId == userId);
+
+        return playlistList.ToListAsync();
     }
 }

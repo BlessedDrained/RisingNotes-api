@@ -6,6 +6,11 @@ namespace RisingNotesLib.Models;
 public record GetSongListFilterModel
 {
     /// <summary>
+    /// Часть имени
+    /// </summary>
+    public string NamePart { get; init; }
+    
+    /// <summary>
     /// Список жанров
     /// </summary>
     public CollectionFieldFilter<string> GenreList { get; init; } = new();

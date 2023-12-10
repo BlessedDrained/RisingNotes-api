@@ -1,15 +1,10 @@
-﻿namespace Api.Controllers.Playlist.Dto.Response;
+﻿namespace Api.Controllers.Playlist.Dto.Request;
 
 /// <summary>
-/// Мо
+/// Запрос на обновление плейлиста
 /// </summary>
-public record GetPlaylistInfoResponse
+public record UpdatePlaylistRequest
 {
-    /// <summary>
-    /// Идентификатор
-    /// </summary>
-    public Guid Id { get; init; }
-    
     /// <summary>
     /// Название
     /// </summary>

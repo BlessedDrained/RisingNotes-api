@@ -5,8 +5,11 @@ using Api.Controllers.Song.Dto.Response;
 using AutoMapper;
 using Dal.File;
 using Dal.Playlist;
+using Dal.Playlist.Repository;
 using Logic.Playlist;
 using MainLib.Logging;
+using Microsoft.EntityFrameworkCore.Query.Internal;
+using RisingNotesLib.Models;
 
 namespace Api.Premanager.Playlist;
 
@@ -15,12 +18,14 @@ public class PlaylistPremanager : IPlaylistPremanager
 {
     private readonly IPlaylistManager _playlistManager;
     private readonly IMapper _mapper;
+    private readonly IPlaylistRepository _playlistRepository;
 
     ///
-    public PlaylistPremanager(IPlaylistManager playlistManager, IMapper mapper)
+    public PlaylistPremanager(IPlaylistManager playlistManager, IMapper mapper, IPlaylistRepository playlistRepository)
     {
         _playlistManager = playlistManager;
         _mapper = mapper;
+        _playlistRepository = playlistRepository;
     }
 
     /// <inheritdoc />
@@ -96,5 +101,32 @@ public class PlaylistPremanager : IPlaylistPremanager
 
         var file = _mapper.Map<FileDal>(request);
         await _playlistManager.UpdateLogoAsync(userId, playlistId, file);
+    }
+
+    /// <inheritdoc />
+    public async Task<GetPlaylistListResponse> GetListAsync(Guid? userId, GetPlaylistListRequest request)
+    {
+        using var log = new MethodLog(request);
+
+        var filter = _mapper.Map<GetPlaylistListFilterModel>(request);
+        var playlistList = await _playlistRepository.GetListAsync(userId, filter);
+
+        var responseList = _mapper.Map<List<GetPlaylistInfoResponse>>(playlistList);
+
+        var response = new GetPlaylistListResponse()
+        {
+            PlaylistList = responseList
+        };
+        return response;
+    }
+
+    /// <inheritdoc />
+    public Task UpdateAsync(Guid playlistId, UpdatePlaylistRequest request)
+    {
+        using var log = new MethodLog(request);
+
+        var newPlaylist = _mapper.Map<PlaylistDal>(request);
+        
+        return _playlistManager.UpdateAsync(playlistId, newPlaylist);
     }
 }
