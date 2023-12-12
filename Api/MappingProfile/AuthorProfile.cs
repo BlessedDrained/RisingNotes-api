@@ -31,5 +31,11 @@ public class AuthorProfile : Profile
             .ForMember(d => d.YaMusicLink, o => o.MapFrom(s => s.YaMusicLink))
             .ForMember(d => d.WebSiteLink, o => o.MapFrom(s => s.WebSiteLink))
             .ForMember(d => d.VkLink, o => o.MapFrom(s => s.VkLink));
+
+        CreateMap<UpdateAuthorRequest, AuthorDal>()
+            .ForMember(d => d.About, o => o.MapFrom(s => s.About))
+            .ForMember(d => d.VkLink, o => o.MapFrom(s => s.VkLink))
+            .ForMember(d => d.WebSiteLink, o => o.MapFrom(s => s.WebSiteLink))
+            .ForMember(d => d.VkLink, o => o.MapFrom(s => s.VkLink));
     }
 }
