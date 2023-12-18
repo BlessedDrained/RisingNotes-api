@@ -1,4 +1,5 @@
-﻿using Api.Controllers.File.Dto.Request;
+﻿using Api.Controllers.ExcludedTrack.Dto;
+using Api.Controllers.File.Dto.Request;
 using Api.Controllers.Song.Dto.Response;
 using Api.Controllers.Subscription.Dto.Response;
 using AutoMapper;
@@ -57,8 +58,24 @@ public class UserPremanager : IUserPremanager
     public async Task UpdateLogoAsync(Guid userId, UploadFileRequest request)
     {
         using var log = new MethodLog(userId, request);
-        
+
         var file = _mapper.Map<FileDal>(request);
         await _userManager.UpdateLogoAsync(userId, file);
+    }
+
+    /// <inheritdoc />
+    public async Task<GetExcludedTrackListResponse> GetExcludedTrackListAsync(Guid userId)
+    {
+        using var log = new MethodLog(userId);
+
+        var excludedTrackList = await _userRepository.GetExcludedTrackListAsync(userId);
+
+        var responseList = _mapper.Map<List<GetExcludedTrackInfoResponse>>(excludedTrackList);
+
+        var response = new GetExcludedTrackListResponse()
+        {
+            ExcludedTrackList = responseList
+        };
+        return response;
     }
 }

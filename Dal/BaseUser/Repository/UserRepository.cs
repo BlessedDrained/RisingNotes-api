@@ -109,4 +109,38 @@ public class UserRepository : Repository<UserDal, Guid>, IUserRepository
 
         return user;
     }
+
+    /// <inheritdoc />
+    public async Task<UserDal> GetWithExcludedListAsync(Guid userId)
+    {
+        var user = await Set
+            .Where(x => x.Id == userId)
+            .Include(x => x.ExcludedSongList)
+            .SingleOrDefaultAsync();
+
+        if (user == null)
+        {
+            throw new EntityNotFoundException<UserDal>(userId);
+        }
+
+        return user;
+    }
+
+    /// <inheritdoc />
+    public async Task<List<SongDal>> GetExcludedTrackListAsync(Guid userId)
+    {
+        var excludedTrackList = await Set
+            .Where(x => x.Id == userId)
+            .Include(x => x.ExcludedSongList)
+            .ThenInclude(x => x.Author)
+            .Select(x => x.ExcludedSongList)
+            .SingleOrDefaultAsync();
+
+        if (excludedTrackList == null)
+        {
+            throw new EntityNotFoundException<UserDal>(userId);
+        }
+
+        return excludedTrackList;
+    }
 }

@@ -68,4 +68,14 @@ public interface ISongManager
     /// Получить количество прослуишиваний трека
     /// </summary>
     Task<int> GetAuditionCountAsync(Guid songId);
+
+    /// <summary>
+    /// Добавить трек в исключенные
+    /// </summary>
+    Task ExcludeAsync(Guid userId, Guid songId);
+
+    /// <summary>
+    /// Удалить трек из исключенных
+    /// </summary>
+    Task RemoveFromExcludedAsync(Guid userId, Guid songId);
 }

@@ -1,4 +1,5 @@
-﻿using Api.Controllers.File.Dto.Request;
+﻿using Api.Controllers.ExcludedTrack.Dto;
+using Api.Controllers.File.Dto.Request;
 using Api.Controllers.Song.Dto.Response;
 using Api.Controllers.Subscription.Dto.Response;
 
@@ -23,4 +24,9 @@ public interface IUserPremanager
     /// Обновить логотип
     /// </summary>
     Task UpdateLogoAsync(Guid userId, UploadFileRequest request);
+
+    /// <summary>
+    /// Получить список исключенных треков
+    /// </summary>
+    Task<GetExcludedTrackListResponse> GetExcludedTrackListAsync(Guid userId);
 }

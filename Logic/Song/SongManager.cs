@@ -194,4 +194,31 @@ public class SongManager : ISongManager
 
         return song.AuditionCount;
     }
+
+    /// <inheritdoc />
+    public async Task ExcludeAsync(Guid userId, Guid songId)
+    {
+        using var log = new MethodLog(userId, songId);
+
+        var user = await _userRepository.GetAsync(userId);
+        var song = await _songRepository.GetAsync(songId);
+
+        user.ExcludedSongList.Add(song);
+
+        await _userRepository.UpdateAsync(user);
+    }
+
+
+    /// <inheritdoc />
+    public async Task RemoveFromExcludedAsync(Guid userId, Guid songId)
+    {
+        using var log = new MethodLog(userId, songId);
+
+        var user = await _userRepository.GetWithExcludedListAsync(userId);
+        var song = await _songRepository.GetAsync(songId);
+
+        user.ExcludedSongList.Remove(song);
+
+        await _userRepository.UpdateAsync(user);
+    }
 }

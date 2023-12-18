@@ -36,7 +36,15 @@ public interface IUserRepository : IRepository<UserDal, Guid>
     /// <summary>
     /// Получить пользователя со списком подписок
     /// </summary>
-    /// <param name="userId"></param>
-    /// <returns></returns>
     Task<UserDal> GetWithSubscriptionListAsync(Guid userId);
+
+    /// <summary>
+    /// Получить пользователя со списком исключенных треков
+    /// </summary>
+    Task<UserDal> GetWithExcludedListAsync(Guid userId);
+
+    /// <summary>
+    /// Получить список исключенных треков
+    /// </summary>
+    Task<List<SongDal>> GetExcludedTrackListAsync(Guid userId);
 }

@@ -36,6 +36,12 @@ public class AuthorProfile : Profile
             .ForMember(d => d.About, o => o.MapFrom(s => s.About))
             .ForMember(d => d.VkLink, o => o.MapFrom(s => s.VkLink))
             .ForMember(d => d.WebSiteLink, o => o.MapFrom(s => s.WebSiteLink))
-            .ForMember(d => d.VkLink, o => o.MapFrom(s => s.VkLink));
+            .ForMember(d => d.VkLink, o => o.MapFrom(s => s.VkLink))
+            .ForMember(d => d.Id, o => o.Ignore())
+            .ForMember(d => d.SongList, o => o.Ignore())
+            .ForMember(d => d.SubscribedUserList, o => o.Ignore())
+            .ForMember(d => d.User, o => o.Ignore())
+            .ForMember(d => d.UserId, o => o.Ignore())
+            .ForMember(x => x.Name, o => o.Ignore());
     }
 }

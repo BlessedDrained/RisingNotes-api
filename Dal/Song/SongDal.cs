@@ -94,6 +94,11 @@ public record SongDal : DalModel<Guid>
     public List<UserDal> AddedToFavoriteUserList { get; set; } = new();
 
     /// <summary>
+    /// Список пользователей, добавивших трек в исключенные
+    /// </summary>
+    public List<UserDal> ExcludedUserList { get; set; } = new();
+
+    /// <summary>
     /// Список комментариев
     /// </summary>
     public List<CommentDal> CommentList { get; set; } = new();

@@ -1,4 +1,5 @@
-﻿using Api.Controllers.Song.Dto.Request;
+﻿using Api.Controllers.ExcludedTrack.Dto;
+using Api.Controllers.Song.Dto.Request;
 using Api.Controllers.Song.Dto.Response;
 using AutoMapper;
 using Dal.Song;
@@ -29,7 +30,8 @@ public class SongProfile : Profile
             .ForMember(d => d.VibeList, o => o.MapFrom(s => s.VibeList))
             .ForMember(d => d.Instrumental, o => o.MapFrom(s => s.Instrumental))
             .ForMember(d => d.AuditionCount, o => o.Ignore())
-            .ForMember(d => d.VocalGenderList, o => o.MapFrom(s => s.VocalGenderList));
+            .ForMember(d => d.VocalGenderList, o => o.MapFrom(s => s.VocalGenderList))
+            .ForMember(d => d.ExcludedUserList, o => o.Ignore());
 
         CreateMap<SongDal, GetAuthorSongInfoResponse>()
             .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
@@ -57,5 +59,13 @@ public class SongProfile : Profile
             .ForMember(d => d.VibeList, o => o.MapFrom(s => s.VibeList))
             .ForMember(d => d.GenreList, o => o.MapFrom(s => s.GenreList))
             .ForMember(d => d.TrackDurationRange, o => o.MapFrom(s => s.TrackDurationRange));
+
+        CreateMap<SongDal, GetExcludedTrackInfoResponse>()
+            .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
+            .ForMember(d => d.AuthorId, o => o.MapFrom(s => s.AuthorId))
+            .ForMember(d => d.AuthorName, o => o.MapFrom(s => s.Author.Name))
+            .ForMember(d => d.DurationMs, o => o.MapFrom(s => s.DurationMsec))
+            .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
+            .ForMember(d => d.GenreList, o => o.MapFrom(s => s.GenreList));
     }
 }

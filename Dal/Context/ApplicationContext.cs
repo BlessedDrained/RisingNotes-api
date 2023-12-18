@@ -54,6 +54,14 @@ public class ApplicationContext : IdentityDbContext<AppIdentityUser>
         builder.Entity<UserDal>()
             .HasMany(x => x.SubscriptionList)
             .WithMany(x => x.SubscribedUserList);
+
+        builder.Entity<UserDal>()
+            .HasMany(x => x.ExcludedSongList)
+            .WithMany(x => x.ExcludedUserList);
+
+        builder.Entity<UserDal>()
+            .HasMany(x => x.FavoriteSongList)
+            .WithMany(x => x.AddedToFavoriteUserList);
         
         builder.Entity<SongPublishRequestDal>();
     }

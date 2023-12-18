@@ -39,6 +39,11 @@ public record UserDal : DalModel<Guid>
     public List<AuthorDal> SubscriptionList { get; set; } = new();
 
     /// <summary>
+    /// Список исключенных треков
+    /// </summary>
+    public List<SongDal> ExcludedSongList { get; set; } = new();
+
+    /// <summary>
     /// Нав свойство
     /// </summary>
     public FileDal LogoFile { get; set; }
