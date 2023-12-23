@@ -101,6 +101,7 @@ public class SongPublishManager : ISongPublishManager
 
             await _songRepository.InsertAsync(song);
             request.Song = song;
+            request.Status = PublishRequestStatus.Approved;
             await _repository.UpdateAsync(request);
 
             return;
