@@ -34,4 +34,9 @@ public record GetAuthorInfoResponse
     /// Ссылка на личный сайт
     /// </summary>
     public string WebSiteLink { get; set; }
+    
+    /// <summary>
+    /// Идентификатор пользователя
+    /// </summary>
+    public Guid UserId { get; set; }
 }
