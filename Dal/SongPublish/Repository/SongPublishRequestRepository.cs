@@ -31,16 +31,13 @@ public class SongPublishRequestRepository : Repository<SongPublishRequestDal, Gu
     // }
 
     /// <inheritdoc />
-    public Task<List<SongPublishRequestDal>> GetListAsync(GetPublishRequestListFilterModel filter, bool isAdmin)
+    public Task<List<SongPublishRequestDal>> GetListAsync(GetPublishRequestListFilterModel filter, Guid authorId)
     {
         var result = Set.AsQueryable();
-
-        // if (!isAdmin)
-        // {
-        //     result = result.Where(x => x.Status != PublishRequestStatus.Review);
-        // }
-        result = result.Include(x => x.Author);
         
+        result = result.Include(x => x.Author);
+        result = result.Where(x => x.AuthorId == authorId);
+
         if (filter.OrderByStatusDescending.HasValue)
         {
             result = filter.OrderByStatusDescending.Value

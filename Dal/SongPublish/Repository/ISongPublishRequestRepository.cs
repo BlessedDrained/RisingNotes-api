@@ -13,5 +13,5 @@ public interface ISongPublishRequestRepository : IRepository<SongPublishRequestD
     /// <summary>
     /// Получить список по фильтрам
     /// </summary>
-    Task<List<SongPublishRequestDal>> GetListAsync(GetPublishRequestListFilterModel filter, bool isAdmin);
+    Task<List<SongPublishRequestDal>> GetListAsync(GetPublishRequestListFilterModel filter, Guid authorId);
 }

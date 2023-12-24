@@ -68,12 +68,12 @@ public class SongPublishPremanager : ISongPublishPremanager
     }
 
     /// <inheritdoc />
-    public async Task<GetPublishRequestShortInfoListResponse> GetListAsync(GetPublishRequestListRequest request, bool isAdmin)
+    public async Task<GetPublishRequestShortInfoListResponse> GetListAsync(GetPublishRequestListRequest request, Guid authorId)
     {
-        using var log = new MethodLog(request, isAdmin);
+        using var log = new MethodLog(request, authorId);
         var filter = _mapper.Map<GetPublishRequestListFilterModel>(request);
 
-        var result = await _songPublishRequestRepository.GetListAsync(filter, isAdmin);
+        var result = await _songPublishRequestRepository.GetListAsync(filter, authorId);
 
         var responseList = _mapper.Map<List<GetPublishRequestShortInfoResponse>>(result);
 
@@ -95,6 +95,24 @@ public class SongPublishPremanager : ISongPublishPremanager
         var response = _mapper.Map<GetPublishRequestInfoResponse>(result);
 
         log.ReturnsValue(response);
+        return response;
+    }
+
+    /// <inheritdoc />
+    public async Task<GetPublishRequestShortInfoListResponse> GetForReviewListAsync()
+    {
+        using var log = new MethodLog();
+        var result = await _songPublishRequestRepository
+            .GetListAsync(x => x.Status == PublishRequestStatus.Review);
+
+        var responseList = _mapper.Map<List<GetPublishRequestShortInfoResponse>>(result);
+
+        var response = new GetPublishRequestShortInfoListResponse()
+        {
+            PublishRequestShortInfoList = responseList
+        };
+        log.ReturnsValue(responseList);
+
         return response;
     }
 }

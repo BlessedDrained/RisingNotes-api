@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
+using Dal.File;
 using Dal.Song;
 using Dal.Song.Repository;
 using Dal.SongPublish;
 using Dal.SongPublish.Repository;
 using Logic.File;
-using Logic.Song;
 using MainLib.TagLib;
 using RisingNotesLib.Enums;
 
@@ -17,20 +17,17 @@ public class SongPublishManager : ISongPublishManager
     private readonly IMapper _mapper;
     private readonly ISongRepository _songRepository;
     private readonly IFileManager _fileManager;
-    private readonly ISongManager _songManager;
 
     public SongPublishManager(
         ISongPublishRequestRepository repository,
         IMapper mapper,
         ISongRepository songRepository,
-        IFileManager fileManager,
-        ISongManager songManager)
+        IFileManager fileManager)
     {
         _repository = repository;
         _mapper = mapper;
         _songRepository = songRepository;
         _fileManager = fileManager;
-        _songManager = songManager;
     }
 
     /// <inheritdoc />
@@ -127,5 +124,24 @@ public class SongPublishManager : ISongPublishManager
         }
 
         await _repository.UpdateAsync(request);
+    }
+
+
+    /// <inheritdoc />
+    public async Task<FileDal> GetLogoAsync(Guid requestId)
+    {
+        var request = await _repository.GetAsync(requestId);
+        var file = await _fileManager.DownloadAsync(request.LogoFileId.Value);
+
+        return file;
+    }
+
+    /// <inheritdoc />
+    public async Task<FileDal> GetSongFileAsync(Guid requestId)
+    {
+        var request = await _repository.GetAsync(requestId);
+        var file = await _fileManager.DownloadAsync(request.SongFileId.Value);
+
+        return file;
     }
 }

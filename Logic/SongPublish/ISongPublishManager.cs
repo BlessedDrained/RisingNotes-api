@@ -1,4 +1,5 @@
-﻿using Dal.SongPublish;
+﻿using Dal.File;
+using Dal.SongPublish;
 using RisingNotesLib.Enums;
 
 namespace Logic.SongPublish;
@@ -23,6 +24,16 @@ public interface ISongPublishManager
     /// </summary>
     Task ReplyAsAdminAsync(Guid requestId, PublishRequestStatus status, string comment);
 
+    /// <summary>
+    /// Получить файл логотипа
+    /// </summary>
+    Task<FileDal> GetLogoAsync(Guid requestId);
+
+    /// <summary>
+    /// Получить файл песни
+    /// </summary>
+    Task<FileDal> GetSongFileAsync(Guid requestId);
+    
     // /// <summary>
     // /// Получить список заявок
     // /// </summary>

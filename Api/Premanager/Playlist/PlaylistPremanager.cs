@@ -8,7 +8,6 @@ using Dal.Playlist;
 using Dal.Playlist.Repository;
 using Logic.Playlist;
 using MainLib.Logging;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using RisingNotesLib.Models;
 
 namespace Api.Premanager.Playlist;
