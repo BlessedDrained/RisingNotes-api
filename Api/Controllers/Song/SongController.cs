@@ -86,21 +86,21 @@ public class SongController : PublicController
     [HttpGet("{songId:guid}/logo")]
     [ProducesResponseType(200)]
     public async Task<IActionResult> GetLogoAsync(
-        [FromRoute] Guid songId,
-        [FromQuery] int? width,
-        [FromQuery] int? height,
-        [FromServices] ILogoResizeService logoResizeService)
+        [FromRoute] Guid songId)
+        // [FromQuery] int? width,
+        // [FromQuery] int? height,
+        // [FromServices] ILogoResizeService logoResizeService)
     {
-        if (!width.HasValue && !height.HasValue)
-        {
-            throw new InvalidImageSizeException();
-        }
+        // if (!width.HasValue && !height.HasValue)
+        // {
+        //     throw new InvalidImageSizeException();
+        // }
 
         var logo = await _songManager.GetSongLogoAsync(songId);
-        var resized = await logoResizeService.ResizeAsync(logo, width, height);
+        // var resized = await logoResizeService.ResizeAsync(logo, width, height);
         var contentType = ContentTypeHelper.GetContentTypeByFileExtension(logo.Extension);
 
-        return File(resized, contentType);
+        return File(logo.Content, contentType);
     }
 
     /// <summary>
