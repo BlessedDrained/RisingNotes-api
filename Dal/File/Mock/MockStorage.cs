@@ -1,4 +1,6 @@
-﻿namespace Dal.File.Mock;
+﻿using Dal.File.Enums;
+
+namespace Dal.File.Mock;
 
 /// <summary>
 /// Моковый сервис для загрузки файлов
@@ -12,8 +14,15 @@ public class MockStorage : IFileStorage
     }
 
     /// <inheritdoc />
-    public Task<byte[]> DownloadFileAsync(Guid id)
+    public Task<FileDal> DownloadFileAsync(Guid id)
     {
-        return Task.FromResult(Array.Empty<byte>());
+        return Task.FromResult(new FileDal()
+        {
+            Content = Array.Empty<byte>(),
+            Extension = ".test",
+            Name = "test",
+            StorageType = StorageType.YandexDisk,
+            Id = Guid.NewGuid()
+        });
     }
 }

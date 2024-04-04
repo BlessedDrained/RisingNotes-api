@@ -30,7 +30,8 @@ public class SongPublishProfile : Profile
             .ForMember(d => d.VibeList, o => o.MapFrom(s => s.VibeList))
             .ForMember(d => d.LanguageList, o => o.MapFrom(s => s.LanguageList))
             .ForMember(d => d.Instrumental, o => o.MapFrom(s => s.Instrumental))
-            .ForMember(d => d.VocalGenderList, o => o.MapFrom(s => s.VocalGenderList));
+            .ForMember(d => d.VocalGenderList, o => o.MapFrom(s => s.VocalGenderList))
+            .ForMember(d => d.DurationMs, o => o.Ignore());
 
         CreateMap<GetPublishRequestListRequest, GetPublishRequestListFilterModel>()
             .ForMember(d => d.OrderByStatusDescending, o => o.MapFrom(s => s.OrderByStatusDescending))
@@ -76,12 +77,13 @@ public class SongPublishProfile : Profile
             .ForMember(d => d.VibeList, o => o.MapFrom(s => s.VibeList))
             .ForMember(d => d.GenreList, o => o.MapFrom(s => s.GenreList))
             .ForMember(d => d.LanguageList, o => o.MapFrom(s => s.LanguageList))
-            .ForMember(d => d.Instrumental, o => o.MapFrom(s => s.Instrumental));
+            .ForMember(d => d.Instrumental, o => o.MapFrom(s => s.Instrumental))
+            .ForMember(d => d.DurationMs, o => o.Ignore());
 
         CreateMap<SongPublishRequestDal, GetPublishRequestShortInfoResponse>()
             .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
             .ForMember(d => d.Status, o => o.MapFrom(s => s.Status))
-            .ForMember(d => d.AuthorName, o => o.MapFrom(s => s.Author.Name))
+            .ForMember(d => d.AuthorName, o => o.MapFrom(s => s.Author.User.UserName))
             .ForMember(d => d.AuthorId, o => o.MapFrom(s => s.AuthorId));
 
         CreateMap<SongPublishRequestDal, GetPublishRequestInfoResponse>()
@@ -92,6 +94,8 @@ public class SongPublishProfile : Profile
             .ForMember(d => d.GenreList, o => o.MapFrom(s => s.GenreList))
             .ForMember(d => d.VibeList, o => o.MapFrom(s => s.VibeList))
             .ForMember(d => d.LanguageList, o => o.MapFrom(s => s.LanguageList))
-            .ForMember(d => d.Instrumental, o => o.MapFrom(s => s.Instrumental));
+            .ForMember(d => d.Instrumental, o => o.MapFrom(s => s.Instrumental))
+            .ForMember(d => d.PublishedSongId, o => o.MapFrom(s => s.SongId))
+            .ForMember(d => d.DurationMs, o => o.MapFrom(s => s.DurationMs));
     }
 }

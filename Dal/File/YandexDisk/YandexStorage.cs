@@ -3,7 +3,7 @@
 /// <summary>
 /// Сервис для взаимодействия с Яндекс диском
 /// </summary>
-public class YandexDiskStorage : IFileStorage
+public class YandexStorage : IFileStorage
 {
     /// <inheritdoc />
     public Task<Guid> UploadFileAsync(FileDal request)
@@ -12,7 +12,7 @@ public class YandexDiskStorage : IFileStorage
     }
 
     /// <inheritdoc />
-    public Task<byte[]> DownloadFileAsync(Guid id)
+    public Task<FileDal> DownloadFileAsync(Guid id)
     {
         throw new NotImplementedException();
     }

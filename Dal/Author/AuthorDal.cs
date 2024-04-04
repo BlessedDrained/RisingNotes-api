@@ -10,10 +10,10 @@ namespace Dal.Author;
 public record AuthorDal : DalModel<Guid>
 {
     /// <summary>
-    /// Имя автора
+    /// Имя автора + имя пользователя по совместительству
     /// </summary>
-    public string Name { get; set; }
-
+    public string Name => User.UserName;
+    
     /// <summary>
     /// Список песен
     /// </summary>

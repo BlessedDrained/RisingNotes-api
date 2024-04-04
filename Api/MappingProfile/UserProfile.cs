@@ -1,5 +1,7 @@
 ﻿using Api.Controllers.Profile.Dto.Response;
+using Api.Controllers.User.Dto.Response;
 using AutoMapper;
+using Dal.BaseUser;
 using RisingNotesLib.Models;
 
 namespace Api.MappingProfile;
@@ -27,5 +29,9 @@ public class UserProfile : Profile
 
         CreateMap<AppIdentityUser, GetProfileResponse>()
             .ForMember(d => d.Email, o => o.MapFrom(s => s.Email));
+
+        CreateMap<UserDal, GetUserResponse>()
+            .ForMember(d => d.UserName, o => o.MapFrom(s => s.UserName))
+            .ForMember(d => d.Email, o => o.Ignore());
     }
 }

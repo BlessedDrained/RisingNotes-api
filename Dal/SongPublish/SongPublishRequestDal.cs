@@ -59,6 +59,11 @@ public record SongPublishRequestDal : DalModel<Guid>
     public bool Instrumental { get; set; }
     
     /// <summary>
+    /// Продолжительность трека
+    /// </summary>
+    public int DurationMs { get; set; }
+    
+    /// <summary>
     /// Список жанров песни
     /// </summary>
     public string[] GenreList { get; set; } = Array.Empty<string>();

@@ -43,21 +43,10 @@ public class SongCommentPremanager : ISongCommentPremanager
         {
             var responseComment = responseCommentList[i];
             var commentAuthor = await _userRepository.GetAsync(responseComment.AuthorId);
-            if (commentAuthor.IsAuthor)
+            responseComment = responseComment with
             {
-                var author = await _authorRepository.GetByUserIdAsync(commentAuthor.Id);
-                responseComment = responseComment with
-                {
-                    AuthorDisplayedName = author.Name
-                };
-            }
-            else
-            {
-                responseComment = responseComment with
-                {
-                    AuthorDisplayedName = commentAuthor.UserName
-                };
-            }
+                AuthorDisplayedName = commentAuthor.UserName
+            };
 
             responseCommentList[i] = responseComment;
         }

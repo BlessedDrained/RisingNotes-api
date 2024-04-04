@@ -1,6 +1,8 @@
 ﻿using Api.Controllers.File.Dto.Request;
 using Api.Controllers.User.Dto.Request;
+using Api.Controllers.User.Dto.Response;
 using Api.Premanager.User;
+using Dal.BaseUser.Repository;
 using Logic.Logo;
 using Logic.User;
 using MainLib.Api.Auth.Constant;
@@ -21,12 +23,29 @@ public class UserController : PublicController
 {
     private readonly IUserManager _userManager;
     private readonly IUserPremanager _userPremanager;
+    private readonly IUserRepository _userRepository;
 
     /// <inheritdoc />
-    public UserController(IUserManager userManager, IUserPremanager userPremanager)
+    public UserController(IUserManager userManager, IUserPremanager userPremanager, IUserRepository userRepository)
     {
         _userManager = userManager;
         _userPremanager = userPremanager;
+        _userRepository = userRepository;
+    }
+
+    /// <summary>
+    /// Получить информацию о пользователе
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    [ProducesResponseType(typeof(GetUserResponse), 200)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastUser)]
+    public async Task<IActionResult> GetAsync()
+    {
+        var userId = Guid.Parse(User.Identity!.Name!);
+        var response = await _userPremanager.GetAsync(userId);
+
+        return Ok(response);
     }
 
     /// <summary>
@@ -72,7 +91,7 @@ public class UserController : PublicController
     [HttpPatch]
     [ProducesResponseType(204)]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastUser)]
-    public async Task<IActionResult> UpdateUserNameAsync([FromBody] UpdateUserNameRequest request)
+    public async Task<IActionResult> UpdateAsync([FromBody] UpdateUserNameRequest request)
     {
         var userId = Guid.Parse(User.Identity!.Name!);
         await _userManager.UpdateUserNameAsync(userId, request.UserName);

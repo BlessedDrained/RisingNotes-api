@@ -2,11 +2,14 @@
 using Api.Controllers.File.Dto.Request;
 using Api.Controllers.Song.Dto.Response;
 using Api.Controllers.Subscription.Dto.Response;
+using Api.Controllers.User.Dto.Response;
 using AutoMapper;
 using Dal.BaseUser.Repository;
 using Dal.File;
 using Logic.User;
 using MainLib.Logging;
+using Microsoft.AspNetCore.Identity;
+using RisingNotesLib.Models;
 
 namespace Api.Premanager.User;
 
@@ -16,6 +19,7 @@ public class UserPremanager : IUserPremanager
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
     private readonly IUserManager _userManager;
+    private readonly UserManager<AppIdentityUser> _identityUserManager;
 
     /// <summary>
     /// 
@@ -77,5 +81,19 @@ public class UserPremanager : IUserPremanager
             ExcludedTrackList = responseList
         };
         return response;
+    }
+
+    /// <inheritdoc />
+    public async Task<GetUserResponse> GetAsync(Guid id)
+    {
+        using var log = new MethodLog(id);
+
+        var user = await _userRepository.GetAsync(id);
+        var identityUser = await _identityUserManager.FindByIdAsync(user.IdentityUserId);
+        
+        
+        var userResponse = _mapper.Map<GetUserResponse>(user);
+
+        return userResponse;
     }
 }

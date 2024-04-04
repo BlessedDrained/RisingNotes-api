@@ -13,5 +13,5 @@ public interface IFileStorage
     /// <summary>
     /// Скачать файл из хранилища
     /// </summary>
-    Task<byte[]> DownloadFileAsync(Guid id);
+    Task<FileDal> DownloadFileAsync(Guid id);
 }

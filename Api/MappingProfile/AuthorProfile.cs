@@ -26,7 +26,7 @@ public class AuthorProfile : Profile
 
         CreateMap<AuthorDal, GetAuthorInfoResponse>()
             .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
-            .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
+            .ForMember(d => d.Name, o => o.MapFrom(s => s.User.UserName))
             .ForMember(d => d.About, o => o.MapFrom(s => s.About))
             .ForMember(d => d.YaMusicLink, o => o.MapFrom(s => s.YaMusicLink))
             .ForMember(d => d.WebSiteLink, o => o.MapFrom(s => s.WebSiteLink))
@@ -42,7 +42,6 @@ public class AuthorProfile : Profile
             .ForMember(d => d.SongList, o => o.Ignore())
             .ForMember(d => d.SubscribedUserList, o => o.Ignore())
             .ForMember(d => d.User, o => o.Ignore())
-            .ForMember(d => d.UserId, o => o.Ignore())
-            .ForMember(x => x.Name, o => o.Ignore());
+            .ForMember(d => d.UserId, o => o.Ignore());
     }
 }

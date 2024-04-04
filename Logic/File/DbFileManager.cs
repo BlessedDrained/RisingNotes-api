@@ -11,12 +11,11 @@ namespace Logic.File;
 public class DbFileManager : IFileManager
 {
     private readonly IFileRepository _fileRepository;
-    private readonly MemoryCache _memoryCache;
+    private static readonly MemoryCache _memoryCache = new(new MemoryCacheOptions());
 
     public DbFileManager(IFileRepository fileRepository)
     {
         _fileRepository = fileRepository;
-        _memoryCache = new MemoryCache(new MemoryCacheOptions());
     }
 
     /// <inheritdoc />
@@ -25,19 +24,6 @@ public class DbFileManager : IFileManager
         using var log = new MethodLog(file);
 
         return _fileRepository.InsertAsync(file);
-        // var fileId = await _fileRepository.InsertAsync(file);
-        // if (file.StorageType == StorageType.Database)
-        // {
-        //     fileId = await _fileRepository.InsertAsync(file);
-        // }
-        // else
-        // {
-        //     var fileStorage = _fileStorageFactory.CreateService(file.StorageType);
-        //     fileId = await fileStorage.UploadFileAsync(file);
-        //     file.Content = Array.Empty<byte>();
-        // }
-        //
-        // return fileId;
     }
 
     /// <inheritdoc />
@@ -57,13 +43,6 @@ public class DbFileManager : IFileManager
         log.ReturnsValue(file);
 
         return file;
-        // if (file.StorageType == StorageType.Database)
-        // {
-        //     return file;
-        // }
-        //
-        // var fileStorage = _fileStorageFactory.CreateService(file.StorageType);
-        // var fileContent = await fileStorage.DownloadFileAsync(id);
     }
 
     /// <inheritdoc />

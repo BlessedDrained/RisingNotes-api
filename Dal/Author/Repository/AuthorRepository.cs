@@ -1,4 +1,5 @@
-﻿using Dal.Context;
+﻿using Dal.BaseUser;
+using Dal.Context;
 using MainLib.Dal.Exception;
 using MainLib.Dal.Repository.Base;
 using Microsoft.EntityFrameworkCore;
@@ -52,7 +53,18 @@ public class AuthorRepository : Repository<AuthorDal, Guid>, IAuthorRepository
     /// <inheritdoc />
     public async Task<AuthorDal> GetInfoAsync(string authorName)
     {
-        var author = await Set.SingleOrDefaultAsync(x => x.Name == authorName);
+        var user = await Context
+            .Set<UserDal>()
+            .Where(x => x.UserName == authorName)
+            .FirstOrDefaultAsync();
+        if (user == null)
+        {
+            throw new EntityNotFoundException<UserDal>(authorName);
+        }
+        
+        var author = await Set
+            .Where(x => x.UserId == user.Id)
+            .FirstOrDefaultAsync();
         if (author == null)
         {
             throw new EntityNotFoundException<AuthorDal>(authorName);
@@ -64,6 +76,7 @@ public class AuthorRepository : Repository<AuthorDal, Guid>, IAuthorRepository
     /// <inheritdoc />
     public Task<List<AuthorDal>> GetListAsync(GetAuthorListFilterModel filter)
     {
+        var userList = Context.Set<UserDal>().AsQueryable();
         var authorList = Set.AsQueryable();
 
         if (filter == null)

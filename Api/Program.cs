@@ -1,6 +1,9 @@
 using Api;
 using Dal;
+using Dal.File;
+using Dal.File.Enums;
 using Logic;
+using Logic.File;
 using Serilog;
 using Serilog.Events;
 
@@ -38,9 +41,9 @@ builder.Services.AddSerilog((sp, loggerConfiguration) =>
     }
 });
 
-builder.Services.AddApiServices();
-builder.Services.AddLogicServices();
-builder.Services.AddDalServices();
+builder.Services.AddApiServices(builder.Configuration);
+builder.Services.AddLogicServices(builder.Configuration);
+builder.Services.AddDalServices(builder.Configuration);
 
 var app = builder.Build();
 

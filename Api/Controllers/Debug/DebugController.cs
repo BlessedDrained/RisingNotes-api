@@ -75,7 +75,7 @@ public class DebugController : PublicController
         {
             Email = "testauthor@mail.ru",
             Password = "123456",
-            UserName = "testauthor"
+            UserName = "ZIA"
         };
 
         var ziaRegisterResponse = await _profilePremanager.RegisterAsync(ziaRegisterRequest);
@@ -90,7 +90,6 @@ public class DebugController : PublicController
             UserId = ziaUser.Id,
             User = ziaUser,
             About = "Я крутая певица. У меня большое будущее!",
-            Name = "ZIA",
             VkLink = "https://vk.com/lizokshmelik",
             WebSiteLink = "Нету)",
             YaMusicLink = "Нету)",
@@ -103,7 +102,7 @@ public class DebugController : PublicController
         {
             Email = "testadmin@mail.ru",
             Password = "123456",
-            UserName = "testadmin"
+            UserName = "Francis Owens"
         };
 
         var adminRegisterResponse = await _profilePremanager.RegisterAsync(adminRegisterRequest);
@@ -119,8 +118,7 @@ public class DebugController : PublicController
             About = "Играю на пианино, гитаре. Коллекционирую пластинки.",
             YaMusicLink = "https://music.yandex.ru/artist/11389103",
             WebSiteLink = "В процессе!",
-            VkLink = "https://vk.com/id211233345",
-            Name = "Francis Owens"
+            VkLink = "https://vk.com/id211233345"
         };
 
         await _authorManager.CreateAsync(francisOwensUser.Id, francisOwens);

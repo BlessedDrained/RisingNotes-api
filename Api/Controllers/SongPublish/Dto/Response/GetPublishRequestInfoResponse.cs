@@ -42,6 +42,16 @@ public record GetPublishRequestInfoResponse
     /// 
     /// </summary>
     public Gender[] VocalGenderList { get; init; } = Array.Empty<Gender>();
+    
+    /// <summary>
+    /// Идентификатор песни, если она выложена
+    /// </summary>
+    public Guid? PublishedSongId { get; init; }
+    
+    /// <summary>
+    /// Продолжительность трека в секундах
+    /// </summary>
+    public int DurationMs { get; init; }
 
     /// <summary>
     /// Файл с песней

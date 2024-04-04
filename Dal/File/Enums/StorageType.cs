@@ -14,12 +14,7 @@ public enum StorageType
     Database = 1,
     
     /// <summary>
-    /// Внутри контейнера
-    /// </summary>
-    Container = 2,
-    
-    /// <summary>
     /// Яндекс диск
     /// </summary>
-    YandexDisk = 3
+    YandexDisk = 2
 }

@@ -35,7 +35,7 @@ public class AuthorController : PublicController
     /// Сделать пользователя автором
     /// </summary>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAdmin)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastUser)]
     public async Task<IActionResult> MakeAuthorAsync([FromBody] MakeAuthorRequest request)
     {
         var id = await _authorPremanager.MakeAuthorAsync(request);

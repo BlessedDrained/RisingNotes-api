@@ -7,6 +7,7 @@ using MainLib.Api.Route;
 using MainLib.Api.Swagger;
 using MainLib.Automapper;
 using MainLib.ExceptionHandler;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Identity;
 using RisingNotesLib.Models;
 using Serilog;
@@ -19,7 +20,7 @@ public static class Startup
     /// <summary>
     /// Добавить апи сервисы
     /// </summary>
-    public static IServiceCollection AddApiServices(this IServiceCollection services)
+    public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<RouteOptions>(config =>
         {
@@ -100,7 +101,8 @@ public static class Startup
         // app.UseImageSharp();
 
         app.UseIdentityServer();
-
+        
+        
         var swaggerEnabled = app.Configuration.GetValue<bool>("Swagger:IsEnabled");
         if (swaggerEnabled)
         {

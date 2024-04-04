@@ -31,9 +31,18 @@ public class SongPublishManager : ISongPublishManager
     }
 
     /// <inheritdoc />
-    public Task<Guid> CreateAsync(SongPublishRequestDal request)
+    public async Task<Guid> CreateAsync(SongPublishRequestDal request)
     {
-        return _repository.InsertAsync(request);
+        var file = TagLib.File.Create(new FileAbstraction($"{request.SongFile.Name}.{request.SongFile.Extension}", request.SongFile.Content));
+        request.DurationMs = Convert.ToInt32(file.Properties.Duration.TotalMilliseconds);
+
+        var songFileId = await _fileManager.UploadAsync(request.SongFile);
+        var logoFileId = await _fileManager.UploadAsync(request.LogoFile);
+        request.SongFileId = songFileId;
+        request.LogoFileId = logoFileId;
+
+        var id = await _repository.InsertAsync(request);
+        return id;
     }
 
     /// <inheritdoc />
@@ -61,9 +70,10 @@ public class SongPublishManager : ISongPublishManager
         request.VibeList = newRequest.VibeList;
         request.Instrumental = newRequest.Instrumental;
 
-
         if (newRequest.SongFile != null)
         {
+            var file = TagLib.File.Create(new FileAbstraction($"{request.SongFile.Name}.{request.SongFile.Extension}", request.SongFile.Content));
+            request.DurationMs = Convert.ToInt32(file.Properties.Duration.TotalMilliseconds);
             var songFileId = await _fileManager.UploadAsync(newRequest.SongFile);
             request.SongFileId = songFileId;
         }

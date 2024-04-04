@@ -14,6 +14,6 @@ public class FileProfile : Profile
             .ForMember(d => d.Name, o => o.MapFrom(s => Path.GetFileNameWithoutExtension(s.File.FileName)))
             .ForMember(d => d.Extension, o => o.MapFrom(s => Path.GetExtension(s.File.FileName)))
             .ForMember(d => d.Content, o => o.MapFrom(s => s.File.GetFileContent()))
-            .ForMember(d => d.StorageType, o => o.Ignore());
+            .ForMember(d => d. StorageType, o => o.Ignore());
     }
 }

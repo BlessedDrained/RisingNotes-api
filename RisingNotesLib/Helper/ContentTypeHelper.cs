@@ -17,6 +17,6 @@ public static class ContentTypeHelper
             return contentType;
         }
 
-        throw new ArgumentOutOfRangeException("Such file extension is not allowed");
+        throw new ArgumentOutOfRangeException(nameof(fileExtension), "Such file extension is not allowed");
     }
 }

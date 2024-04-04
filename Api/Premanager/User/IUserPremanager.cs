@@ -2,6 +2,7 @@
 using Api.Controllers.File.Dto.Request;
 using Api.Controllers.Song.Dto.Response;
 using Api.Controllers.Subscription.Dto.Response;
+using Api.Controllers.User.Dto.Response;
 
 namespace Api.Premanager.User;
 
@@ -29,4 +30,9 @@ public interface IUserPremanager
     /// Получить список исключенных треков
     /// </summary>
     Task<GetExcludedTrackListResponse> GetExcludedTrackListAsync(Guid userId);
+
+    /// <summary>
+    /// Получить информацию о пользователе
+    /// </summary>
+    Task<GetUserResponse> GetAsync(Guid id);
 }
