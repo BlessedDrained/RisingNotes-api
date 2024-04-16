@@ -1,8 +1,10 @@
 ﻿using Dal.Author;
-using Dal.Comment;
 using Dal.File;
+using Dal.MusicClipComment;
 using Dal.Playlist;
+using Dal.ShortVideoComment;
 using Dal.Song;
+using Dal.SongComment;
 using MainLib.Dal.Model.Base;
 using RisingNotesLib.Models;
 
@@ -31,7 +33,17 @@ public record UserDal : DalModel<Guid>
     /// <summary>
     /// Список комментариев, оставленных пользователем
     /// </summary>
-    public List<CommentDal> CommentList { get; set; } = new();
+    public List<SongCommentDal> SongCommentList { get; set; } = new();
+
+    /// <summary>
+    /// Список комментариев к клипам
+    /// </summary>
+    public List<MusicClipCommentDal> MusicClipCommentList { get; set; } = new();
+
+    /// <summary>
+    /// Список комментариев к коротким видео
+    /// </summary>
+    public List<ShortVideoCommentDal> ShortVideoCommentList { get; set; } = new();
 
     /// <summary>
     /// Список подписок

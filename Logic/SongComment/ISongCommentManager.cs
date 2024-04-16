@@ -1,4 +1,4 @@
-﻿using Dal.Comment;
+﻿using Dal.SongComment;
 
 namespace Logic.SongComment;
 
@@ -15,7 +15,7 @@ public interface ISongCommentManager
     /// <summary>
     /// Получить список комментариев к песне
     /// </summary>
-    Task<List<CommentDal>> GetCommentListAsync(Guid songId);
+    Task<List<SongCommentDal>> GetCommentListAsync(Guid songId);
 
     /// <summary>
     /// Изменить комментарий

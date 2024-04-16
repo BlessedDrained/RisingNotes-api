@@ -1,4 +1,4 @@
-﻿namespace Dal.File.Enums;
+﻿namespace MainLib.Enums;
 
 /// <summary>
 /// Тип хранилища для файла

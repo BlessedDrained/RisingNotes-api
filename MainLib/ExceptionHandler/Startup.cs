@@ -37,7 +37,9 @@ public static class Startup
             var model = new
             {
                 Name = exceptionName,
-                Description = codeException.Message
+                ErrorCode = codeException.ErrorCode,
+                Description = codeException.Message,
+                StackTrace = error.StackTrace
             };
 
             context.Response.StatusCode = 400;
@@ -49,8 +51,8 @@ public static class Startup
             var model = new
             {
                 Name = "InternalServerError",
-                Description = "Error occured",
-                StackTrace = error.StackTrace
+                ErrorCode = 500,
+                Description = "Error occured"
             };
 
             context.Response.WriteAsJsonAsync(model);

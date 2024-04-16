@@ -1,4 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using System.Data;
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace MainLib.Dal.Repository.Base;
 
@@ -46,7 +48,7 @@ public interface IRepository<TEntity, TKey>
     /// Получение всех сущностей
     /// </summary>
     /// <returns>Список всех сущностей</returns>
-    Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate = null);
     
     // /// <summary>
     // /// Получение списка сущностей с учетом фильтрации и сортировки
@@ -73,4 +75,14 @@ public interface IRepository<TEntity, TKey>
     /// <param name="filter">Expression с фильтрами</param>
     /// <returns>Флаг, существует ли сущность</returns>
     Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filter);
+
+    /// <summary>
+    /// Начать транзакцию
+    /// </summary>
+    Task<IDbContextTransaction> BeginTransactionAsync();
+
+    /// <summary>
+    /// Начать транзакцию или получить уже существующую
+    /// </summary>
+    Task<IDbContextTransaction> BeginTransactionOrExistingAsync();
 }

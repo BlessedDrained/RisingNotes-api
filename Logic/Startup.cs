@@ -1,12 +1,16 @@
-﻿using Dal.File.Enums;
-using Logic.Author;
+﻿using Logic.Author;
 using Logic.File;
 using Logic.Logo;
+using Logic.MusicClip;
+using Logic.MusicClipComment;
 using Logic.Playlist;
+using Logic.ShortVideo;
+using Logic.ShortVideoComment;
 using Logic.Song;
 using Logic.SongComment;
 using Logic.SongPublish;
 using Logic.User;
+using MainLib.Enums;
 
 namespace Logic;
 
@@ -31,6 +35,10 @@ public static class Startup
         services.AddTransient<ILogoResizeService, LogoResizeService>();
         services.AddTransient<IAuthorManager, AuthorManager>();
         services.AddTransient<ISongPublishManager, SongPublishManager>();
+        services.AddTransient<IMusicClipManager, MusicClipManager>();
+        services.AddTransient<IMusicClipCommentManager, MusicClipCommentManager>();
+        services.AddTransient<IShortVideoManager, ShortVideoManager>();
+        services.AddTransient<IShortVideoCommentManager, ShortVideoCommentManager>();
 
         return services;
     }

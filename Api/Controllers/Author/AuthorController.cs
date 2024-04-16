@@ -122,22 +122,22 @@ public class AuthorController : PublicController
     [ProducesResponseType(200)]
     public async Task<IActionResult> GetLogoAsync(
         [FromRoute] Guid authorId,
-        [FromQuery] int? width,
-        [FromQuery] int? height,
-        [FromServices] ILogoResizeService logoResizeService,
+        // [FromQuery] int? width,
+        // [FromQuery] int? height,
+        // [FromServices] ILogoResizeService logoResizeService,
         [FromServices] IAuthorRepository authorRepository,
         [FromServices] IUserManager userManager)
     {
-        if (!width.HasValue && !height.HasValue)
-        {
-            throw new InvalidImageSizeException();
-        }
+        // if (!width.HasValue && !height.HasValue)
+        // {
+        //     throw new InvalidImageSizeException();
+        // }
 
         var author = await authorRepository.GetAsync(authorId);
         var logo = await userManager.GetLogoAsync(author.UserId);
-        var resized = await logoResizeService.ResizeAsync(logo, width, height);
+        // var resized = await logoResizeService.ResizeAsync(logo, width, height);
         var contentType = ContentTypeHelper.GetContentTypeByFileExtension(logo.Extension);
 
-        return File(resized, contentType);
+        return File(logo.Content, contentType);
     }
 }

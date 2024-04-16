@@ -54,21 +54,21 @@ public class UserController : PublicController
     [HttpGet("{userId:guid}/logo")]
     [ProducesResponseType(200)]
     public async Task<IActionResult> GetLogoAsync(
-        [FromRoute] Guid userId,
-        [FromQuery] int? width,
-        [FromQuery] int? height,
-        [FromServices] ILogoResizeService logoResizeService)
+        [FromRoute] Guid userId)
+        // [FromQuery] int? width,
+        // [FromQuery] int? height,
+        // [FromServices] ILogoResizeService logoResizeService)
     {
-        if (!width.HasValue && !height.HasValue)
-        {
-            throw new InvalidImageSizeException();
-        }
+        // if (!width.HasValue && !height.HasValue)
+        // {
+        //     throw new InvalidImageSizeException();
+        // }
 
         var logo = await _userManager.GetLogoAsync(userId);
-        var resized = await logoResizeService.ResizeAsync(logo, width, height);
+        // var resized = await logoResizeService.ResizeAsync(logo, width, height);
         var contentType = ContentTypeHelper.GetContentTypeByFileExtension(logo.Extension);
 
-        return File(resized, contentType);
+        return File(logo.Content, contentType);
     }
 
     /// <summary>

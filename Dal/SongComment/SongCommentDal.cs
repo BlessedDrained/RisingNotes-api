@@ -2,12 +2,12 @@
 using Dal.Song;
 using MainLib.Dal.Model.Base;
 
-namespace Dal.Comment;
+namespace Dal.SongComment;
 
 /// <summary>
 /// Комментарий к песне
 /// </summary>
-public record CommentDal : DalModel<Guid>
+public record SongCommentDal : DalModel<Guid>
 {
     /// <summary>
     /// Текст
@@ -27,10 +27,10 @@ public record CommentDal : DalModel<Guid>
     /// <summary>
     /// Нав свойство
     /// </summary>
-    public SongDal Song { get; init; }
+    public SongDal Song { get; set; }
     
     /// <summary>
     /// Нав свойство
     /// </summary>
-    public Guid SongId { get; init; }
+    public Guid SongId { get; set; }
 }

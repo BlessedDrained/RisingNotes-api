@@ -1,14 +1,14 @@
 ﻿using MainLib.Dal.Repository.Base;
 
-namespace Dal.Comment.Repository;
+namespace Dal.SongComment.Repository;
 
 /// <summary>
 /// Репозиторий для комментариев к песням
 /// </summary>
-public interface ICommentRepository : IRepository<CommentDal, Guid>
+public interface ISongCommentRepository : IRepository<SongCommentDal, Guid>
 {
     /// <summary>
     /// Получить список комментариев к песне
     /// </summary>
-    public Task<List<CommentDal>> GetSongCommentListAsync(Guid songId);
+    public Task<List<SongCommentDal>> GetSongCommentListAsync(Guid songId);
 }

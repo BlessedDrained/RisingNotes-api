@@ -1,9 +1,13 @@
 ﻿using Dal.Author;
 using Dal.BaseUser;
-using Dal.Comment;
 using Dal.File;
+using Dal.MusicClip;
+using Dal.MusicClipComment;
 using Dal.Playlist;
+using Dal.ShortVideo;
+using Dal.ShortVideoComment;
 using Dal.Song;
+using Dal.SongComment;
 using Dal.SongPublish;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -36,12 +40,12 @@ public class ApplicationContext : IdentityDbContext<AppIdentityUser>
         builder.HasPostgresExtension("fuzzystrmatch");
 
         base.OnModelCreating(builder);
-
+        
         builder.Entity<UserDal>();
         builder.Entity<SongDal>();
         builder.Entity<PlaylistDal>();
         builder.Entity<FileDal>();
-        builder.Entity<CommentDal>();
+        builder.Entity<SongCommentDal>();
         builder.Entity<AuthorDal>(config => config
             .HasMany(x => x.SongList)
             .WithOne(x => x.Author)
@@ -62,7 +66,25 @@ public class ApplicationContext : IdentityDbContext<AppIdentityUser>
         builder.Entity<UserDal>()
             .HasMany(x => x.FavoriteSongList)
             .WithMany(x => x.AddedToFavoriteUserList);
+
+        builder.Entity<UserDal>()
+            .HasMany(x => x.MusicClipCommentList)
+            .WithOne()
+            .HasForeignKey(x => x.AuthorId);
+
+        builder.Entity<UserDal>()
+            .HasMany(x => x.ShortVideoCommentList)
+            .WithOne()
+            .HasForeignKey(x => x.AuthorId);
         
         builder.Entity<SongPublishRequestDal>();
+
+        builder.Entity<ShortVideoCommentDal>();
+
+        builder.Entity<MusicClipDal>();
+
+        builder.Entity<ShortVideoDal>();
+
+        builder.Entity<MusicClipCommentDal>();
     }
 }

@@ -2,6 +2,7 @@
 using MainLib.Dal.Exception;
 using MainLib.Dal.Model.Base;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace MainLib.Dal.Repository.Base;
 
@@ -68,8 +69,13 @@ public abstract class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
     }
 
     /// <inheritdoc />
-    public async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate)
+    public async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate = null)
     {
+        if (predicate == null)
+        {
+            return await Set.ToListAsync();
+        }
+        
         var result = await Set
             .Where(predicate)
             .ToListAsync();
@@ -123,5 +129,19 @@ public abstract class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
 
         return await result.AnyAsync(filter);
 
+    }
+
+    /// <inheritdoc />
+    public async Task<IDbContextTransaction> BeginTransactionAsync()
+    {
+        var transacton =  await Context.Database.BeginTransactionAsync();
+
+        return transacton;
+    }
+
+    public async Task<IDbContextTransaction> BeginTransactionOrExistingAsync()
+    {
+        return default;
+        // return Context.Database.CurrentTransaction ?? await Context.Database.BeginTransactionAsync();
     }
 }

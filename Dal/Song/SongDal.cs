@@ -1,8 +1,8 @@
 ﻿using Dal.Author;
 using Dal.BaseUser;
-using Dal.Comment;
 using Dal.File;
 using Dal.Playlist;
+using Dal.SongComment;
 using MainLib.Dal.Model.Base;
 using RisingNotesLib.Enums;
 
@@ -101,7 +101,7 @@ public record SongDal : DalModel<Guid>
     /// <summary>
     /// Список комментариев
     /// </summary>
-    public List<CommentDal> CommentList { get; set; } = new();
+    public List<SongCommentDal> CommentList { get; set; } = new();
 
     /// <summary>
     /// Количество прослушиваний

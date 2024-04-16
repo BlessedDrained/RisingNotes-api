@@ -1,4 +1,5 @@
 ﻿using MainLib.CustomException;
+using RisingNotesLib.Constant;
 
 namespace RisingNotesLib.Exceptions;
 
@@ -7,7 +8,9 @@ namespace RisingNotesLib.Exceptions;
 /// </summary>
 public class NoSuchFavoriteTrackException : BadRequestException
 {
-    public NoSuchFavoriteTrackException(Guid songId) : base($"Track with id={songId} is not present in favorite")
+    public NoSuchFavoriteTrackException(Guid songId) : base(
+        $"Track with id={songId} is not present in favorite", 
+        RisingNotesErrorConstants.NoSuchFavoriteTrack)
     {
     }
 }

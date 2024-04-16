@@ -5,6 +5,7 @@ using Dal.Song.Repository;
 using Dal.SongPublish;
 using Dal.SongPublish.Repository;
 using Logic.File;
+using MainLib.Logging;
 using MainLib.TagLib;
 using RisingNotesLib.Enums;
 
@@ -36,6 +37,8 @@ public class SongPublishManager : ISongPublishManager
         var file = TagLib.File.Create(new FileAbstraction($"{request.SongFile.Name}.{request.SongFile.Extension}", request.SongFile.Content));
         request.DurationMs = Convert.ToInt32(file.Properties.Duration.TotalMilliseconds);
 
+        await using var transaction = await _repository.BeginTransactionOrExistingAsync(); 
+        
         var songFileId = await _fileManager.UploadAsync(request.SongFile);
         var logoFileId = await _fileManager.UploadAsync(request.LogoFile);
         request.SongFileId = songFileId;
@@ -48,6 +51,10 @@ public class SongPublishManager : ISongPublishManager
     /// <inheritdoc />
     public async Task ReplyAsUserAsync(Guid requestId, SongPublishRequestDal newRequest)
     {
+        using var log = new MethodLog(requestId, newRequest);
+
+        await using var transaction = await _songRepository.BeginTransactionOrExistingAsync();
+        
         var request = await _repository.GetAsync(requestId);
         if (request.Status is PublishRequestStatus.Approved or PublishRequestStatus.Rejected or PublishRequestStatus.Revoked)
         {
@@ -91,6 +98,9 @@ public class SongPublishManager : ISongPublishManager
     /// <inheritdoc />
     public async Task ReplyAsAdminAsync(Guid requestId, PublishRequestStatus status, string comment)
     {
+        using var log = new MethodLog(requestId, status, comment);
+        await using var transaction = await _repository.BeginTransactionOrExistingAsync();
+        
         var request = await _repository.GetAsync(requestId);
         if (request.Status is PublishRequestStatus.Approved or PublishRequestStatus.Rejected)
         {
@@ -118,13 +128,12 @@ public class SongPublishManager : ISongPublishManager
         // Удаляем, чтобы место не занимать
         if (status is PublishRequestStatus.Rejected or PublishRequestStatus.Revoked)
         {
-            // // TODO: нужно сделать метод DeleteAsync для FileManager. После этого раскомментить
-            // await _fileManager.DeleteAsync(request.SongFileId.Value);
-            //
-            // if (request.LogoFileId.HasValue)
-            // {
-            //     await _fileManager.DeleteAsync(request.LogoFileId.Value);
-            // }
+            await _fileManager.DeleteAsync(request.SongFileId.Value);
+            
+            if (request.LogoFileId.HasValue)
+            {
+                await _fileManager.DeleteAsync(request.LogoFileId.Value);
+            }
         }
 
         request.Status = status;
@@ -140,6 +149,10 @@ public class SongPublishManager : ISongPublishManager
     /// <inheritdoc />
     public async Task<FileDal> GetLogoAsync(Guid requestId)
     {
+        using var log = new MethodLog(requestId);
+
+        await using var transaction = await _repository.BeginTransactionOrExistingAsync();
+        
         var request = await _repository.GetAsync(requestId);
         var file = await _fileManager.DownloadAsync(request.LogoFileId.Value);
 
@@ -149,6 +162,10 @@ public class SongPublishManager : ISongPublishManager
     /// <inheritdoc />
     public async Task<FileDal> GetSongFileAsync(Guid requestId)
     {
+        using var log = new MethodLog(requestId);
+        
+        await using var transaction = await _repository.BeginTransactionOrExistingAsync();
+        
         var request = await _repository.GetAsync(requestId);
         var file = await _fileManager.DownloadAsync(request.SongFileId.Value);
 

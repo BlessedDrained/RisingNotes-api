@@ -1,9 +1,11 @@
-﻿using System.Net;
+﻿using Amazon.S3;
 using Amazon.S3.Model;
 using Dal.File;
 using Dal.File.Repository;
 using Dal.File.YandexDisk;
-using MainLib.Dal.Exception;
+using MainLib.Enums;
+using Microsoft.EntityFrameworkCore.Storage;
+using RisingNotesLib.Exceptions;
 
 namespace Logic.File;
 
@@ -20,7 +22,7 @@ public class YandexFileManager : IFileManager
         _fileRepository = fileRepository;
         _s3ClientFactory = s3ClientFactory;
     }
-    
+
     /// <inheritdoc />
     public async Task<Guid> UploadAsync(FileDal file)
     {
@@ -34,17 +36,18 @@ public class YandexFileManager : IFileManager
             InputStream = new MemoryStream(file.Content)
         };
 
-        var response = await client.PutObjectAsync(request);
-
-        if ((int)response.HttpStatusCode >= 400)
+        try
         {
-            // TODO: сделать кастомное исключение при загрузке файла
-            throw new Exception();
+            await client.PutObjectAsync(request);
         }
-        
-        file.Id = fileId; 
-        await _fileRepository.InsertAsync(file);
+        catch
+        {
+            throw new S3FileUploadException("Error occured on trying to upload file");
+        }
 
+        file.Id = fileId;
+        await _fileRepository.InsertAsync(file);
+        
         return fileId;
     }
 
@@ -53,17 +56,20 @@ public class YandexFileManager : IFileManager
     {
         var file = await _fileRepository.GetAsync(id);
         using var client = _s3ClientFactory.CreateClient();
-        var response = await client.GetObjectAsync("rising-notes", id.ToString());
 
-        if ((int) response.HttpStatusCode >= (int) HttpStatusCode.BadRequest)
+        GetObjectResponse response;
+        try
         {
-            // сделать кастомное исключение, что файл не найден
-            throw new Exception();
+            response = await client.GetObjectAsync("rising-notes", id.ToString());
+        }
+        catch
+        {
+            throw new S3FileDownloadException(StorageType.YandexDisk);
         }
 
         var buffer = new byte[response.ResponseStream.Length];
         file.Content = buffer;
-            
+
         await using var stream = new BufferedStream(response.ResponseStream);
         _ = await stream.ReadAsync(buffer);
 
@@ -74,14 +80,16 @@ public class YandexFileManager : IFileManager
     public async Task DeleteAsync(Guid id)
     {
         await _fileRepository.DeleteAsync(id);
-        
+
         using var client = _s3ClientFactory.CreateClient();
-        var response = await client.DeleteObjectAsync("rising-notes", id.ToString());
-        
-        if ((int)response.HttpStatusCode >= (int) HttpStatusCode.BadRequest)
+
+        try
         {
-            // TODO: сделать кастомное исключение, если файл не был удален
-            throw new Exception();
+            await client.DeleteObjectAsync("rising-notes", id.ToString());
+        }
+        catch (DeleteObjectsException e)
+        {
+            throw new S3FileDeleteException(e.Message);
         }
     }
 }

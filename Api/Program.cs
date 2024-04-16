@@ -1,9 +1,6 @@
 using Api;
 using Dal;
-using Dal.File;
-using Dal.File.Enums;
 using Logic;
-using Logic.File;
 using Serilog;
 using Serilog.Events;
 

@@ -1,4 +1,5 @@
 ﻿using MainLib.CustomException;
+using RisingNotesLib.Constant;
 
 namespace RisingNotesLib.Exceptions;
 
@@ -7,7 +8,8 @@ namespace RisingNotesLib.Exceptions;
 /// </summary>
 public class TrackIsAlreadyInFavoriteException : BadRequestException
 {
-    public TrackIsAlreadyInFavoriteException(Guid songId) : base($"Track with id={songId} is already in favorite")
+    public TrackIsAlreadyInFavoriteException(Guid songId) 
+        : base($"Track with id={songId} is already in favorite", RisingNotesErrorConstants.TrackIsAlreadyInFavorite)
     {
     }
 }

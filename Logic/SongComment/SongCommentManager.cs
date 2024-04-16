@@ -1,7 +1,7 @@
 ﻿using Dal.BaseUser.Repository;
-using Dal.Comment;
-using Dal.Comment.Repository;
 using Dal.Song.Repository;
+using Dal.SongComment;
+using Dal.SongComment.Repository;
 using MainLib.Logging;
 
 namespace Logic.SongComment;
@@ -10,16 +10,16 @@ namespace Logic.SongComment;
 public class SongCommentManager : ISongCommentManager
 {
     private readonly IUserRepository _userRepository;
-    private readonly ICommentRepository _commentRepository;
+    private readonly ISongCommentRepository _songCommentRepository;
     private readonly ISongRepository _songRepository;
 
     public SongCommentManager(
         IUserRepository userRepository,
-        ICommentRepository commentRepository,
+        ISongCommentRepository songCommentRepository,
         ISongRepository songRepository)
     {
         _userRepository = userRepository;
-        _commentRepository = commentRepository;
+        _songCommentRepository = songCommentRepository;
         _songRepository = songRepository;
 
     }
@@ -28,29 +28,34 @@ public class SongCommentManager : ISongCommentManager
     public async Task<Guid> AddCommentAsync(Guid songId, Guid userId, string commentText)
     {
         using var log = new MethodLog(songId, userId, commentText);
+
+        await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
+        
         await _userRepository.GetAsync(userId);
 
-        var commentModel = new CommentDal()
+        var commentModel = new SongCommentDal()
         {
             CreatorId = userId,
             Text = commentText,
             SongId = songId
         };
 
-        var id = await _commentRepository.InsertAsync(commentModel);
+        var id = await _songCommentRepository.InsertAsync(commentModel);
 
         log.ReturnsValue(id);
         return id;
     }
 
     /// <inheritdoc />
-    public async Task<List<CommentDal>> GetCommentListAsync(Guid songId)
+    public async Task<List<SongCommentDal>> GetCommentListAsync(Guid songId)
     {
         using var log = new MethodLog(songId);
 
+        await using var transaction = await _songRepository.BeginTransactionOrExistingAsync();
+
         await _songRepository.GetAsync(songId);
 
-        var commentList = await _commentRepository.GetSongCommentListAsync(songId);
+        var commentList = await _songCommentRepository.GetSongCommentListAsync(songId);
 
         log.ReturnsValue(commentList);
         return commentList;
@@ -61,17 +66,19 @@ public class SongCommentManager : ISongCommentManager
     {
         using var log = new MethodLog(commentId, newText);
 
-        var commentModel = await _commentRepository.GetAsync(commentId);
+        await using var transaction = await _songCommentRepository.BeginTransactionOrExistingAsync();
+        
+        var commentModel = await _songCommentRepository.GetAsync(commentId);
 
         commentModel.Text = newText;
 
-        await _commentRepository.UpdateAsync(commentModel);
+        await _songCommentRepository.UpdateAsync(commentModel);
     }
 
     /// <inheritdoc />
     public Task RemoveCommentAsync(Guid commentId)
     {
         using var log = new MethodLog(commentId);
-        return _commentRepository.DeleteAsync(commentId);
+        return _songCommentRepository.DeleteAsync(commentId);
     }
 }

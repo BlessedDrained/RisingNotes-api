@@ -1,6 +1,6 @@
 ﻿using Api.Controllers.SongComment.Response;
 using AutoMapper;
-using Dal.Comment;
+using Dal.SongComment;
 
 namespace Api.MappingProfile;
 
@@ -8,7 +8,7 @@ public class SongCommentProfile : Profile
 {
     public SongCommentProfile()
     {
-        CreateMap<CommentDal, GetSongCommentResponse>()
+        CreateMap<SongCommentDal, GetSongCommentResponse>()
             .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
             .ForMember(d => d.AuthorId, o => o.MapFrom(s => s.CreatorId))
             .ForMember(d => d.Text, o => o.MapFrom(s => s.Text))

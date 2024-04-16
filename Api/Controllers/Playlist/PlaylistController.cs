@@ -79,21 +79,21 @@ public class PlaylistController : PublicController
     [HttpGet("{playlistId:guid}/logo")]
     [ProducesResponseType(200)]
     public async Task<IActionResult> GetLogoAsync(
-        [FromRoute] Guid playlistId,
-        [FromQuery] int? width,
-        [FromQuery] int? height,
-        [FromServices] ILogoResizeService logoResizeService)
+        [FromRoute] Guid playlistId)
+        // [FromQuery] int? width,
+        // [FromQuery] int? height,
+        // [FromServices] ILogoResizeService logoResizeService)
     {
-        if (!width.HasValue && !height.HasValue)
-        {
-            throw new InvalidImageSizeException();
-        }
+        // if (!width.HasValue && !height.HasValue)
+        // {
+        //     throw new InvalidImageSizeException();
+        // }
 
         var file = await _playlistManager.GetLogoAsync(playlistId);
-        var resized = await logoResizeService.ResizeAsync(file, width, height);
+        // var resized = await logoResizeService.ResizeAsync(file, width, height);
         var contentType = ContentTypeHelper.GetContentTypeByFileExtension(file.Extension);
 
-        return File(resized, contentType);
+        return File(file.Content, contentType);
     }
 
     /// <summary>

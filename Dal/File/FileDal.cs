@@ -1,6 +1,6 @@
-﻿using Dal.File.Enums;
-using Destructurama.Attributed;
+﻿using Destructurama.Attributed;
 using MainLib.Dal.Model.Base;
+using MainLib.Enums;
 using Microsoft.AspNetCore.Mvc;
 using RisingNotesLib.Helper;
 

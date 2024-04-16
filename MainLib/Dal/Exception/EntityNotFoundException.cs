@@ -1,10 +1,11 @@
 ﻿using MainLib.CustomException;
+using MainLib.Exceptions;
 
 namespace MainLib.Dal.Exception;
 
 public class EntityNotFoundException : BadRequestException
 {
-    public EntityNotFoundException(string message) : base(message)
+    public EntityNotFoundException(string message) : base(message, MainErrorConstants.EntityNotFound)
     {
     }
 }

@@ -74,6 +74,8 @@ public class PlaylistManager : IPlaylistManager
     {
         using var methodLog = new MethodLog(playlistId, songId);
 
+        await using var transaction = await _playlistRepository.BeginTransactionOrExistingAsync();
+
         var playlist = await _playlistRepository.GetAsync(playlistId);
         var song = await _songRepository.GetAsync(songId);
 
@@ -87,6 +89,8 @@ public class PlaylistManager : IPlaylistManager
     {
         using var log = new MethodLog(playlistId);
 
+        await using var transaction = await _playlistRepository.BeginTransactionOrExistingAsync();
+        
         var playlist = await _playlistRepository.GetAsync(playlistId);
 
         if (!playlist.LogoFileId.HasValue)
@@ -105,6 +109,8 @@ public class PlaylistManager : IPlaylistManager
     {
         using var log = new MethodLog(playlistId, file);
 
+        await using var transaction = await _playlistRepository.BeginTransactionOrExistingAsync();
+        
         var playlist = await _playlistRepository.GetAsync(playlistId);
 
         if (playlist.CreatorId != userId)
@@ -128,6 +134,10 @@ public class PlaylistManager : IPlaylistManager
     /// <inheritdoc />
     public async Task UpdateAsync(Guid playlistId, PlaylistDal newPlaylist)
     {
+        using var log = new MethodLog(playlistId, newPlaylist);
+        
+        await using var transaction = await _playlistRepository.BeginTransactionOrExistingAsync();
+        
         var playlist = await _playlistRepository.GetAsync(playlistId);
 
         if (newPlaylist.Name != null)

@@ -36,6 +36,9 @@ public class UserManager : IUserManager
     public async Task<FileDal> GetLogoAsync(Guid userId)
     {
         using var log = new MethodLog(userId);
+        
+        await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
+        
         var user = await _userRepository.GetAsync(userId);
         if (!user.LogoFileId.HasValue)
         {
@@ -54,6 +57,8 @@ public class UserManager : IUserManager
     public async Task SubscribeAsync(Guid userId, Guid authorId)
     {
         using var log = new MethodLog(userId, authorId);
+        
+        await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
 
         var user = await _userRepository.GetWithSubscriptionListAsync(userId);
         if (user.SubscriptionList.Exists(x => x.Id == authorId))
@@ -72,6 +77,8 @@ public class UserManager : IUserManager
     {
         using var log = new MethodLog(userId, authorId);
 
+        await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
+        
         var user = await _userRepository.GetWithSubscriptionListAsync(userId);
         if (!user.SubscriptionList.Exists(x => x.Id == authorId))
         {
@@ -88,12 +95,14 @@ public class UserManager : IUserManager
     {
         using var log = new MethodLog(userId, file);
 
+        await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
+        
         var user = await _userRepository.GetAsync(userId);
 
-        // if (user.LogoFileId.HasValue)
-        // {
-        //     await _fileManager.DeleteAsync(user.LogoFileId.Value);
-        // }
+        if (user.LogoFileId.HasValue)
+        {
+            await _fileManager.DeleteAsync(user.LogoFileId.Value);
+        }
 
         var fileId = await _fileManager.UploadAsync(file);
 
@@ -108,6 +117,8 @@ public class UserManager : IUserManager
     {
         using var log = new MethodLog(userId, userName);
 
+        await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
+        
         var nameAlreadyUsed = await _userRepository.ExistsAsync(x => x.UserName == userName);
         if (nameAlreadyUsed)
         {

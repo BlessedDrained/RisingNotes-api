@@ -33,6 +33,10 @@ public class AuthorManager : IAuthorManager
     /// <inheritdoc />
     public async Task<Guid> CreateAsync(Guid userId, AuthorDal author)
     {
+        using var log = new MethodLog(userId, author);
+        
+        await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
+        
         var user = await _userRepository.GetAsync(userId);
         if (user.IsAuthor)
         {
@@ -74,6 +78,8 @@ public class AuthorManager : IAuthorManager
     {
         using var log = new MethodLog(authorId, newAuthor);
 
+        await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
+        
         var author = await _authorRepository.GetAsync(authorId);
 
         if (newAuthor.About != null)

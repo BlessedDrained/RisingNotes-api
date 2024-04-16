@@ -1,7 +1,6 @@
 ﻿using Dal.File;
 using Dal.File.Repository;
 using MainLib.Logging;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Logic.File;
 
@@ -11,7 +10,6 @@ namespace Logic.File;
 public class DbFileManager : IFileManager
 {
     private readonly IFileRepository _fileRepository;
-    private static readonly MemoryCache _memoryCache = new(new MemoryCacheOptions());
 
     public DbFileManager(IFileRepository fileRepository)
     {
@@ -19,29 +17,24 @@ public class DbFileManager : IFileManager
     }
 
     /// <inheritdoc />
-    public Task<Guid> UploadAsync(FileDal file)
+    public async Task<Guid> UploadAsync(FileDal file)
     {
         using var log = new MethodLog(file);
 
-        return _fileRepository.InsertAsync(file);
+        var id = await _fileRepository.InsertAsync(file);
+        log.ReturnsValue(id);
+
+        return id;
     }
 
     /// <inheritdoc />
     public async Task<FileDal> DownloadAsync(Guid id)
     {
         using var log = new MethodLog(id);
+
         var file = await _fileRepository.GetAsync(id);
 
-        if (_memoryCache.TryGetValue(id, out FileDal cachedFile))
-        {
-            log.ReturnsValue(cachedFile);
-            return cachedFile;
-        }
-
-        _memoryCache.Set(id, file, TimeSpan.FromMinutes(15));
-
         log.ReturnsValue(file);
-
         return file;
     }
 
