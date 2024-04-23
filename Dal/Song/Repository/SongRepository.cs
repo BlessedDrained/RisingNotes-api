@@ -19,6 +19,7 @@ public class SongRepository : Repository<SongDal, Guid>, ISongRepository
     {
         var song = await Set
             .Include(x => x.Author)
+            .ThenInclude(x => x.User)
             .SingleOrDefaultAsync(x => x.Id == songId);
 
         if (song == null)
