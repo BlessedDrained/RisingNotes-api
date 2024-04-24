@@ -1,4 +1,5 @@
-﻿using Dal.ShortVideo;
+﻿using Dal.File;
+using Dal.ShortVideo;
 
 namespace Logic.ShortVideo;
 
@@ -10,12 +11,22 @@ public interface IShortVideoManager
     /// <summary>
     /// Создать клип
     /// </summary>
-    Task<Guid> CreateAsync(ShortVideoDal clip);
+    Task<Guid> UploadAsync(ShortVideoDal clip, FileDal clipFile, FileDal previewFile);
 
     /// <summary>
     /// Получить по id
     /// </summary>
     Task<ShortVideoDal> GetAsync(Guid id);
+
+    /// <summary>
+    /// Получить файл превью
+    /// </summary>
+    Task<FileDal> GetPreviewAsync(Guid clipId);
+
+    /// <summary>
+    /// Получить файл с клипом
+    /// </summary>
+    Task<FileDal> GetFileAsync(Guid clipId);
 
     /// <summary>
     /// Обновить

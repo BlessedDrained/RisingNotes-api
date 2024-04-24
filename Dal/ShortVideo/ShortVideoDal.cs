@@ -9,19 +9,19 @@ namespace Dal.ShortVideo;
 public record ShortVideoDal : DalModel<Guid>
 {
     /// <summary>
-    /// Идентификатор кто загрузил видео
+    /// Название
     /// </summary>
-    public Guid UploaderId { get; set; }
-    
-    /// <summary>
-    /// Кто загрузил видео
-    /// </summary>
-    public AuthorDal Uploader { get; set; }
+    public string Title { get; set; }
     
     /// <summary>
     /// Идентификатор файла превью
     /// </summary>
     public Guid PreviewFileId { get; set; }
+    
+    /// <summary>
+    /// Идентификатор видео
+    /// </summary>
+    public Guid VideoFileId { get; set; }
     
     /// <summary>
     /// Идентификатор песни, для которой снято короткое видео. 
@@ -33,4 +33,19 @@ public record ShortVideoDal : DalModel<Guid>
     /// Описание
     /// </summary>
     public string Description { get; set; }
+    
+    /// <summary>
+    /// Продолжительность в миллисекундах
+    /// </summary>
+    public int DurationMsec { get; set; }
+    
+    /// <summary>
+    /// Идентификатор кто загрузил видео
+    /// </summary>
+    public Guid UploaderId { get; set; }
+    
+    /// <summary>
+    /// Кто загрузил видео
+    /// </summary>
+    public AuthorDal Uploader { get; set; }
 }

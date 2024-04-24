@@ -1,40 +1,100 @@
-﻿using Dal.ShortVideo;
+﻿using Dal.File;
+using Dal.ShortVideo;
 using Dal.ShortVideo.Repository;
+using Logic.File;
+using MainLib.Logging;
+using MainLib.TagLib;
 
 namespace Logic.ShortVideo;
 
 /// <inheritdoc />
 public class ShortVideoManager : IShortVideoManager
 {
-    private readonly IShortVideoRepository _repository;
+    private readonly IShortVideoRepository _musicClipRepository;
+    private readonly IFileManager _fileManager;
 
-    public ShortVideoManager(IShortVideoRepository repository)
+    public ShortVideoManager(
+        IShortVideoRepository musicClipRepository,
+        IFileManager fileManager)
     {
-        _repository = repository;
-
-    }
-    
-    /// <inheritdoc />
-    public Task<Guid> CreateAsync(ShortVideoDal clip)
-    {
-        throw new NotImplementedException();
+        _musicClipRepository = musicClipRepository;
+        _fileManager = fileManager;
     }
 
     /// <inheritdoc />
-    public Task<ShortVideoDal> GetAsync(Guid id)
+    public async Task<Guid> UploadAsync(ShortVideoDal clip, FileDal clipFile, FileDal previewFile)
     {
-        throw new NotImplementedException();
+        using var log = new MethodLog(clip);
+
+        var file = TagLib.File.Create(new FileAbstraction($"{clipFile.Name}.{clipFile.Extension}", clipFile.Content));
+        clip.DurationMsec = Convert.ToInt32(file.Properties.Duration.TotalMilliseconds);
+
+        var videoFileId = await _fileManager.UploadAsync(clipFile);
+        var previewFileId = await _fileManager.UploadAsync(previewFile);
+
+        clip.VideoFileId = videoFileId;
+        clip.PreviewFileId = previewFileId;
+        var id = await _musicClipRepository.InsertAsync(clip);
+
+        log.ReturnsValue(id);
+        return id;
     }
 
     /// <inheritdoc />
-    public Task UpdateAsync(ShortVideoDal clip)
+    public async Task<ShortVideoDal> GetAsync(Guid id)
     {
-        throw new NotImplementedException();
+        using var log = new MethodLog(id);
+
+        var clip = await _musicClipRepository.GetAsync(id);
+
+        log.ReturnsValue(clip);
+        return clip;
     }
 
     /// <inheritdoc />
-    public Task DeleteAsync(Guid id)
+    public async Task<FileDal> GetPreviewAsync(Guid clipId)
     {
-        throw new NotImplementedException();
+        using var log = new MethodLog(clipId);
+
+        await using var transaction = await _musicClipRepository.BeginTransactionOrExistingAsync();
+
+        var clip = await _musicClipRepository.GetAsync(clipId);
+        var file = await _fileManager.DownloadAsync(clip.VideoFileId);
+
+        log.ReturnsValue(file);
+        return file;
+    }
+
+    public async Task<FileDal> GetFileAsync(Guid clipId)
+    {
+        using var log = new MethodLog(clipId);
+
+        await using var transaction = await _musicClipRepository.BeginTransactionOrExistingAsync();
+
+        var clip = await _musicClipRepository.GetAsync(clipId);
+        var file = await _fileManager.DownloadAsync(clip.VideoFileId);
+
+        log.ReturnsValue(file);
+        return file;
+    }
+
+    /// <inheritdoc />
+    public async Task UpdateAsync(ShortVideoDal clip)
+    {
+        using var log = new MethodLog(clip);
+
+        await using var transaction = await _musicClipRepository.BeginTransactionOrExistingAsync();
+        
+        await _musicClipRepository.UpdateAsync(clip);
+    }
+
+    /// <inheritdoc />
+    public async Task DeleteAsync(Guid id)
+    {
+        using var log = new MethodLog(id);
+        
+        await using var transaction = await _musicClipRepository.BeginTransactionOrExistingAsync();
+        
+        await _musicClipRepository.DeleteAsync(id);
     }
 }
