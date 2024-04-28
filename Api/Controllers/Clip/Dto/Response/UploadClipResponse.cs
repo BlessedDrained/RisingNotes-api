@@ -1,4 +1,4 @@
-﻿namespace Api.Controllers.MusicClip.Dto.Response;
+﻿namespace Api.Controllers.Clip.Dto.Response;
 
 /// <summary>
 /// ответ на создание клипа

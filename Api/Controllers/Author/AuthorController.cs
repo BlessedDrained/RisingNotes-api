@@ -4,7 +4,6 @@ using Api.Controllers.Song.Dto.Response;
 using Api.Premanager.Author;
 using Api.Premanager.Music;
 using Dal.Author.Repository;
-using Logic.Logo;
 using Logic.User;
 using MainLib.Api.Auth.Constant;
 using MainLib.Api.Controller;
@@ -12,7 +11,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RisingNotesLib.Constant;
-using RisingNotesLib.Exceptions;
 using RisingNotesLib.Helper;
 
 namespace Api.Controllers.Author;

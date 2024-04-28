@@ -3,7 +3,6 @@ using Api.Controllers.Song.Dto.Request;
 using Api.Controllers.Song.Dto.Response;
 using Api.Premanager.Music;
 using Dal.Song;
-using Logic.Logo;
 using Logic.Song;
 using MainLib.Api.Auth.Constant;
 using MainLib.Api.Controller;
@@ -11,7 +10,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RisingNotesLib.Constant;
-using RisingNotesLib.Exceptions;
 using RisingNotesLib.Helper;
 
 namespace Api.Controllers.Song;

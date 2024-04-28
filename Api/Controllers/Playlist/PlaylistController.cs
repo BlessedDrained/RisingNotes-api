@@ -3,14 +3,12 @@ using Api.Controllers.Playlist.Dto.Request;
 using Api.Controllers.Playlist.Dto.Response;
 using Api.Premanager.Playlist;
 using Dal.Playlist.Repository;
-using Logic.Logo;
 using Logic.Playlist;
 using MainLib.Api.Auth.Constant;
 using MainLib.Api.Controller;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RisingNotesLib.Exceptions;
 using RisingNotesLib.Helper;
 
 namespace Api.Controllers.Playlist;

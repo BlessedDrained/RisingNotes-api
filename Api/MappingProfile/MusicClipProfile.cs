@@ -1,5 +1,5 @@
-﻿using Api.Controllers.MusicClip.Dto.Request;
-using Api.Controllers.MusicClip.Dto.Response;
+﻿using Api.Controllers.Clip.Dto.Request;
+using Api.Controllers.Clip.Dto.Response;
 using AutoMapper;
 using Dal.MusicClip;
 
@@ -9,7 +9,7 @@ public class MusicClipProfile : Profile
 {
     public MusicClipProfile()
     {
-        CreateMap<MusicClipDal, GetMusicClipInfoResponse>()
+        CreateMap<ClipDal, GetClipInfoResponse>()
             .ForMember(d => d.Description, o => o.MapFrom(s => s.Description))
             .ForMember(d => d.SongId, o => o.MapFrom(s => s.SongId))
             .ForMember(d => d.Title, o => o.MapFrom(s => s.Title))
@@ -17,7 +17,7 @@ public class MusicClipProfile : Profile
             .ForMember(d => d.ClipFileId, o => o.MapFrom(s => s.ClipFileId))
             .ForMember(d => d.PreviewFileId, o => o.MapFrom(s => s.PreviewFileId));
 
-        CreateMap<UploadClipRequest, MusicClipDal>()
+        CreateMap<UploadClipRequest, ClipDal>()
             .ForMember(d => d.SongId, o => o.MapFrom(s => s.SongId))
             .ForMember(d => d.Description, o => o.MapFrom(s => s.Description))
             .ForMember(d => d.Title, o => o.MapFrom(s => s.Title))

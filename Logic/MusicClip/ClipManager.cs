@@ -8,21 +8,21 @@ using MainLib.TagLib;
 namespace Logic.MusicClip;
 
 /// <inheritdoc />
-public class MusicClipManager : IMusicClipManager
+public class ClipManager : IClipManager
 {
-    private readonly IMusicClipRepository _musicClipRepository;
+    private readonly IClipRepository _clipRepository;
     private readonly IFileManager _fileManager;
 
-    public MusicClipManager(
-        IMusicClipRepository musicClipRepository,
+    public ClipManager(
+        IClipRepository clipRepository,
         IFileManager fileManager)
     {
-        _musicClipRepository = musicClipRepository;
+        _clipRepository = clipRepository;
         _fileManager = fileManager;
     }
 
     /// <inheritdoc />
-    public async Task<Guid> UploadAsync(MusicClipDal clip, FileDal clipFile, FileDal previewFile)
+    public async Task<Guid> UploadAsync(ClipDal clip, FileDal clipFile, FileDal previewFile)
     {
         using var log = new MethodLog(clip);
 
@@ -34,18 +34,18 @@ public class MusicClipManager : IMusicClipManager
 
         clip.ClipFileId = clipFileId;
         clip.PreviewFileId = previewFileId;
-        var id = await _musicClipRepository.InsertAsync(clip);
+        var id = await _clipRepository.InsertAsync(clip);
 
         log.ReturnsValue(id);
         return id;
     }
 
     /// <inheritdoc />
-    public async Task<MusicClipDal> GetAsync(Guid id)
+    public async Task<ClipDal> GetAsync(Guid id)
     {
         using var log = new MethodLog(id);
 
-        var clip = await _musicClipRepository.GetAsync(id);
+        var clip = await _clipRepository.GetAsync(id);
 
         log.ReturnsValue(clip);
         return clip;
@@ -56,9 +56,9 @@ public class MusicClipManager : IMusicClipManager
     {
         using var log = new MethodLog(clipId);
 
-        await using var transaction = await _musicClipRepository.BeginTransactionOrExistingAsync();
+        await using var transaction = await _clipRepository.BeginTransactionOrExistingAsync();
 
-        var clip = await _musicClipRepository.GetAsync(clipId);
+        var clip = await _clipRepository.GetAsync(clipId);
         var file = await _fileManager.DownloadAsync(clip.ClipFileId);
 
         log.ReturnsValue(file);
@@ -69,9 +69,9 @@ public class MusicClipManager : IMusicClipManager
     {
         using var log = new MethodLog(clipId);
 
-        await using var transaction = await _musicClipRepository.BeginTransactionOrExistingAsync();
+        await using var transaction = await _clipRepository.BeginTransactionOrExistingAsync();
 
-        var clip = await _musicClipRepository.GetAsync(clipId);
+        var clip = await _clipRepository.GetAsync(clipId);
         var file = await _fileManager.DownloadAsync(clip.ClipFileId);
 
         log.ReturnsValue(file);
@@ -79,13 +79,13 @@ public class MusicClipManager : IMusicClipManager
     }
 
     /// <inheritdoc />
-    public async Task UpdateAsync(MusicClipDal clip)
+    public async Task UpdateAsync(ClipDal clip)
     {
         using var log = new MethodLog(clip);
 
-        await using var transaction = await _musicClipRepository.BeginTransactionOrExistingAsync();
+        await using var transaction = await _clipRepository.BeginTransactionOrExistingAsync();
         
-        await _musicClipRepository.UpdateAsync(clip);
+        await _clipRepository.UpdateAsync(clip);
     }
 
     /// <inheritdoc />
@@ -93,8 +93,8 @@ public class MusicClipManager : IMusicClipManager
     {
         using var log = new MethodLog(id);
         
-        await using var transaction = await _musicClipRepository.BeginTransactionOrExistingAsync();
+        await using var transaction = await _clipRepository.BeginTransactionOrExistingAsync();
         
-        await _musicClipRepository.DeleteAsync(id);
+        await _clipRepository.DeleteAsync(id);
     }
 }

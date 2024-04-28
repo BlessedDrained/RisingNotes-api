@@ -1,10 +1,7 @@
-﻿using Api.Controllers.MusicClip.Dto.Request;
-using Api.Controllers.MusicClip.Dto.Response;
-using Api.Controllers.ShortVideo.Dto.Request;
+﻿using Api.Controllers.ShortVideo.Dto.Request;
 using Api.Controllers.ShortVideo.Dto.Response;
 using AutoMapper;
 using Dal.File;
-using Dal.MusicClip;
 using Dal.ShortVideo;
 using Logic.ShortVideo;
 using MainLib.Logging;

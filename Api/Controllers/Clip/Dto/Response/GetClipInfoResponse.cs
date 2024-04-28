@@ -1,9 +1,9 @@
-﻿namespace Api.Controllers.MusicClip.Dto.Response;
+﻿namespace Api.Controllers.Clip.Dto.Response;
 
 /// <summary>
 /// Ответ на получение инфы о клипе
 /// </summary>
-public record GetMusicClipInfoResponse
+public record GetClipInfoResponse
 {
     /// <summary>
     /// Название

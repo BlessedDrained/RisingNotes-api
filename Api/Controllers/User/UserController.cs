@@ -3,14 +3,12 @@ using Api.Controllers.User.Dto.Request;
 using Api.Controllers.User.Dto.Response;
 using Api.Premanager.User;
 using Dal.BaseUser.Repository;
-using Logic.Logo;
 using Logic.User;
 using MainLib.Api.Auth.Constant;
 using MainLib.Api.Controller;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RisingNotesLib.Exceptions;
 using RisingNotesLib.Helper;
 
 namespace Api.Controllers.User;

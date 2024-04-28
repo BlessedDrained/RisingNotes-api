@@ -11,20 +11,20 @@ public record ShortVideoCommentDal : DalModel<Guid>
     /// <summary>
     /// Идентификатор автора
     /// </summary>
-    public Guid AuthorId { get; init; }
+    public Guid CreatorId { get; set; }
     
     /// <summary>
     /// Автор
     /// </summary>
-    public UserDal Author { get; init; }
+    public UserDal Creator { get; set; }
     
     /// <summary>
     /// Текст комментария
     /// </summary>
-    public string Text { get; init; }
+    public string Text { get; set; }
     
     /// <summary>
     /// Идентификатор видео
     /// </summary>
-    public Guid ShortVideoId { get; init; }
+    public Guid ShortVideoId { get; set; }
 }

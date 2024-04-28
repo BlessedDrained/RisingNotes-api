@@ -1,7 +1,6 @@
 ﻿using Api.Controllers.SongPublish.Dto.Request;
 using Api.Controllers.SongPublish.Dto.Response;
 using Api.Premanager.SongPublish;
-using Logic.Logo;
 using Logic.SongPublish;
 using MainLib.Api.Auth.Constant;
 using MainLib.Api.Controller;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RisingNotesLib.Constant;
-using RisingNotesLib.Exceptions;
 using RisingNotesLib.Helper;
 
 namespace Api.Controllers.SongPublish;

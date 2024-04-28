@@ -1,11 +1,11 @@
-﻿using Dal.ShortVideoComment;
+﻿using Dal.MusicClipComment;
 
-namespace Logic.ShortVideoComment;
+namespace Logic.MusicClipComment;
 
 /// <summary>
-/// Менеджер для <see cref="ShortVideoCommentDal"/>
+/// Менеджер для <see cref="ClipCommentDal"/>
 /// </summary>
-public interface IShortVideoCommentManager
+public interface IClipCommentManager
 {
     /// <summary>
     /// Добавить комментарий
@@ -15,7 +15,7 @@ public interface IShortVideoCommentManager
     /// <summary>
     /// Получить список комментариев к песне
     /// </summary>
-    Task<List<ShortVideoCommentDal>> GetCommentListAsync(Guid songId);
+    Task<List<ClipCommentDal>> GetCommentListAsync(Guid songId);
 
     /// <summary>
     /// Изменить комментарий

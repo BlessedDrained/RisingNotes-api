@@ -7,5 +7,8 @@ namespace Dal.ShortVideoComment.Repository;
 /// </summary>
 public interface IShortVideoCommentRepository : IRepository<ShortVideoCommentDal, Guid>
 {
-    
+    /// <summary>
+    /// Получить список комментариев к песне
+    /// </summary>
+    public Task<List<ShortVideoCommentDal>> GetShortVideoCommentListAsync(Guid songId);
 }

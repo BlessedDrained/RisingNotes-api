@@ -1,6 +1,5 @@
 ﻿using Dal.Context;
 using MainLib.Dal.Repository.Base;
-using Microsoft.EntityFrameworkCore;
 
 namespace Dal.ShortVideo.Repository;
 

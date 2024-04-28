@@ -38,7 +38,7 @@ public record UserDal : DalModel<Guid>
     /// <summary>
     /// Список комментариев к клипам
     /// </summary>
-    public List<MusicClipCommentDal> MusicClipCommentList { get; set; } = new();
+    public List<ClipCommentDal> MusicClipCommentList { get; set; } = new();
 
     /// <summary>
     /// Список комментариев к коротким видео

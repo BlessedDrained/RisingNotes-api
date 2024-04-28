@@ -1,4 +1,5 @@
 ﻿using Dal.BaseUser;
+using Dal.MusicClip;
 using Dal.MusicClipComment;
 using Dal.ShortVideo;
 using Dal.Song;
@@ -14,7 +15,7 @@ public record AuthorDal : DalModel<Guid>
     /// <summary>
     /// Имя автора + имя пользователя по совместительству
     /// </summary>
-    public string Name => User.UserName;
+    public string Name => User?.UserName;
     
     /// <summary>
     /// Список песен
@@ -24,7 +25,7 @@ public record AuthorDal : DalModel<Guid>
     /// <summary>
     /// Список музыкальных клипов
     /// </summary>
-    public List<MusicClipCommentDal> MusicClipList { get; set; } = new();
+    public List<ClipDal> MusicClipList { get; set; } = new();
 
     /// <summary>
     /// Список коротких видео, загруженных автором

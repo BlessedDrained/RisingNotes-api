@@ -4,19 +4,19 @@ using Dal.MusicClip;
 namespace Logic.MusicClip;
 
 /// <summary>
-/// Менеджер для <see cref="MusicClipDal"/>
+/// Менеджер для <see cref="ClipDal"/>
 /// </summary>
-public interface IMusicClipManager
+public interface IClipManager
 {
     /// <summary>
     /// Создать клип
     /// </summary>
-    Task<Guid> UploadAsync(MusicClipDal clip, FileDal clipFile, FileDal previewFile);
+    Task<Guid> UploadAsync(ClipDal clip, FileDal clipFile, FileDal previewFile);
 
     /// <summary>
     /// Получить по id
     /// </summary>
-    Task<MusicClipDal> GetAsync(Guid id);
+    Task<ClipDal> GetAsync(Guid id);
 
     /// <summary>
     /// Получить файл превью
@@ -31,7 +31,7 @@ public interface IMusicClipManager
     /// <summary>
     /// Обновить
     /// </summary>
-    Task UpdateAsync(MusicClipDal clip);
+    Task UpdateAsync(ClipDal clip);
 
     /// <summary>
     /// Удалить

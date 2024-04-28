@@ -37,7 +37,7 @@ public class SongPublishManager : ISongPublishManager
         var file = TagLib.File.Create(new FileAbstraction($"{request.SongFile.Name}.{request.SongFile.Extension}", request.SongFile.Content));
         request.DurationMs = Convert.ToInt32(file.Properties.Duration.TotalMilliseconds);
 
-        await using var transaction = await _repository.BeginTransactionOrExistingAsync(); 
+        // await using var transaction = await _repository.BeginTransactionOrExistingAsync(); 
         
         var songFileId = await _fileManager.UploadAsync(request.SongFile);
         var logoFileId = await _fileManager.UploadAsync(request.LogoFile);
@@ -53,7 +53,7 @@ public class SongPublishManager : ISongPublishManager
     {
         using var log = new MethodLog(requestId, newRequest);
 
-        await using var transaction = await _songRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _songRepository.BeginTransactionOrExistingAsync();
         
         var request = await _repository.GetAsync(requestId);
         if (request.Status is PublishRequestStatus.Approved or PublishRequestStatus.Rejected or PublishRequestStatus.Revoked)
@@ -151,7 +151,7 @@ public class SongPublishManager : ISongPublishManager
     {
         using var log = new MethodLog(requestId);
 
-        await using var transaction = await _repository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _repository.BeginTransactionOrExistingAsync();
         
         var request = await _repository.GetAsync(requestId);
         var file = await _fileManager.DownloadAsync(request.LogoFileId.Value);

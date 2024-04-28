@@ -1,7 +1,8 @@
 ﻿using Api.Premanager.Auth;
 using Api.Premanager.Author;
+using Api.Premanager.Clip;
+using Api.Premanager.ClipComment;
 using Api.Premanager.Music;
-using Api.Premanager.MusicClip;
 using Api.Premanager.Playlist;
 using Api.Premanager.ShortVideo;
 using Api.Premanager.SongComment;
@@ -27,8 +28,9 @@ public static class Startup
         services.AddTransient<IUserPremanager, UserPremanager>();
         services.AddTransient<IAuthorPremanager, AuthorPremanager>();
         services.AddTransient<ISongPublishPremanager, SongPublishPremanager>();
-        services.AddTransient<IMusicClipPremanager, MusicClipPremanager>();
+        services.AddTransient<IClipPremanager, ClipPremanager>();
         services.AddTransient<IShortVideoPremanager, ShortVideoPremanager>();
+        services.AddTransient<IClipCommentPremanager, ClipCommentPremanager>();
 
         return services;
     }

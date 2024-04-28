@@ -37,7 +37,7 @@ public class UserManager : IUserManager
     {
         using var log = new MethodLog(userId);
         
-        await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
         
         var user = await _userRepository.GetAsync(userId);
         if (!user.LogoFileId.HasValue)
@@ -58,7 +58,7 @@ public class UserManager : IUserManager
     {
         using var log = new MethodLog(userId, authorId);
         
-        await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
 
         var user = await _userRepository.GetWithSubscriptionListAsync(userId);
         if (user.SubscriptionList.Exists(x => x.Id == authorId))
@@ -77,7 +77,7 @@ public class UserManager : IUserManager
     {
         using var log = new MethodLog(userId, authorId);
 
-        await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
         
         var user = await _userRepository.GetWithSubscriptionListAsync(userId);
         if (!user.SubscriptionList.Exists(x => x.Id == authorId))
@@ -95,7 +95,7 @@ public class UserManager : IUserManager
     {
         using var log = new MethodLog(userId, file);
 
-        await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
         
         var user = await _userRepository.GetAsync(userId);
 
@@ -117,12 +117,12 @@ public class UserManager : IUserManager
     {
         using var log = new MethodLog(userId, userName);
 
-        await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
         
         var nameAlreadyUsed = await _userRepository.ExistsAsync(x => x.UserName == userName);
         if (nameAlreadyUsed)
         {
-            throw new Exception($"Username={userName} is already taken");
+            throw new UserNameIsAlreadyTakenException(userName);
         }
 
         var user = await _userRepository.GetAsync(userId);

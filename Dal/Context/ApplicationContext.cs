@@ -66,25 +66,14 @@ public class ApplicationContext : IdentityDbContext<AppIdentityUser>
         builder.Entity<UserDal>()
             .HasMany(x => x.FavoriteSongList)
             .WithMany(x => x.AddedToFavoriteUserList);
-
-        builder.Entity<UserDal>()
-            .HasMany(x => x.MusicClipCommentList)
-            .WithOne()
-            .HasForeignKey(x => x.AuthorId);
-
-        builder.Entity<UserDal>()
-            .HasMany(x => x.ShortVideoCommentList)
-            .WithOne()
-            .HasForeignKey(x => x.AuthorId);
         
         builder.Entity<SongPublishRequestDal>();
 
+        builder.Entity<ClipCommentDal>();
         builder.Entity<ShortVideoCommentDal>();
 
-        builder.Entity<MusicClipDal>();
+        builder.Entity<ClipDal>();
 
         builder.Entity<ShortVideoDal>();
-
-        builder.Entity<MusicClipCommentDal>();
     }
 }

@@ -36,7 +36,7 @@ public class SongManager : ISongManager
         var file = TagLib.File.Create(new FileAbstraction($"{songFile.Name}.{songFile.Extension}", songFile.Content));
         model.DurationMsec = Convert.ToInt32(file.Properties.Duration.TotalMilliseconds);
 
-        await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
 
         var songFileId = await _fileManager.UploadAsync(songFile);
         var logoFileId = await _fileManager.UploadAsync(logoFile);
@@ -75,7 +75,7 @@ public class SongManager : ISongManager
     public async Task<FileDal> GetSongFileAsync(Guid songId)
     {
         using var log = new MethodLog(songId);
-        await using var transaction = await _songRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _songRepository.BeginTransactionOrExistingAsync();
         
         var song = await _songRepository.GetAsync(songId);
         var file = await _fileManager.DownloadAsync(song.SongFileId);
@@ -93,7 +93,7 @@ public class SongManager : ISongManager
     {
         using var log = new MethodLog(songId);
 
-        await using var transaction = await _songRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _songRepository.BeginTransactionOrExistingAsync();
         
         var song = await _songRepository.GetAsync(songId);
 
@@ -137,7 +137,7 @@ public class SongManager : ISongManager
     public async Task AddFavoriteAsync(Guid userId, Guid songId)
     {
         using var log = new MethodLog(userId, songId);
-        await using var transaction = await _songRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _songRepository.BeginTransactionOrExistingAsync();
         var song = await _songRepository.GetAsync(songId);
 
         var user = await _userRepository.GetWithFavoriteSongListAsync(userId);
@@ -155,7 +155,7 @@ public class SongManager : ISongManager
     public async Task RemoveFavoriteAsync(Guid userId, Guid songId)
     {
         using var log = new MethodLog(userId, songId);
-        await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
         
         var user = await _userRepository.GetWithFavoriteSongListAsync(userId);
 
@@ -174,7 +174,7 @@ public class SongManager : ISongManager
     {
         using var log = new MethodLog(authorId, songId, file);
 
-        await using var transaction = await _songRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _songRepository.BeginTransactionOrExistingAsync();
         
         var song = await _songRepository.GetAsync(songId);
 
@@ -210,7 +210,7 @@ public class SongManager : ISongManager
     {
         using var log = new MethodLog(userId, songId);
 
-        await using var transaction = await _songRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _songRepository.BeginTransactionOrExistingAsync();
         
         var user = await _userRepository.GetAsync(userId);
         var song = await _songRepository.GetAsync(songId);
@@ -226,7 +226,7 @@ public class SongManager : ISongManager
     {
         using var log = new MethodLog(userId, songId);
 
-        await using var transaction = await _songRepository.BeginTransactionAsync();
+        // await using var transaction = await _songRepository.BeginTransactionAsync();
         
         var user = await _userRepository.GetWithExcludedListAsync(userId);
         var song = await _songRepository.GetAsync(songId);

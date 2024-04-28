@@ -1,6 +1,6 @@
-﻿using Api.Controllers.MusicClip.Dto.Request;
-using Api.Controllers.MusicClip.Dto.Response;
-using Api.Premanager.MusicClip;
+﻿using Api.Controllers.Clip.Dto.Request;
+using Api.Controllers.Clip.Dto.Response;
+using Api.Premanager.Clip;
 using Dal.MusicClip;
 using Logic.MusicClip;
 using MainLib.Api.Auth.Constant;
@@ -11,23 +11,23 @@ using Microsoft.AspNetCore.Mvc;
 using RisingNotesLib.Constant;
 using RisingNotesLib.Helper;
 
-namespace Api.Controllers.MusicClip;
+namespace Api.Controllers.Clip;
 
 /// <summary>
-/// Контроллер для <see cref="MusicClipDal"/>
+/// Контроллер для <see cref="ClipDal"/>
 /// </summary>
 [Route("music-clip")]
-public class MusicClipController : PublicController
+public class ClipController : PublicController
 {
-    private readonly IMusicClipPremanager _musicClipPremanager;
-    private readonly IMusicClipManager _musicClipManager;
+    private readonly IClipPremanager _clipPremanager;
+    private readonly IClipManager _clipManager;
 
-    public MusicClipController(
-        IMusicClipPremanager musicClipPremanager, 
-        IMusicClipManager musicClipManager)
+    public ClipController(
+        IClipPremanager clipPremanager, 
+        IClipManager clipManager)
     {
-        _musicClipPremanager = musicClipPremanager;
-        _musicClipManager = musicClipManager;
+        _clipPremanager = clipPremanager;
+        _clipManager = clipManager;
     }
     
     /// <summary>
@@ -45,7 +45,7 @@ public class MusicClipController : PublicController
         }
         
         var authorId = Guid.Parse(claim.Value);
-        var response = await _musicClipPremanager.UploadAsync(request, authorId);
+        var response = await _clipPremanager.UploadAsync(request, authorId);
         
         return CreatedAtAction("GetInfo", new {clipId = response.Id}, response);
     }
@@ -54,10 +54,10 @@ public class MusicClipController : PublicController
     /// Получить информацию о клипе
     /// </summary>
     [HttpGet("{clipId:guid}")]
-    [ProducesResponseType(typeof(GetMusicClipInfoResponse), 200)]
+    [ProducesResponseType(typeof(GetClipInfoResponse), 200)]
     public async Task<IActionResult> GetInfoAsync([FromRoute] Guid clipId)
     {
-        var response = await _musicClipPremanager.GetInfoAsync(clipId);
+        var response = await _clipPremanager.GetInfoAsync(clipId);
         
         return Ok(response);
     }
@@ -69,7 +69,7 @@ public class MusicClipController : PublicController
     [ProducesResponseType(200)]
     public async Task<IActionResult> GetPreviewAsync([FromRoute] Guid clipId)
     {
-        var preview = await _musicClipManager.GetPreviewAsync(clipId);
+        var preview = await _clipManager.GetPreviewAsync(clipId);
         var contentType = ContentTypeHelper.GetContentTypeByFileExtension(preview.Extension);
 
         return File(preview.Content, contentType, enableRangeProcessing: true);
@@ -83,7 +83,7 @@ public class MusicClipController : PublicController
     [ProducesResponseType(206)]
     public async Task<IActionResult> GetFileAsync([FromRoute] Guid clipId)
     {
-        var file = await _musicClipManager.GetFileAsync(clipId);
+        var file = await _clipManager.GetFileAsync(clipId);
         var contentType = ContentTypeHelper.GetContentTypeByFileExtension(file.Extension);
 
         return File(file.Content, contentType);
@@ -96,8 +96,31 @@ public class MusicClipController : PublicController
     [ProducesResponseType(204)]
     public async Task<IActionResult> DeleteAsync([FromRoute] Guid clipId)
     {
-        await _musicClipManager.DeleteAsync(clipId);
+        await _clipManager.DeleteAsync(clipId);
 
         return NoContent();
+    }
+
+    /// <summary>
+    /// Получить список клипов по вайлдкарду названия
+    /// </summary>
+    [HttpGet("list")]
+    [ProducesResponseType(typeof(GetClipInfoListResponse), 200)]
+    public async Task<IActionResult> GetListAsync([FromQuery] string nameWildcard)
+    {
+        var response = await _clipPremanager.GetListAsync(nameWildcard);
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Получить список клипов автора
+    /// </summary>
+    [HttpGet("by-author/{authorId:guid}")]
+    public async Task<IActionResult> GetAuthorClipListAsync([FromRoute] Guid authorId)
+    {
+        var response = await _clipPremanager.GetAuthorClipListAsync(authorId);
+
+        return Ok(response);
     }
 }

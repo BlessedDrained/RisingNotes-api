@@ -1,6 +1,4 @@
-﻿using Api.Controllers.MusicClip.Dto.Request;
-using Api.Controllers.MusicClip.Dto.Response;
-using Api.Controllers.ShortVideo.Dto.Request;
+﻿using Api.Controllers.ShortVideo.Dto.Request;
 using Api.Controllers.ShortVideo.Dto.Response;
 
 namespace Api.Premanager.ShortVideo;

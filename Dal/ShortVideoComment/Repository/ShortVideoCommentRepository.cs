@@ -9,4 +9,13 @@ public class ShortVideoCommentRepository : Repository<ShortVideoCommentDal, Guid
     public ShortVideoCommentRepository(ApplicationContext context) : base(context)
     {
     }
+
+    public async Task<List<ShortVideoCommentDal>> GetShortVideoCommentListAsync(Guid shortVideoId)
+    {
+        var commentList = await Set
+            .Where(x => x.ShortVideoId == shortVideoId)
+            .ToListAsync();
+
+        return commentList;
+    }
 }

@@ -17,7 +17,10 @@ public class AuthorRepository : Repository<AuthorDal, Guid>, IAuthorRepository
     /// <inheritdoc />
     public async Task<AuthorDal> GetShortInfoAsync(string authorName)
     {
-        var author = await Set.SingleOrDefaultAsync(x => x.Name == authorName);
+        var author = await Set
+            .Include(x => x.User)
+            .SingleOrDefaultAsync(x => x.Name == authorName);
+        
         if (author == null)
         {
             throw new EntityNotFoundException<AuthorDal>(authorName);
@@ -29,7 +32,10 @@ public class AuthorRepository : Repository<AuthorDal, Guid>, IAuthorRepository
     /// <inheritdoc />
     public async Task<AuthorDal> GetShortInfoAsync(Guid authorId)
     {
-        var author = await Set.FindAsync(authorId);
+        var author = await Set
+            .Include(x => x.User)
+            .FirstOrDefaultAsync(x => x.Id == authorId);
+        
         if (author == null)
         {
             throw new EntityNotFoundException<AuthorDal>(authorId);
@@ -41,7 +47,10 @@ public class AuthorRepository : Repository<AuthorDal, Guid>, IAuthorRepository
     /// <inheritdoc />
     public async Task<AuthorDal> GetByUserIdAsync(Guid userId)
     {
-        var author = await Set.SingleOrDefaultAsync(x => x.UserId == userId);
+        var author = await Set
+            .Include(x => x.User)
+            .SingleOrDefaultAsync(x => x.UserId == userId);
+        
         if (author == null)
         {
             throw new EntityNotFoundException<AuthorDal>($"""userId = {userId}""");
@@ -57,14 +66,17 @@ public class AuthorRepository : Repository<AuthorDal, Guid>, IAuthorRepository
             .Set<UserDal>()
             .Where(x => x.UserName == authorName)
             .FirstOrDefaultAsync();
+        
         if (user == null)
         {
             throw new EntityNotFoundException<UserDal>(authorName);
         }
         
         var author = await Set
+            .Include(x => x.User)
             .Where(x => x.UserId == user.Id)
             .FirstOrDefaultAsync();
+        
         if (author == null)
         {
             throw new EntityNotFoundException<AuthorDal>(authorName);
@@ -76,18 +88,19 @@ public class AuthorRepository : Repository<AuthorDal, Guid>, IAuthorRepository
     /// <inheritdoc />
     public Task<List<AuthorDal>> GetListAsync(GetAuthorListFilterModel filter)
     {
-        var userList = Context.Set<UserDal>().AsQueryable();
-        var authorList = Set.AsQueryable();
+        var authorList = Set.Include(x => x.User)
+            .AsQueryable();
 
         if (filter == null)
         {
-            return authorList.ToListAsync();
+            return authorList
+                .ToListAsync();
         }
 
         if (filter.NameWildcard != null)
         {
             var kek = filter.NameWildcard.ToLower();
-            authorList = authorList.Where(x => x.Name.ToLower().Contains(kek));
+            authorList = authorList.Where(x => x.User.UserName.ToLower().Contains(kek));
             // .Where(x => 1 - EF.Functions.FuzzyStringMatchLevenshtein(filter.NameWildcard, x.AuthorPseudoname) / Math.Max(x.AuthorPseudoname.Length, filter.NameWildcard.Length) > 0.8);
         }
 
@@ -98,7 +111,10 @@ public class AuthorRepository : Repository<AuthorDal, Guid>, IAuthorRepository
     /// <inheritdoc />
     public async Task<int> GetSubcriberCountAsync(Guid authorId)
     {
-        var author = await Set.SingleOrDefaultAsync(x => x.Id == authorId);
+        var author = await Set
+            .Include(x => x.User)
+            .SingleOrDefaultAsync(x => x.Id == authorId);
+        
         if (author == null)
         {
             throw new EntityNotFoundException<AuthorDal>(authorId);
@@ -110,5 +126,19 @@ public class AuthorRepository : Repository<AuthorDal, Guid>, IAuthorRepository
             .SingleAsync();
 
         return count;
+    }
+
+    public override async Task<AuthorDal> GetAsync(Guid id)
+    {
+        var author = await Set.Include(x => x.User)
+            .Where(x => x.Id == id)
+            .FirstOrDefaultAsync();
+        
+        if (author == null)
+        {
+            throw new EntityNotFoundException<AuthorDal>(id);
+        }
+
+        return author;
     }
 }

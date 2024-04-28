@@ -35,8 +35,8 @@ public static class Startup
         services.AddTransient<ILogoResizeService, LogoResizeService>();
         services.AddTransient<IAuthorManager, AuthorManager>();
         services.AddTransient<ISongPublishManager, SongPublishManager>();
-        services.AddTransient<IMusicClipManager, MusicClipManager>();
-        services.AddTransient<IMusicClipCommentManager, MusicClipCommentManager>();
+        services.AddTransient<IClipManager, ClipManager>();
+        services.AddTransient<IClipCommentManager, ClipCommentManager>();
         services.AddTransient<IShortVideoManager, ShortVideoManager>();
         services.AddTransient<IShortVideoCommentManager, ShortVideoCommentManager>();
 

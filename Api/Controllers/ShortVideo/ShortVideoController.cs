@@ -1,11 +1,7 @@
-﻿using Api.Controllers.MusicClip.Dto.Request;
-using Api.Controllers.MusicClip.Dto.Response;
-using Api.Controllers.ShortVideo.Dto.Request;
+﻿using Api.Controllers.ShortVideo.Dto.Request;
 using Api.Controllers.ShortVideo.Dto.Response;
-using Api.Premanager.MusicClip;
 using Api.Premanager.ShortVideo;
 using Dal.ShortVideo;
-using Logic.MusicClip;
 using Logic.ShortVideo;
 using MainLib.Api.Auth.Constant;
 using MainLib.Api.Controller;

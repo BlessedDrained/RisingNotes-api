@@ -24,11 +24,16 @@ public class UserPremanager : IUserPremanager
     /// <summary>
     /// 
     /// </summary>
-    public UserPremanager(IUserRepository userRepository, IMapper mapper, IUserManager userManager)
+    public UserPremanager(
+        IUserRepository userRepository, 
+        IMapper mapper, 
+        IUserManager userManager,
+        UserManager<AppIdentityUser> identityUserManager)
     {
         _userRepository = userRepository;
         _mapper = mapper;
         _userManager = userManager;
+        _identityUserManager = identityUserManager;
     }
 
     public Task<List<GetWithAuthorSongInfoResponse>> GetFavoriteSongInfoListAsync(Guid userId)

@@ -59,4 +59,9 @@ public static class RisingNotesErrorConstants
     /// Ошибка при удалении файла
     /// </summary>
     public const int FileDelete = 2010;
+
+    /// <summary>
+    /// Имя пользователя уже занято
+    /// </summary>
+    public const int UserNameIsAlreadyTaken = 2011;
 }

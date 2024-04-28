@@ -1,6 +1,6 @@
 ﻿using Api.Controllers.File.Dto.Request;
 
-namespace Api.Controllers.MusicClip.Dto.Request;
+namespace Api.Controllers.Clip.Dto.Request;
 
 /// <summary>
 /// Запрос на загрузку клипа

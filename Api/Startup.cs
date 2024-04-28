@@ -7,7 +7,6 @@ using MainLib.Api.Route;
 using MainLib.Api.Swagger;
 using MainLib.Automapper;
 using MainLib.ExceptionHandler;
-using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Identity;
 using RisingNotesLib.Models;
 using Serilog;

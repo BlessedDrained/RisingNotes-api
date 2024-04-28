@@ -6,7 +6,7 @@ namespace Dal.MusicClipComment;
 /// <summary>
 /// Комментарий к клипу
 /// </summary>
-public record MusicClipCommentDal : DalModel<Guid>
+public record ClipCommentDal : DalModel<Guid>
 {
     /// <summary>
     /// Текст комментария
@@ -16,20 +16,15 @@ public record MusicClipCommentDal : DalModel<Guid>
     /// <summary>
     /// Идентификатор автора
     /// </summary>
-    public Guid AuthorId { get; set; }
+    public Guid CreatorId { get; set; }
     
     /// <summary>
     /// Модель автора
     /// </summary>
-    public UserDal Author { get; set; }
+    public UserDal Creator { get; set; }
     
     /// <summary>
     /// Идентификатор песни, для которой загружен клип
     /// </summary>
     public Guid SongId { get; set; }
-    
-    /// <summary>
-    /// Идентификатор файла превью
-    /// </summary>
-    public Guid PreviewFileId { get; set; }
 }

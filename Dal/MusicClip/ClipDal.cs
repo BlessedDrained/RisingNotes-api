@@ -6,7 +6,7 @@ namespace Dal.MusicClip;
 /// <summary>
 /// модель видео
 /// </summary>
-public record MusicClipDal : DalModel<Guid>
+public record ClipDal : DalModel<Guid>
 {
     /// <summary>
     /// Название

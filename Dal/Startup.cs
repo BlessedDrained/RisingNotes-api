@@ -1,5 +1,4 @@
-﻿using Amazon.S3;
-using Dal.Author.Repository;
+﻿using Dal.Author.Repository;
 using Dal.BaseUser.Repository;
 using Dal.Context;
 using Dal.File.Repository;
@@ -31,8 +30,8 @@ public static class Startup
         services.AddSingleton<IS3ClientFactory, S3ClientFactory>();
         services.AddTransient<IShortVideoRepository, ShortVideoRepository>();
         services.AddTransient<IShortVideoCommentRepository, ShortVideoCommentRepository>();
-        services.AddTransient<IMusicClipRepository, MusicClipRepository>();
-        services.AddTransient<IMusicClipCommentRepository, MusicClipCommentRepository>();
+        services.AddTransient<IClipRepository, ClipRepository>();
+        services.AddTransient<IClipCommentRepository, ClipCommentRepository>();
         
         return services;
     }
