@@ -1,4 +1,4 @@
-﻿using Api.Controllers.MusicClipComment.Dto.Response;
+﻿using Api.Controllers.ClipComment.Dto.Response;
 using Dal.MusicClip;
 
 namespace Api.Premanager.ClipComment;

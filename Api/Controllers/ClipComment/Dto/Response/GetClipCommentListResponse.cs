@@ -1,4 +1,4 @@
-﻿namespace Api.Controllers.MusicClipComment.Dto.Response;
+﻿namespace Api.Controllers.ClipComment.Dto.Response;
 
 /// <summary>
 /// Ответ на получение списка комментариев к клипу

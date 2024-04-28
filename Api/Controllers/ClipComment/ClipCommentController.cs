@@ -9,19 +9,19 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Api.Controllers.MusicClipComment;
+namespace Api.Controllers.ClipComment;
 
 /// <summary>
 /// Контроллер для <see cref="ClipCommentDal"/>
 /// </summary>
 [Route("music-clip")]
-public class MusicClipCommentController : PublicController
+public class ClipCommentController : PublicController
 {
     private readonly IClipCommentManager _songCommentManager;
     private readonly IClipCommentPremanager _songCommentPremanager;
 
     /// <inheritdoc />
-    public MusicClipCommentController(
+    public ClipCommentController(
         IClipCommentManager songCommentManager,
         IClipCommentPremanager songCommentPremanager)
     {

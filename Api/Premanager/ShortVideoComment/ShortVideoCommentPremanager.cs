@@ -1,39 +1,37 @@
-﻿using Api.Controllers.ClipComment.Dto.Response;
+﻿using Api.Controllers.ShortVideoComment.Dto.Response;
 using AutoMapper;
 using Dal.BaseUser.Repository;
-using Logic.MusicClip;
-using Logic.MusicClipComment;
+using Logic.ShortVideo;
+using Logic.ShortVideoComment;
 using MainLib.Logging;
 
-namespace Api.Premanager.ClipComment;
+namespace Api.Premanager.ShortVideoComment;
 
 /// <inheritdoc />
-public class ClipCommentPremanager : IClipCommentPremanager
+public class ShortVideoCommentPremanager : IShortVideoCommentPremanager
 {
-    private readonly IClipCommentManager _clipCommentManager;
-    private readonly IClipManager _clipManager;
+    private readonly IShortVideoCommentManager _clipCommentManager;
     private readonly IMapper _mapper;
     private readonly IUserRepository _userRepository;
 
-    public ClipCommentPremanager(
-        IClipCommentManager clipCommentManager,
-        IClipManager clipManager,
+    public ShortVideoCommentPremanager(
+        IShortVideoCommentManager clipCommentManager,
+        IShortVideoManager clipManager,
         IMapper mapper,
         IUserRepository userRepository)
     {
         _clipCommentManager = clipCommentManager;
-        _clipManager = clipManager;
         _mapper = mapper;
         _userRepository = userRepository;
     }
     
     /// <inheritdoc />
-    public async Task<GetClipCommentListResponse> GetClipCommentListAsync(Guid musicClipId)
+    public async Task<GetShortVideoCommentListResponse> GetShortVideoCommentListAsync(Guid musicClipId)
     {
         using var log = new MethodLog(musicClipId);
         var commentList = await _clipCommentManager.GetCommentListAsync(musicClipId);
 
-        var responseCommentList = _mapper.Map<List<GetClipCommentResponse>>(commentList);
+        var responseCommentList = _mapper.Map<List<GetShortVideoCommentResponse>>(commentList);
 
         for (var i = 0; i < responseCommentList.Count; i++)
         {
@@ -47,7 +45,7 @@ public class ClipCommentPremanager : IClipCommentPremanager
             responseCommentList[i] = responseComment;
         }
 
-        var response = new GetClipCommentListResponse()
+        var response = new GetShortVideoCommentListResponse()
         {
             CommentList = responseCommentList
         };
