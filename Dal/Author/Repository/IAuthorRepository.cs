@@ -34,4 +34,9 @@ public interface IAuthorRepository : IRepository<AuthorDal, Guid>
     /// Получить количество подписчиков автора
     /// </summary>
     Task<int> GetSubcriberCountAsync(Guid authorId);
+
+    /// <summary>
+    /// Получить общее количество прослушиваний автора
+    /// </summary>
+    Task<int> GetTotalAuditionCountAsync(Guid authorId);
 }

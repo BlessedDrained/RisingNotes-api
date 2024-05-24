@@ -1,5 +1,6 @@
 ﻿using Dal.BaseUser;
 using Dal.Context;
+using Dal.Song;
 using MainLib.Dal.Exception;
 using MainLib.Dal.Repository.Base;
 using Microsoft.EntityFrameworkCore;
@@ -126,6 +127,19 @@ public class AuthorRepository : Repository<AuthorDal, Guid>, IAuthorRepository
             .SingleAsync();
 
         return count;
+    }
+
+    /// <inheritdoc />
+    public async Task<int> GetTotalAuditionCountAsync(Guid authorId)
+    {
+        var songSet = Context.Set<SongDal>();
+
+        var auditionCount = await songSet
+            .Where(x => x.AuthorId == authorId)
+            .Select(x => x.AuditionCount)
+            .SumAsync();
+
+        return auditionCount;
     }
 
     public override async Task<AuthorDal> GetAsync(Guid id)

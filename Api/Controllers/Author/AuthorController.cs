@@ -138,4 +138,18 @@ public class AuthorController : PublicController
 
         return File(logo.Content, contentType);
     }
+
+    /// <summary>
+    /// Получить общее количество прослушиваний автора
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("{authorId:guid}/audition/count")]
+    [ProducesResponseType(typeof(GetAuthorTotalAuditionCountResponse), 200)]
+    public async Task<IActionResult> GetAuthorCount(
+        [FromRoute] Guid authorId)
+    {
+        var auditionCount = await _authorPremanager.GetAuthorTotalAuditionCountAsync(authorId);
+
+        return Ok(auditionCount);
+    }
 }

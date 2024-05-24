@@ -52,4 +52,9 @@ public interface IAuthorPremanager
     /// Обновить информацию об авторе
     /// </summary>
     Task UpdateAsync(Guid authorId, UpdateAuthorRequest request);
+
+    /// <summary>
+    /// Получить общее количество прослушиваний автора
+    /// </summary>
+    Task<GetAuthorTotalAuditionCountResponse> GetAuthorTotalAuditionCountAsync(Guid authorId);
 }

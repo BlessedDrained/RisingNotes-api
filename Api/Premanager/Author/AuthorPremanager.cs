@@ -125,4 +125,19 @@ public class AuthorPremanager : IAuthorPremanager
         var author = _mapper.Map<AuthorDal>(request);
         await _authorManager.UpdateAsync(authorId, author);
     }
+
+    /// <inheritdoc />
+    public async Task<GetAuthorTotalAuditionCountResponse> GetAuthorTotalAuditionCountAsync(Guid authorId)
+    {
+        using var log = new MethodLog(authorId);
+
+        var auditionCount = await _authorManager.GetAuthorTotalAuditionCountAsync(authorId);
+
+        var response = new GetAuthorTotalAuditionCountResponse()
+        {
+            AuditionCount = auditionCount
+        };
+
+        return response;
+    }
 }

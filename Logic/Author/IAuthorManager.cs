@@ -22,4 +22,9 @@ public interface IAuthorManager
     /// Обновить информацию об авторе
     /// </summary>
     Task UpdateAsync(Guid authorId, AuthorDal newAuthor);
+
+    /// <summary>
+    /// Получить общее количество прослушиваний автора
+    /// </summary>
+    Task<int> GetAuthorTotalAuditionCountAsync(Guid authorId);
 }

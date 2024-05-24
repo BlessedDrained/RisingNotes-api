@@ -35,7 +35,7 @@ public class AuthorManager : IAuthorManager
     {
         using var log = new MethodLog(userId, author);
         
-        await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
         
         var user = await _userRepository.GetAsync(userId);
         if (user.IsAuthor)
@@ -78,7 +78,7 @@ public class AuthorManager : IAuthorManager
     {
         using var log = new MethodLog(authorId, newAuthor);
 
-        await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
         
         var author = await _authorRepository.GetAsync(authorId);
 
@@ -103,5 +103,13 @@ public class AuthorManager : IAuthorManager
         }
 
         await _authorRepository.UpdateAsync(author);
+    }
+
+    /// <inheritdoc />
+    public async Task<int> GetAuthorTotalAuditionCountAsync(Guid authorId)
+    {
+        await _authorRepository.GetAsync(authorId);
+
+        return await _authorRepository.GetTotalAuditionCountAsync(authorId);
     }
 }
