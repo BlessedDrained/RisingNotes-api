@@ -86,7 +86,7 @@ public class ClipController : PublicController
         var file = await _clipManager.GetFileAsync(clipId);
         var contentType = ContentTypeHelper.GetContentTypeByFileExtension(file.Extension);
 
-        return File(file.Content, contentType);
+        return File(file.Content, contentType, enableRangeProcessing: true);
     }
 
     /// <summary>

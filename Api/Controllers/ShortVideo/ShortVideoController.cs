@@ -47,7 +47,7 @@ public class ShortVideoController : PublicController
         var authorId = Guid.Parse(claim.Value);
         var response = await _shortVideoPremanager.UploadAsync(request, authorId);
 
-        return CreatedAtAction("GetInfo", new {clipId = response.Id}, response);
+        return CreatedAtAction("GetInfo", new {shortVideoId = response.Id}, response);
     }
 
     /// <summary>
@@ -86,7 +86,7 @@ public class ShortVideoController : PublicController
         var file = await _shortVideoManager.GetFileAsync(shortVideoId);
         var contentType = ContentTypeHelper.GetContentTypeByFileExtension(file.Extension);
 
-        return File(file.Content, contentType);
+        return File(file.Content, contentType, enableRangeProcessing: true);
     }
 
     /// <summary>
