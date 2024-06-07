@@ -10,6 +10,7 @@ public class MusicClipProfile : Profile
     public MusicClipProfile()
     {
         CreateMap<ClipDal, GetClipInfoResponse>()
+            .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
             .ForMember(d => d.Description, o => o.MapFrom(s => s.Description))
             .ForMember(d => d.SongId, o => o.MapFrom(s => s.SongId))
             .ForMember(d => d.Title, o => o.MapFrom(s => s.Title))

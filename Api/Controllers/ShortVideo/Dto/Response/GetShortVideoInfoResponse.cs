@@ -6,6 +6,11 @@
 public record GetShortVideoInfoResponse
 {
     /// <summary>
+    /// Идентификатор короткого видео
+    /// </summary>
+    public Guid Id { get; init; }
+    
+    /// <summary>
     /// Название
     /// </summary>
     public string Title { get; init; }

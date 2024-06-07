@@ -52,7 +52,6 @@ public class DebugController : PublicController
     [HttpPost]
     public async Task<IActionResult> RestoreDatabase()
     {
-        await _context.Database.EnsureDeletedAsync();
         await _context.Database.EnsureCreatedAsync();
 
         await _roleManager.CreateAsync(new IdentityRole(RoleConstants.Author));

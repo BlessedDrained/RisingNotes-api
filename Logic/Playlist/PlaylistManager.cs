@@ -85,6 +85,25 @@ public class PlaylistManager : IPlaylistManager
     }
 
     /// <inheritdoc />
+    public async Task RemoveTrackAsync(Guid playlistId, Guid songId)
+    {
+        using var methodLog = new MethodLog(playlistId, songId);
+
+        var playlist = await _playlistRepository.GetAsync(playlistId);
+        var song = await _songRepository.GetAsync(songId);
+
+        var playlistSong = playlist.SongList.FirstOrDefault(x => x.Id == song.Id);
+        if (playlistSong == null)
+        {
+            throw new PlaylistHasNoSuchTrackException(playlistId, songId);
+        }
+
+        playlist.SongList.Remove(playlistSong);
+
+        await _playlistRepository.UpdateAsync(playlist);
+    }
+
+    /// <inheritdoc />
     public async Task<FileDal> GetLogoAsync(Guid playlistId)
     {
         using var log = new MethodLog(playlistId);
@@ -123,10 +142,10 @@ public class PlaylistManager : IPlaylistManager
         //     await _fileManager.DeleteAsync(playlist.LogoFileId.Value);
         // }
 
-        var fileId = await _fileManager.UploadAsync(file);
+        await _fileManager.UploadAsync(file);
 
         playlist.LogoFile = file;
-        playlist.LogoFileId = fileId;
+        playlist.LogoFileId = file.Id;
 
         await _playlistRepository.UpdateAsync(playlist);
     }

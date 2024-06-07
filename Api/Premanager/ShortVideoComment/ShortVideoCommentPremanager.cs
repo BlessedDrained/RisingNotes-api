@@ -16,7 +16,6 @@ public class ShortVideoCommentPremanager : IShortVideoCommentPremanager
 
     public ShortVideoCommentPremanager(
         IShortVideoCommentManager clipCommentManager,
-        IShortVideoManager clipManager,
         IMapper mapper,
         IUserRepository userRepository)
     {

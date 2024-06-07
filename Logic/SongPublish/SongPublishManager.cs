@@ -38,11 +38,11 @@ public class SongPublishManager : ISongPublishManager
         request.DurationMs = Convert.ToInt32(file.Properties.Duration.TotalMilliseconds);
 
         // await using var transaction = await _repository.BeginTransactionOrExistingAsync(); 
-        
-        var songFileId = await _fileManager.UploadAsync(request.SongFile);
-        var logoFileId = await _fileManager.UploadAsync(request.LogoFile);
-        request.SongFileId = songFileId;
-        request.LogoFileId = logoFileId;
+
+        await _fileManager.UploadAsync(request.SongFile);
+        await _fileManager.UploadAsync(request.LogoFile);
+        request.SongFileId = request.SongFile.Id;
+        request.LogoFileId = request.LogoFile.Id;
 
         var id = await _repository.InsertAsync(request);
         return id;
@@ -54,7 +54,7 @@ public class SongPublishManager : ISongPublishManager
         using var log = new MethodLog(requestId, newRequest);
 
         // await using var transaction = await _songRepository.BeginTransactionOrExistingAsync();
-        
+
         var request = await _repository.GetAsync(requestId);
         if (request.Status is PublishRequestStatus.Approved or PublishRequestStatus.Rejected or PublishRequestStatus.Revoked)
         {
@@ -81,14 +81,14 @@ public class SongPublishManager : ISongPublishManager
         {
             var file = TagLib.File.Create(new FileAbstraction($"{request.SongFile.Name}.{request.SongFile.Extension}", request.SongFile.Content));
             request.DurationMs = Convert.ToInt32(file.Properties.Duration.TotalMilliseconds);
-            var songFileId = await _fileManager.UploadAsync(newRequest.SongFile);
-            request.SongFileId = songFileId;
+            await _fileManager.UploadAsync(newRequest.SongFile);
+            request.SongFileId = newRequest.SongFileId;
         }
 
         if (newRequest.LogoFile != null)
         {
-            var logoFileId = await _fileManager.UploadAsync(newRequest.LogoFile);
-            request.LogoFileId = logoFileId;
+            await _fileManager.UploadAsync(newRequest.LogoFile);
+            request.LogoFileId = newRequest.LogoFile.Id;
         }
 
         request.Status = PublishRequestStatus.Review;
@@ -99,8 +99,7 @@ public class SongPublishManager : ISongPublishManager
     public async Task ReplyAsAdminAsync(Guid requestId, PublishRequestStatus status, string comment)
     {
         using var log = new MethodLog(requestId, status, comment);
-        await using var transaction = await _repository.BeginTransactionOrExistingAsync();
-        
+
         var request = await _repository.GetAsync(requestId);
         if (request.Status is PublishRequestStatus.Approved or PublishRequestStatus.Rejected)
         {
@@ -124,18 +123,19 @@ public class SongPublishManager : ISongPublishManager
             return;
         }
 
-        // Возможно, удалять не стоит, а хранить какое то время
-        // Удаляем, чтобы место не занимать
-        if (status is PublishRequestStatus.Rejected or PublishRequestStatus.Revoked)
+        if (status is PublishRequestStatus.Revoked)
         {
-            await _fileManager.DeleteAsync(request.SongFileId.Value);
-            
+            if (request.SongFileId.HasValue)
+            {
+                await _fileManager.DeleteAsync(request.SongFileId.Value);
+            }
+
             if (request.LogoFileId.HasValue)
             {
                 await _fileManager.DeleteAsync(request.LogoFileId.Value);
             }
         }
-
+        
         request.Status = status;
         if (!string.IsNullOrWhiteSpace(comment))
         {
@@ -152,7 +152,7 @@ public class SongPublishManager : ISongPublishManager
         using var log = new MethodLog(requestId);
 
         // await using var transaction = await _repository.BeginTransactionOrExistingAsync();
-        
+
         var request = await _repository.GetAsync(requestId);
         var file = await _fileManager.DownloadAsync(request.LogoFileId.Value);
 
@@ -163,9 +163,9 @@ public class SongPublishManager : ISongPublishManager
     public async Task<FileDal> GetSongFileAsync(Guid requestId)
     {
         using var log = new MethodLog(requestId);
-        
-        await using var transaction = await _repository.BeginTransactionOrExistingAsync();
-        
+
+        // await using var transaction = await _repository.BeginTransactionOrExistingAsync();
+
         var request = await _repository.GetAsync(requestId);
         var file = await _fileManager.DownloadAsync(request.SongFileId.Value);
 

@@ -48,6 +48,7 @@ public class SongProfile : Profile
             .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
             .ForMember(d => d.AuthorId, o => o.MapFrom(s => s.AuthorId))
             .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
+            .ForMember(d => d.Lyrics, o => o.MapFrom(s => s.Lyrics))
             .ForMember(d => d.DurationMs, o => o.MapFrom(s => s.DurationMsec))
             .ForMember(d => d.AuthorName, o => o.MapFrom(s => s.Author.User.UserName))
             .ForMember(d => d.VocalGenderList, o => o.MapFrom(s => s.VocalGenderList));

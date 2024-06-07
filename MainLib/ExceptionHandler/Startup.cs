@@ -39,7 +39,7 @@ public static class Startup
                 Name = exceptionName,
                 ErrorCode = codeException.ErrorCode,
                 Description = codeException.Message,
-                StackTrace = error.StackTrace
+                StackTrace = error.ToString()
             };
 
             context.Response.StatusCode = 400;

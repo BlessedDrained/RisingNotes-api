@@ -1,4 +1,5 @@
 ﻿using IdentityServer4.Services;
+using IdentityServer4.Stores;
 using RisingNotesLib.Models;
 
 namespace Api.IdentityServer;
@@ -21,7 +22,7 @@ public static class Startup
             .AddInMemoryApiResources(IdentityServerConfiguration.ApiResoures)
             .AddInMemoryApiScopes(IdentityServerConfiguration.ApiScopes)
             .AddInMemoryIdentityResources(IdentityServerConfiguration.IdentityResources)
-            .AddInMemoryPersistedGrants()
+            .AddPersistedGrantStore<PersistedGrandStore>()
             .AddInMemoryCaching()
             .AddDeveloperSigningCredential();
         

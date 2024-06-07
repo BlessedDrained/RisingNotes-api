@@ -29,11 +29,11 @@ public class ClipManager : IClipManager
         var file = TagLib.File.Create(new FileAbstraction($"{clipFile.Name}.{clipFile.Extension}", clipFile.Content));
         clip.DurationMsec = Convert.ToInt32(file.Properties.Duration.TotalMilliseconds);
 
-        var clipFileId = await _fileManager.UploadAsync(clipFile);
-        var previewFileId = await _fileManager.UploadAsync(previewFile);
-
-        clip.ClipFileId = clipFileId;
-        clip.PreviewFileId = previewFileId;
+        await _fileManager.UploadAsync(clipFile);
+        await _fileManager.UploadAsync(previewFile);
+        
+        clip.ClipFileId = clipFile.Id;
+        clip.PreviewFileId = previewFile.Id;
         var id = await _clipRepository.InsertAsync(clip);
 
         log.ReturnsValue(id);
@@ -56,10 +56,10 @@ public class ClipManager : IClipManager
     {
         using var log = new MethodLog(clipId);
 
-        await using var transaction = await _clipRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _clipRepository.BeginTransactionOrExistingAsync();
 
         var clip = await _clipRepository.GetAsync(clipId);
-        var file = await _fileManager.DownloadAsync(clip.ClipFileId);
+        var file = await _fileManager.DownloadAsync(clip.PreviewFileId);
 
         log.ReturnsValue(file);
         return file;
@@ -69,7 +69,7 @@ public class ClipManager : IClipManager
     {
         using var log = new MethodLog(clipId);
 
-        await using var transaction = await _clipRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _clipRepository.BeginTransactionOrExistingAsync();
 
         var clip = await _clipRepository.GetAsync(clipId);
         var file = await _fileManager.DownloadAsync(clip.ClipFileId);
@@ -83,7 +83,7 @@ public class ClipManager : IClipManager
     {
         using var log = new MethodLog(clip);
 
-        await using var transaction = await _clipRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _clipRepository.BeginTransactionOrExistingAsync();
         
         await _clipRepository.UpdateAsync(clip);
     }
@@ -93,7 +93,7 @@ public class ClipManager : IClipManager
     {
         using var log = new MethodLog(id);
         
-        await using var transaction = await _clipRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _clipRepository.BeginTransactionOrExistingAsync();
         
         await _clipRepository.DeleteAsync(id);
     }

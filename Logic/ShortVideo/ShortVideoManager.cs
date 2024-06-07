@@ -29,11 +29,11 @@ public class ShortVideoManager : IShortVideoManager
         var file = TagLib.File.Create(new FileAbstraction($"{clipFile.Name}.{clipFile.Extension}", clipFile.Content));
         clip.DurationMsec = Convert.ToInt32(file.Properties.Duration.TotalMilliseconds);
 
-        var videoFileId = await _fileManager.UploadAsync(clipFile);
-        var previewFileId = await _fileManager.UploadAsync(previewFile);
+        await _fileManager.UploadAsync(clipFile);
+        await _fileManager.UploadAsync(previewFile);
 
-        clip.VideoFileId = videoFileId;
-        clip.PreviewFileId = previewFileId;
+        clip.VideoFileId = clipFile.Id;
+        clip.PreviewFileId = previewFile.Id;
         var id = await _musicClipRepository.InsertAsync(clip);
 
         log.ReturnsValue(id);
@@ -56,10 +56,10 @@ public class ShortVideoManager : IShortVideoManager
     {
         using var log = new MethodLog(clipId);
 
-        await using var transaction = await _musicClipRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _musicClipRepository.BeginTransactionOrExistingAsync();
 
         var clip = await _musicClipRepository.GetAsync(clipId);
-        var file = await _fileManager.DownloadAsync(clip.VideoFileId);
+        var file = await _fileManager.DownloadAsync(clip.PreviewFileId);
 
         log.ReturnsValue(file);
         return file;
@@ -69,7 +69,7 @@ public class ShortVideoManager : IShortVideoManager
     {
         using var log = new MethodLog(clipId);
 
-        await using var transaction = await _musicClipRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _musicClipRepository.BeginTransactionOrExistingAsync();
 
         var clip = await _musicClipRepository.GetAsync(clipId);
         var file = await _fileManager.DownloadAsync(clip.VideoFileId);
@@ -83,7 +83,7 @@ public class ShortVideoManager : IShortVideoManager
     {
         using var log = new MethodLog(clip);
 
-        await using var transaction = await _musicClipRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _musicClipRepository.BeginTransactionOrExistingAsync();
         
         await _musicClipRepository.UpdateAsync(clip);
     }
@@ -93,7 +93,7 @@ public class ShortVideoManager : IShortVideoManager
     {
         using var log = new MethodLog(id);
         
-        await using var transaction = await _musicClipRepository.BeginTransactionOrExistingAsync();
+        // await using var transaction = await _musicClipRepository.BeginTransactionOrExistingAsync();
         
         await _musicClipRepository.DeleteAsync(id);
     }

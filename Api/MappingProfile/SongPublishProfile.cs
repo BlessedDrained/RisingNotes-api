@@ -96,6 +96,7 @@ public class SongPublishProfile : Profile
             .ForMember(d => d.LanguageList, o => o.MapFrom(s => s.LanguageList))
             .ForMember(d => d.Instrumental, o => o.MapFrom(s => s.Instrumental))
             .ForMember(d => d.PublishedSongId, o => o.MapFrom(s => s.SongId))
-            .ForMember(d => d.DurationMs, o => o.MapFrom(s => s.DurationMs));
+            .ForMember(d => d.DurationMs, o => o.MapFrom(s => s.DurationMs))
+            .ForMember(d => d.ReviewerComment, o => o.MapFrom(s => s.ReviewerComment));
     }
 }

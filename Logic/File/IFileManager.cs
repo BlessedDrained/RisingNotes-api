@@ -10,7 +10,7 @@ public interface IFileManager
     /// <summary>
     /// Загрузить файл
     /// </summary>
-    Task<Guid> UploadAsync(FileDal file);
+    Task<FileDal> UploadAsync(FileDal file);
 
     /// <summary>
     /// Скачать файл

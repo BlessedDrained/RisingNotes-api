@@ -15,4 +15,14 @@ public interface IShortVideoPremanager
     /// Получить информацию о клипе
     /// </summary>
     Task<GetShortVideoInfoResponse> GetInfoAsync(Guid clipId);
+    
+    /// <summary>
+    /// Получить список коротких видео по вайлдкарду названия
+    /// </summary>
+    Task<GetShortVideoInfoListResponse> GetListAsync(string nameWildcard);
+    
+    /// <summary>
+    /// Получить список коротких видео автора
+    /// </summary>
+    Task<GetShortVideoInfoListResponse> GetAuthorClipListAsync(Guid authorId);
 }

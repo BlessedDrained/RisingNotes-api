@@ -3,6 +3,7 @@ using Dal.BaseUser;
 using Dal.File;
 using Dal.MusicClip;
 using Dal.MusicClipComment;
+using Dal.PersistedGrant;
 using Dal.Playlist;
 using Dal.ShortVideo;
 using Dal.ShortVideoComment;
@@ -30,17 +31,16 @@ public class ApplicationContext : IdentityDbContext<AppIdentityUser>
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(_configuration.GetValue<string>("Dal:ConnectionString"));
+        optionsBuilder.UseNpgsql(_configuration.GetValue<string>("Dal:ConnectionString"), config => config.EnableRetryOnFailure(3));
         base.OnConfiguring(optionsBuilder);
     }
 
     ///
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.HasPostgresExtension("fuzzystrmatch");
-
         base.OnModelCreating(builder);
-        
+
+        builder.Entity<PersistedGrantDal>();
         builder.Entity<UserDal>();
         builder.Entity<SongDal>();
         builder.Entity<PlaylistDal>();

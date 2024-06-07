@@ -38,10 +38,12 @@ public class SongManager : ISongManager
 
         // await using var transaction = await _userRepository.BeginTransactionOrExistingAsync();
 
-        var songFileId = await _fileManager.UploadAsync(songFile);
-        var logoFileId = await _fileManager.UploadAsync(logoFile);
-        model.SongFileId = songFileId;
-        model.LogoFileId = logoFileId;
+        await _fileManager.UploadAsync(songFile);
+        await _fileManager.UploadAsync(logoFile);
+        model.SongFile = songFile;
+        model.SongFileId = songFile.Id;
+        model.LogoFile = logoFile;
+        model.LogoFileId = logoFile.Id;
 
         var songId = await _songRepository.InsertAsync(model);
 
@@ -188,10 +190,10 @@ public class SongManager : ISongManager
         //     await _fileManager.DeleteAsync(song.LogoFileId.Value);
         // }
 
-        var fileId = await _fileManager.UploadAsync(file);
+        await _fileManager.UploadAsync(file);
 
         song.LogoFile = file;
-        song.LogoFileId = fileId;
+        song.LogoFileId = file.Id;
 
         await _songRepository.UpdateAsync(song);
     }

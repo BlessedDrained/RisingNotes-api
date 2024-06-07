@@ -17,14 +17,14 @@ public class DbFileManager : IFileManager
     }
 
     /// <inheritdoc />
-    public async Task<Guid> UploadAsync(FileDal file)
+    public async Task<FileDal> UploadAsync(FileDal file)
     {
         using var log = new MethodLog(file);
 
         var id = await _fileRepository.InsertAsync(file);
         log.ReturnsValue(id);
 
-        return id;
+        return file;
     }
 
     /// <inheritdoc />

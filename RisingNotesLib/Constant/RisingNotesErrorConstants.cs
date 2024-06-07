@@ -64,4 +64,9 @@ public static class RisingNotesErrorConstants
     /// Имя пользователя уже занято
     /// </summary>
     public const int UserNameIsAlreadyTaken = 2011;
+
+    /// <summary>
+    /// В плейлисте нет такого трека
+    /// </summary>
+    public const int PlaylistHasNoSuchTrack = 2012;
 }

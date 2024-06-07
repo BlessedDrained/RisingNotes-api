@@ -36,7 +36,7 @@ public static class IdentityServerConfiguration
             ClientSecrets = {new Secret("megaclientsecret".Sha256())},
             AllowOfflineAccess = true,
             UpdateAccessTokenClaimsOnRefresh = true,
-            RefreshTokenUsage = TokenUsage.ReUse
+            RefreshTokenUsage = TokenUsage.ReUse,
         }
     };
 }

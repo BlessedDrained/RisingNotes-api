@@ -121,6 +121,19 @@ public class PlaylistController : PublicController
     }
 
     /// <summary>
+    /// Удалить трек из плейлиста
+    /// </summary>
+    [HttpDelete("{playlistId:guid}/song/{songId:guid}")]
+    [ProducesResponseType(200)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastUser)]
+    public async Task<IActionResult> RemoveFromPlaylistAsync([FromRoute] Guid playlistId, [FromRoute] Guid songId)
+    {
+        await _playlistManager.RemoveTrackAsync(playlistId, songId);
+
+        return Ok();
+    }
+
+    /// <summary>
     /// Обновить плейлист
     /// </summary>
     /// <returns></returns>

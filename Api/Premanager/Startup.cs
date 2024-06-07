@@ -32,7 +32,7 @@ public static class Startup
         services.AddTransient<IClipPremanager, ClipPremanager>();
         services.AddTransient<IShortVideoPremanager, ShortVideoPremanager>();
         services.AddTransient<IClipCommentPremanager, ClipCommentPremanager>();
-        services.AddTransient<IShortVideoCommentPremanager, IShortVideoCommentPremanager>();
+        services.AddTransient<IShortVideoCommentPremanager, ShortVideoCommentPremanager>();
         
         return services;
     }

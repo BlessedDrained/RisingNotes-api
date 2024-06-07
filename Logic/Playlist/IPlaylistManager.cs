@@ -38,6 +38,11 @@ public interface IPlaylistManager
     Task AddTrackAsync(Guid playlistId, Guid songId);
 
     /// <summary>
+    /// Удалить трек из плейлиста
+    /// </summary>
+    Task RemoveTrackAsync(Guid playlistId, Guid songId);
+
+    /// <summary>
     /// Получить файл с логотипом
     /// </summary>
     Task<FileDal> GetLogoAsync(Guid playlistId);

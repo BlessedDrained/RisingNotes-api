@@ -104,10 +104,10 @@ public class UserManager : IUserManager
             await _fileManager.DeleteAsync(user.LogoFileId.Value);
         }
 
-        var fileId = await _fileManager.UploadAsync(file);
+        await _fileManager.UploadAsync(file);
 
         user.LogoFile = file;
-        user.LogoFileId = fileId;
+        user.LogoFileId = file.Id;
 
         await _userRepository.UpdateAsync(user);
     }

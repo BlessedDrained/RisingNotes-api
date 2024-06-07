@@ -21,6 +21,7 @@ public class ShortVideoProfile : Profile
             .ForMember(d => d.Id, o => o.Ignore());
 
         CreateMap<ShortVideoDal, GetShortVideoInfoResponse>()
+            .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
             .ForMember(d => d.PreviewFileId, o => o.MapFrom(s => s.PreviewFileId))
             .ForMember(d => d.Description, o => o.MapFrom(s => s.Description))
             .ForMember(d => d.UploaderId, o => o.MapFrom(s => s.UploaderId))

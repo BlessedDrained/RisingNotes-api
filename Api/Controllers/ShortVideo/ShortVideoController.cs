@@ -100,4 +100,28 @@ public class ShortVideoController : PublicController
 
         return NoContent();
     }
+    
+    /// <summary>
+    /// Получить список клипов по вайлдкарду названия
+    /// </summary>
+    [HttpGet("list")]
+    [ProducesResponseType(typeof(GetShortVideoInfoListResponse), 200)]
+    public async Task<IActionResult> GetShortVideoInfoListAsync([FromQuery] string nameWildcard)
+    {
+        var response = await _shortVideoPremanager.GetListAsync(nameWildcard);
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Получить список клипов автора
+    /// </summary>
+    [HttpGet("by-author/{authorId:guid}")]
+    [ProducesResponseType(typeof(GetShortVideoInfoListResponse), 200)]
+    public async Task<IActionResult> GetAuthorShortVideoListAsync([FromRoute] Guid authorId)
+    {
+        var response = await _shortVideoPremanager.GetAuthorClipListAsync(authorId);
+
+        return Ok(response);
+    }
 }

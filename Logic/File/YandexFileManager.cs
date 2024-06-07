@@ -14,63 +14,73 @@ namespace Logic.File;
 public class YandexFileManager : IFileManager
 {
     private readonly IFileRepository _fileRepository;
-    private readonly IS3ClientFactory _s3ClientFactory;
+    private readonly IYandexS3ClientFactory _yandexS3ClientFactory;
 
-    public YandexFileManager(IFileRepository fileRepository, IS3ClientFactory s3ClientFactory)
+    public YandexFileManager(IFileRepository fileRepository, IYandexS3ClientFactory yandexS3ClientFactory)
     {
         _fileRepository = fileRepository;
-        _s3ClientFactory = s3ClientFactory;
+        _yandexS3ClientFactory = yandexS3ClientFactory;
     }
 
     /// <inheritdoc />
-    public async Task<Guid> UploadAsync(FileDal file)
+    public async Task<FileDal> UploadAsync(FileDal file)
     {
-        using var client = _s3ClientFactory.CreateClient();
+        using var client = _yandexS3ClientFactory.CreateClient();
 
-        var fileId = Guid.NewGuid();
+        var tempContent = file.Content;
+        file.Content = null;
+        try
+        {
+            await _fileRepository.InsertAsync(file);
+            file.Content = tempContent;
+        }
+        catch
+        {
+            await _fileRepository.DeleteAsync(file.Id);
+            throw;
+        }
+        
         var request = new PutObjectRequest()
         {
-            BucketName = "rising-notes",
-            Key = fileId.ToString(),
+            BucketName = client.BucketName,
+            Key = file.Id.ToString(),
             InputStream = new MemoryStream(file.Content)
         };
 
         try
         {
-            await client.PutObjectAsync(request);
+            await client.InnerClient.PutObjectAsync(request);
+            file.Content = null;
         }
         catch
         {
             throw new S3FileUploadException("Error occured on trying to upload file");
         }
-
-        file.Id = fileId;
-        await _fileRepository.InsertAsync(file);
         
-        return fileId;
+        return file;
     }
 
     /// <inheritdoc />
     public async Task<FileDal> DownloadAsync(Guid id)
     {
         var file = await _fileRepository.GetAsync(id);
-        using var client = _s3ClientFactory.CreateClient();
+        using var client = _yandexS3ClientFactory.CreateClient();
 
         GetObjectResponse response;
         try
         {
-            response = await client.GetObjectAsync("rising-notes", id.ToString());
+            response = await client.InnerClient.GetObjectAsync(client.BucketName, file.Id.ToString());
         }
         catch
         {
             throw new S3FileDownloadException(StorageType.YandexDisk);
         }
 
-        var buffer = new byte[response.ResponseStream.Length];
-        file.Content = buffer;
-
-        await using var stream = new BufferedStream(response.ResponseStream);
-        _ = await stream.ReadAsync(buffer);
+        using (var ms = new MemoryStream())
+        {
+            await response.ResponseStream.CopyToAsync(ms);
+            file.Content = ms.ToArray();
+        }
 
         return file;
     }
@@ -80,11 +90,11 @@ public class YandexFileManager : IFileManager
     {
         await _fileRepository.DeleteAsync(id);
 
-        using var client = _s3ClientFactory.CreateClient();
+        using var client = _yandexS3ClientFactory.CreateClient();
 
         try
         {
-            await client.DeleteObjectAsync("rising-notes", id.ToString());
+            await client.InnerClient.DeleteObjectAsync(client.BucketName, id.ToString());
         }
         catch (DeleteObjectsException e)
         {

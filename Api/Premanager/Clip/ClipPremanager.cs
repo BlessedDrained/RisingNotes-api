@@ -64,7 +64,7 @@ public class ClipPremanager : IClipPremanager
 
         var lowerWildcard = nameWildcard.ToLower();
         var clipList = await _clipRepository
-            .GetListAsync(x => x.Title.Contains(lowerWildcard));
+            .GetListAsync(x => x.Title.ToLower().Contains(lowerWildcard));
 
         var responseList = _mapper.Map<List<GetClipInfoResponse>>(clipList);
         var response = new GetClipInfoListResponse()

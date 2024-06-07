@@ -6,6 +6,11 @@
 public record GetClipInfoResponse
 {
     /// <summary>
+    /// Идентификатор клипа
+    /// </summary>
+    public Guid Id { get; init; }
+    
+    /// <summary>
     /// Название
     /// </summary>
     public string Title { get; init; }

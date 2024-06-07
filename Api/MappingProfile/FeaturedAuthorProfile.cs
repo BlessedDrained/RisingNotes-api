@@ -16,7 +16,7 @@ public class FeaturedAuthorProfile : Profile
         //         })
         //     .ForMember(d => d.AuthorModelId,
         //         o =>
-        //         {
+        //           {
         //             o.PreCondition(c => c.AuthorName == null);
         //             o.MapFrom(s => s.AuthorId);
         //         })

@@ -16,6 +16,11 @@ public record GetWithAuthorSongInfoResponse
     /// Название трека
     /// </summary>
     public string Name { get; init; }
+    
+    /// <summary>
+    /// Текст трека
+    /// </summary>
+    public string Lyrics { get; init; }
 
     /// <summary>
     /// Продолжительность трека в секундах

@@ -13,7 +13,12 @@ public static class Startup
         const string jwtKeyFileName = "tempkey.jwk";
 
         services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddAuthentication(config =>
+            {
+                config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                config.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(config =>
             {
                 config.TokenValidationParameters = new()
@@ -27,7 +32,33 @@ public static class Startup
                     // Audience = ApiScope
                     ValidAudience = "Api",
                     ValidIssuer = "http://localhost:5095",
-                    IssuerSigningKey = JsonWebKey.Create(File.ReadAllText(jwtKeyFileName))
+                    IssuerSigningKey = JsonWebKey.Create(File.ReadAllText(jwtKeyFileName)),
+                };
+                config.Events = new JwtBearerEvents()
+                {
+                    OnMessageReceived = context =>
+                    {
+                        if (!context.Request.Headers.TryGetValue("Authorization2", out var value))
+                        {
+                            context.NoResult();
+                            return Task.CompletedTask;
+                        }
+
+                        var strValue = value.ToString();
+
+                        if (strValue.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                        {
+                            context.Token = strValue.Substring("Bearer ".Length).Trim();
+                        }
+
+                        if (string.IsNullOrWhiteSpace(context.Token))
+                        {
+                            context.NoResult();
+                            return Task.CompletedTask;
+                        }
+                    
+                        return Task.CompletedTask;
+                    }
                 };
                 config.RequireHttpsMetadata = false;
             });

@@ -62,4 +62,9 @@ public record GetPublishRequestInfoResponse
     /// Файл логотипа
     /// </summary>
     public FileContentResult LogoFile { get; init; }
+    
+    /// <summary>
+    /// Комментарий админа
+    /// </summary>
+    public string ReviewerComment { get; init; }
 }

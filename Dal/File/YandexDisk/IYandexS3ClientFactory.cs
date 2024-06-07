@@ -5,10 +5,10 @@ namespace Dal.File.YandexDisk;
 /// <summary>
 /// Фабрика клиентов S3
 /// </summary>
-public interface IS3ClientFactory
+public interface IYandexS3ClientFactory
 {
     /// <summary>
     /// Создать клиент
     /// </summary>
-    IAmazonS3 CreateClient();
+    YandexS3Client CreateClient();
 }
