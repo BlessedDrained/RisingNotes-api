@@ -123,4 +123,15 @@ public class ClipController : PublicController
 
         return Ok(response);
     }
+
+    /// <summary>
+    /// Получить идентификатор клипа, который снят для данной песни
+    /// </summary>
+    [HttpGet("by-song/{songId:guid}")]
+    public async Task<IActionResult> GetClipIdBySongIdAsync([FromRoute] Guid songId)
+    {
+        var response = await _clipPremanager.GetClipIdBySongIdAsync(songId);
+        
+        return Ok(response);
+    }
 }

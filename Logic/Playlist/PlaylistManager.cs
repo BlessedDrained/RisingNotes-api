@@ -70,16 +70,25 @@ public class PlaylistManager : IPlaylistManager
     }
 
     /// <inheritdoc />
-    public async Task AddTrackAsync(Guid playlistId, Guid songId)
+    public async Task AddTrackAsync(Guid playlistId, Guid songId, Guid userId)
     {
         using var methodLog = new MethodLog(playlistId, songId);
 
-        // await using var transaction = await _playlistRepository.BeginTransactionOrExistingAsync();
+        var playlist = await _playlistRepository.GetWithSongListAsync(playlistId);
 
-        var playlist = await _playlistRepository.GetAsync(playlistId);
+        if (playlist.CreatorId != userId)
+        {
+            throw new PlaylistDoesNotBelongToCurrentUser(playlistId, userId);
+        }
+        
+        if (playlist.SongList?.Exists(x => x.Id == songId) == true)
+        {
+            throw new TrackIsAlreadyInPlaylistException(songId, playlistId);
+        }
+        
         var song = await _songRepository.GetAsync(songId);
 
-        playlist.SongList.Add(song);
+        playlist.SongList?.Add(song);
 
         await _playlistRepository.UpdateAsync(playlist);
     }
@@ -89,7 +98,7 @@ public class PlaylistManager : IPlaylistManager
     {
         using var methodLog = new MethodLog(playlistId, songId);
 
-        var playlist = await _playlistRepository.GetAsync(playlistId);
+        var playlist = await _playlistRepository.GetWithSongListAsync(playlistId);
         var song = await _songRepository.GetAsync(songId);
 
         var playlistSong = playlist.SongList.FirstOrDefault(x => x.Id == song.Id);

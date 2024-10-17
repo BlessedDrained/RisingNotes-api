@@ -34,32 +34,32 @@ public static class Startup
                     ValidIssuer = "http://localhost:5095",
                     IssuerSigningKey = JsonWebKey.Create(File.ReadAllText(jwtKeyFileName)),
                 };
-                config.Events = new JwtBearerEvents()
-                {
-                    OnMessageReceived = context =>
-                    {
-                        if (!context.Request.Headers.TryGetValue("Authorization2", out var value))
-                        {
-                            context.NoResult();
-                            return Task.CompletedTask;
-                        }
-
-                        var strValue = value.ToString();
-
-                        if (strValue.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-                        {
-                            context.Token = strValue.Substring("Bearer ".Length).Trim();
-                        }
-
-                        if (string.IsNullOrWhiteSpace(context.Token))
-                        {
-                            context.NoResult();
-                            return Task.CompletedTask;
-                        }
-                    
-                        return Task.CompletedTask;
-                    }
-                };
+                // config.Events = new JwtBearerEvents()
+                // {
+                //     OnMessageReceived = context =>
+                //     {
+                //         if (!context.Request.Headers.TryGetValue("Authorization2", out var value))
+                //         {
+                //             context.NoResult();
+                //             return Task.CompletedTask;
+                //         }
+                //
+                //         var strValue = value.ToString();
+                //
+                //         if (strValue.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                //         {
+                //             context.Token = strValue.Substring("Bearer ".Length).Trim();
+                //         }
+                //
+                //         if (string.IsNullOrWhiteSpace(context.Token))
+                //         {
+                //             context.NoResult();
+                //             return Task.CompletedTask;
+                //         }
+                //     
+                //         return Task.CompletedTask;
+                //     }
+                // };
                 config.RequireHttpsMetadata = false;
             });
 

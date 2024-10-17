@@ -7,7 +7,9 @@ using MainLib.Api.Route;
 using MainLib.Api.Swagger;
 using MainLib.Automapper;
 using MainLib.ExceptionHandler;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using RisingNotesLib.Models;
 using Serilog;
 using SixLabors.ImageSharp.Web.DependencyInjection;
@@ -79,6 +81,12 @@ public static class Startup
             x.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
         });
 
+        services.Configure<FormOptions>(x =>
+        {
+            x.MultipartBodyLengthLimit = 1_037_741_824;
+            x.ValueLengthLimit = 1_037_741_824;
+        });
+        
         // services.AddSerilogLogging();
 
         return services;
@@ -100,7 +108,6 @@ public static class Startup
         // app.UseImageSharp();
 
         app.UseIdentityServer();
-        
         
         var swaggerEnabled = app.Configuration.GetValue<bool>("Swagger:IsEnabled");
         if (swaggerEnabled)

@@ -7,6 +7,11 @@ using Serilog.Events;
 var builder = WebApplication.CreateBuilder();
 builder.Configuration.AddEnvironmentVariables();
 
+builder.WebHost.UseKestrel(x =>
+{
+    x.Limits.MaxRequestBodySize = 1_037_741_824;
+});
+
 if (builder.Environment.IsProduction())
 {
     var port = int.TryParse(Environment.GetEnvironmentVariable("PORT"), out var parsedPort)

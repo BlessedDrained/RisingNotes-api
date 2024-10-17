@@ -25,4 +25,9 @@ public interface IClipPremanager
     /// Получить список клипов автора
     /// </summary>
     Task<GetClipInfoListResponse> GetAuthorClipListAsync(Guid authorId);
+
+    /// <summary>
+    /// Получить идентификатор клипа для данной песни
+    /// </summary>
+    Task<GetClipIdBySongIdRequest> GetClipIdBySongIdAsync(Guid songId);
 }

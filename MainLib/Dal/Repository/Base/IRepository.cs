@@ -76,6 +76,11 @@ public interface IRepository<TEntity, TKey>
     Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filter);
 
     /// <summary>
+    /// Получить первое значение, соответствующее заданному фильтру
+    /// </summary>
+    Task<TEntity> FirstByFieldAsync(Expression<Func<TEntity, bool>> filter);
+
+    /// <summary>
     /// Начать транзакцию
     /// </summary>
     Task<IDbContextTransaction> BeginTransactionAsync();

@@ -94,4 +94,18 @@ public class ClipPremanager : IClipPremanager
 
         return response;
     }
+
+
+    /// <inheritdoc />
+    public async Task<GetClipIdBySongIdRequest> GetClipIdBySongIdAsync(Guid songId)
+    {
+        using var log = new MethodLog(songId);
+
+        var clipId = await _clipRepository.FirstByFieldAsync(x => x.SongId == songId);
+
+        return new GetClipIdBySongIdRequest()
+        {
+            ClipId = clipId.Id
+        };
+    }
 }

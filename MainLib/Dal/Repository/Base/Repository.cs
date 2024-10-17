@@ -132,6 +132,21 @@ public abstract class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
     }
 
     /// <inheritdoc />
+    public virtual async Task<TEntity> FirstByFieldAsync(Expression<Func<TEntity, bool>> filter)
+    {
+        ArgumentNullException.ThrowIfNull(filter);
+
+        var result = await Set.FirstOrDefaultAsync(filter);
+
+        if (result == default)
+        {
+            throw new EntityNotFoundException<TEntity>();
+        }
+
+        return result;
+    }
+
+    /// <inheritdoc />
     public async Task<IDbContextTransaction> BeginTransactionAsync()
     {
         var transacton =  await Context.Database.BeginTransactionAsync();

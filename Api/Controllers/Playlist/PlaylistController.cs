@@ -115,7 +115,7 @@ public class PlaylistController : PublicController
     public async Task<IActionResult> AddToPlaylistAsync([FromRoute] Guid playlistId, [FromRoute] Guid songId)
     {
         // TODO: сделать проверку, что плейлист принадлежит пользователю, от имени которого отправлен запрос
-        await _playlistManager.AddTrackAsync(playlistId, songId);
+        await _playlistManager.AddTrackAsync(playlistId, songId, Guid.Parse(HttpContext.User.Identity!.Name!));
 
         return Ok();
     }

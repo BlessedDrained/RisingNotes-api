@@ -35,7 +35,7 @@ public interface IPlaylistManager
     /// <summary>
     /// Добавить трек в плейлист
     /// </summary>
-    Task AddTrackAsync(Guid playlistId, Guid songId);
+    Task AddTrackAsync(Guid playlistId, Guid songId, Guid userId);
 
     /// <summary>
     /// Удалить трек из плейлиста

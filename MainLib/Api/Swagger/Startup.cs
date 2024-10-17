@@ -25,7 +25,7 @@ public static class Startup
             c.AddSecurityDefinition("Bearer",
                 new OpenApiSecurityScheme
                 {
-                    Name = "Authorization2",
+                    Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey,
                     Scheme = "Bearer",
                     BearerFormat = "JWT",

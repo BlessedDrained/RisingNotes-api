@@ -15,7 +15,12 @@ public class EntityNotFoundException : BadRequestException
 /// </summary>
 public class EntityNotFoundException<TDal> : EntityNotFoundException
 {
-    public EntityNotFoundException(object id) : base($"Entity of type {typeof(TDal).Name} not found by Id = {id}")
+    public EntityNotFoundException(object id) : base($"Entity of type {typeof(TDal).Name} was not found by Id = {id}")
     {
     }
+
+    public EntityNotFoundException() : base($"Entity of type {typeof(TDal)} was not found")
+    {
+        
+    } 
 }

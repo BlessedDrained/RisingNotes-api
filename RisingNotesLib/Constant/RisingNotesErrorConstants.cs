@@ -69,4 +69,14 @@ public static class RisingNotesErrorConstants
     /// В плейлисте нет такого трека
     /// </summary>
     public const int PlaylistHasNoSuchTrack = 2012;
+
+    /// <summary>
+    /// Данный трек уже добавлен в плейлист
+    /// </summary>
+    public const int TrackIsAlreadyInPlaylistException = 2013;
+
+    /// <summary>
+    /// Плейлист не принадлежит данному пользователю
+    /// </summary>
+    public const int PlaylistDoesNotBelongToCurrentUser = 2014;
 }
