@@ -1,14 +1,12 @@
-﻿using Amazon.S3;
-
-namespace Dal.File.YandexDisk;
+﻿namespace Dal.File.S3;
 
 /// <summary>
 /// Фабрика клиентов S3
 /// </summary>
-public interface IYandexS3ClientFactory
+public interface IS3ClientFactory
 {
     /// <summary>
     /// Создать клиент
     /// </summary>
-    YandexS3Client CreateClient();
+    S3Client CreateClient();
 }

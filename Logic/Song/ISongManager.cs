@@ -1,5 +1,6 @@
 ﻿using Dal.File;
 using Dal.Song;
+using Logic.File;
 
 namespace Logic.Song;
 
@@ -11,7 +12,13 @@ public interface ISongManager
     /// <summary>
     /// Создать трек
     /// </summary>
-    Task<Guid> CreateAsync(SongDal model, FileDal songFile, FileDal logoFile);
+    Task<Guid> CreateAsync(SongDal model);
+
+    /// <summary>
+    /// Загрузить логотип для песни
+    /// </summary>
+    /// <returns></returns>
+    Task UploadLogoAsync(Guid songId, Guid authorId, IFormFile file);
 
     /// <summary>
     /// Получить информацию о треке без самого файла

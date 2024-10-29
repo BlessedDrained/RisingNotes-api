@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Reflection;
 using Serilog;
 
 namespace MainLib.Logging;
@@ -7,7 +6,6 @@ namespace MainLib.Logging;
 public class MethodLog : IDisposable
 {
     private readonly string _methodName;
-    private readonly ParameterInfo[] _parameterList;
     private object[] _argList;
 
     public MethodLog(params object[] argList)
@@ -15,10 +13,26 @@ public class MethodLog : IDisposable
         var method = new StackFrame(4).GetMethod();
         var type = method.DeclaringType;
 
-        _parameterList = method.GetParameters();
+        method.GetParameters();
         _methodName = $"{type}.{method.Name}";
 
-        Log.Information($"Start method {_methodName} with args: {{{string.Join(", ", argList)}}}");
+        var loggableArgList = argList.Where(x =>
+        {
+            var type = x.GetType();
+            if (type.IsAssignableTo(typeof(Stream)))
+            {
+                return false;
+            }
+
+            if (type.IsAssignableTo(typeof(byte[])))
+            {
+                return false;
+            }
+
+            return true;
+        });
+        
+        Log.Information($"Start method {_methodName} with args: {{{string.Join(", ", loggableArgList)}}}");
     }
 
     public void ReturnsValue(params object[] argList)

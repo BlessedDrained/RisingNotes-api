@@ -11,7 +11,12 @@ public interface ISongPremanager
     /// <summary>
     /// Создать трек
     /// </summary>
-    Task<CreateSongResponse> CreateAsync(UploadSongRequest request, Guid authorId);
+    Task<UploadSongResponse> CreateAsync(UploadSongRequest request, Guid authorId);
+
+    /// <summary>
+    /// Загрузить логотип для песни
+    /// </summary>
+    Task UploadLogoAsync(UploadSongLogoRequest request, Guid authorId);
 
     /// <summary>
     /// Получить информацию о треке

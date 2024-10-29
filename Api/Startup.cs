@@ -55,6 +55,8 @@ public static class Startup
                 });
         });
 
+        services.AddMemoryCache();
+
         services.AddPremanagers();
 
         services

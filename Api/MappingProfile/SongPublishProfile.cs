@@ -13,8 +13,8 @@ public class SongPublishProfile : Profile
     public SongPublishProfile()
     {
         CreateMap<CreateSongPublishRequestRequest, SongPublishRequestDal>()
-            .ForMember(d => d.SongFile, o => o.MapFrom(s => s.SongFile))
-            .ForMember(d => d.LogoFile, o => o.MapFrom(s => s.LogoFile))
+            .ForMember(d => d.SongFile, o => o.Ignore())
+            .ForMember(d => d.LogoFile, o => o.Ignore())
             .ForMember(d => d.Status, o => o.Ignore())
             .ForMember(d => d.Song, o => o.Ignore())
             .ForMember(d => d.SongId, o => o.Ignore())

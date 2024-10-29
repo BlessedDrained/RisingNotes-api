@@ -5,10 +5,13 @@ using Dal.Author;
 using Dal.Author.Repository;
 using Dal.BaseUser.Repository;
 using Dal.Context;
+using Dal.File.Repository;
 using Logic.Author;
+using Logic.File;
 using MainLib.Api.Auth.Constant;
 using MainLib.Api.Controller;
 using MainLib.Dal.Exception;
+using MainLib.Enums;
 using MainLib.Logging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -147,5 +150,22 @@ public class DebugController : PublicController
         using var log = new MethodLog();
 
         return Ok();
+    }
+
+    [HttpPost("migrate")]
+    public async Task<IActionResult> MigrateFromDbToS3Async(
+        [FromServices] IFileRepository fileRepository, 
+        [FromServices] IFileManager fileManager)
+    {
+        var idList = await fileRepository.GetAllDbStoredIdListAsync();
+        foreach (var fileId in idList)
+        {
+            var file = await fileRepository.GetAsync(fileId);
+            await fileManager.UploadSingleAsync(file);
+            file.StorageType = StorageType.S3Storage;
+            await fileRepository.UpdateAsync(file);
+        }
+
+        return NoContent();
     }
 }

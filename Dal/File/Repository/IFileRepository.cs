@@ -7,4 +7,8 @@ namespace Dal.File.Repository;
 /// </summary>
 public interface IFileRepository : IRepository<FileDal, Guid>
 {
+    /// <summary>
+    /// Получить список всех идентификаторов файлов
+    /// </summary>
+    Task<List<Guid>> GetAllDbStoredIdListAsync();
 }

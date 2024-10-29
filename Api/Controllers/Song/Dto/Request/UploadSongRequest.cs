@@ -46,6 +46,9 @@ public record UploadSongRequest
     // [Required]
     public bool HasLyrics { get; init; }
 
+    /// <summary>
+    /// Текст песни
+    /// </summary>
     // TODO: добавить ограничение на длину
     public string Lyrics { get; init; }
 
@@ -54,17 +57,22 @@ public record UploadSongRequest
     /// </summary>
     // [Required]
     public bool Explicit { get; init; }
+    
+    // TODO: сделать валидацию на положительное число
+    public int DurationMsec { get; init; }
+    
+    // /// <summary>
+    // /// Файл с треком
+    // /// </summary>
+    // // [Required]
+    // [MaxFileSize(30720)]
+    // [Obsolete(null, error: true)]
+    // public UploadFileRequest SongFile { get; init; }
 
-    /// <summary>
-    /// Файл с треком
-    /// </summary>
-    // [Required]
-    [MaxFileSize(30720)]
-    public UploadFileRequest SongFile { get; init; }
-
-    /// <summary>
-    /// Лого трека
-    /// </summary>
-    [MaxFileSize(2048)]
-    public UploadFileRequest SongLogo { get; init; }
+    // /// <summary>
+    // /// Лого трека
+    // /// </summary>
+    // [MaxFileSize(2048)]
+    // [Obsolete(null, error: true)]
+    // public UploadFileRequest SongLogo { get; init; }
 }

@@ -21,7 +21,7 @@ public class MockStorage : IFileStorage
             Content = Array.Empty<byte>(),
             Extension = ".test",
             Name = "test",
-            StorageType = StorageType.YandexDisk,
+            StorageType = StorageType.S3Storage,
             Id = Guid.NewGuid()
         });
     }

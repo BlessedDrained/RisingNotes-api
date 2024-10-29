@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Buffers;
+using System.IO.Pipelines;
+using AutoMapper;
 using Dal.File;
 using Dal.Song;
 using Dal.Song.Repository;
@@ -8,6 +10,7 @@ using Logic.File;
 using MainLib.Logging;
 using MainLib.TagLib;
 using RisingNotesLib.Enums;
+using RisingNotesLib.Exceptions;
 
 namespace Logic.SongPublish;
 
@@ -34,16 +37,6 @@ public class SongPublishManager : ISongPublishManager
     /// <inheritdoc />
     public async Task<Guid> CreateAsync(SongPublishRequestDal request)
     {
-        var file = TagLib.File.Create(new FileAbstraction($"{request.SongFile.Name}.{request.SongFile.Extension}", request.SongFile.Content));
-        request.DurationMs = Convert.ToInt32(file.Properties.Duration.TotalMilliseconds);
-
-        // await using var transaction = await _repository.BeginTransactionOrExistingAsync(); 
-
-        await _fileManager.UploadAsync(request.SongFile);
-        await _fileManager.UploadAsync(request.LogoFile);
-        request.SongFileId = request.SongFile.Id;
-        request.LogoFileId = request.LogoFile.Id;
-
         var id = await _repository.InsertAsync(request);
         return id;
     }
@@ -52,13 +45,11 @@ public class SongPublishManager : ISongPublishManager
     public async Task ReplyAsUserAsync(Guid requestId, SongPublishRequestDal newRequest)
     {
         using var log = new MethodLog(requestId, newRequest);
-
-        // await using var transaction = await _songRepository.BeginTransactionOrExistingAsync();
-
+        
         var request = await _repository.GetAsync(requestId);
         if (request.Status is PublishRequestStatus.Approved or PublishRequestStatus.Rejected or PublishRequestStatus.Revoked)
         {
-            // кидать исключение, что заявка уже обработана и отдавать текущйи статус
+            throw new CurrentSongPublishRequestStatusDoesNotAllowUserInteractionException(request.Status);
         }
 
         if (!string.IsNullOrWhiteSpace(newRequest.Lyrics))
@@ -79,19 +70,23 @@ public class SongPublishManager : ISongPublishManager
 
         if (newRequest.SongFile != null)
         {
-            var file = TagLib.File.Create(new FileAbstraction($"{request.SongFile.Name}.{request.SongFile.Extension}", request.SongFile.Content));
+            var file = TagLib.File.Create(new FileAbstraction($"{request.SongFile!.Name}.{request.SongFile.Extension}", request.SongFile.Content));
             request.DurationMs = Convert.ToInt32(file.Properties.Duration.TotalMilliseconds);
-            await _fileManager.UploadAsync(newRequest.SongFile);
+            await _fileManager.UploadSingleAsync(newRequest.SongFile);
             request.SongFileId = newRequest.SongFileId;
         }
 
         if (newRequest.LogoFile != null)
         {
-            await _fileManager.UploadAsync(newRequest.LogoFile);
+            await _fileManager.UploadSingleAsync(newRequest.LogoFile);
             request.LogoFileId = newRequest.LogoFile.Id;
         }
 
-        request.Status = PublishRequestStatus.Review;
+        if (request.SongFileId.HasValue && request.LogoFileId.HasValue)
+        {
+            request.Status = PublishRequestStatus.Review;
+        }
+        
         await _repository.UpdateAsync(request);
     }
 
@@ -145,15 +140,85 @@ public class SongPublishManager : ISongPublishManager
         await _repository.UpdateAsync(request);
     }
 
+    /// <inheritdoc />
+    public async Task UpdateLogoAsync(Guid requestId, Guid authorId, IFormFile file)
+    {
+        using var log = new MethodLog(requestId);
+
+        var request = await _repository.GetAsync(requestId);
+        if (request.AuthorId != authorId)
+        {
+            throw new Exception();
+        }
+        
+        // размер логотипа не более 5мб, поэтому не будет такого кейса, что массив окажется меньше длины файла
+        await using var openReadStream = file.OpenReadStream();
+        await using var stream = new MemoryStream();
+        await openReadStream.CopyToAsync(stream);
+
+        var nameWithExtension = file.FileName;
+        var name = Path.GetFileName(nameWithExtension);
+        var extension = Path.GetExtension(nameWithExtension);
+        var fileDal = new FileDal()
+        {
+            Content = stream.ToArray(),
+            Extension = extension,
+            Name = name
+        };
+        
+        fileDal = await _fileManager.UploadSingleAsync(fileDal);
+        request.LogoFileId = fileDal.Id;
+        await _repository.UpdateAsync(request);
+    }
+
+    /// <inheritdoc />
+    public async Task<string> StartSongFileUpdateAsync(Guid authorId, Guid publishRequestId)
+    {
+        using var methodLog = new MethodLog(authorId, publishRequestId);
+
+        var clip = await _repository.GetAsync(publishRequestId);
+
+        if (clip.AuthorId != authorId)
+        {
+            // сделать нормальный тип исключения
+            throw new Exception();
+        }
+
+        var uploadId = await _fileManager.StartMultipartUploadingOperationAsync(publishRequestId.ToString());
+        return uploadId;
+    }
+
+    /// <inheritdoc />
+    public async Task UpdateSongFilePartAsync(string uploadId, Guid publishRequestId, Guid authorId, IFormFile file, int partNumber, bool isLastPart)
+    {
+        using var methodLog = new MethodLog(uploadId, partNumber, isLastPart);
+
+        var clip = await _repository.GetAsync(publishRequestId);
+        if (clip.AuthorId != authorId)
+        {
+            throw new ClipDoesNotBelongToCurrentAuthorException(authorId, publishRequestId);
+        }
+        
+        await _fileManager.UploadFilePartAsync(uploadId, publishRequestId.ToString(), file, partNumber, isLastPart);
+
+        if (isLastPart)
+        {
+            await _fileManager.CompleteMultipartUploadAsync(uploadId);
+        }
+    }
 
     /// <inheritdoc />
     public async Task<FileDal> GetLogoAsync(Guid requestId)
     {
         using var log = new MethodLog(requestId);
 
-        // await using var transaction = await _repository.BeginTransactionOrExistingAsync();
-
         var request = await _repository.GetAsync(requestId);
+
+        if (!request.LogoFileId.HasValue)
+        {
+            throw new SongPublishRequestHasNoLogoException(requestId);
+        }
+        
         var file = await _fileManager.DownloadAsync(request.LogoFileId.Value);
 
         return file;
@@ -164,9 +229,13 @@ public class SongPublishManager : ISongPublishManager
     {
         using var log = new MethodLog(requestId);
 
-        // await using var transaction = await _repository.BeginTransactionOrExistingAsync();
-
         var request = await _repository.GetAsync(requestId);
+
+        if (!request.SongFileId.HasValue)
+        {
+            throw new SongPublishRequestHasNoFileException(requestId);
+        }
+        
         var file = await _fileManager.DownloadAsync(request.SongFileId.Value);
 
         return file;

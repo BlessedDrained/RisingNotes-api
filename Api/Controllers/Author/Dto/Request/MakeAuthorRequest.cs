@@ -1,4 +1,6 @@
-﻿namespace Api.Controllers.Author.Dto.Request;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Api.Controllers.Author.Dto.Request;
 
 /// <summary>
 /// Запрос на становление музыкантом
@@ -8,11 +10,13 @@ public record MakeAuthorRequest
     /// <summary>
     /// Идентификатор пользователя
     /// </summary>
+    [Required]
     public Guid UserId { get; init; }
     
     /// <summary>
     /// Имя автора
     /// </summary>
+    [Required]
     public string Name { get; init; }
     
     /// <summary>

@@ -22,13 +22,13 @@ public record UploadClipRequest
     /// </summary>
     public Guid SongId { get; init; }
 
-    /// <summary>
-    /// Файл с превью
-    /// </summary>
-    public UploadFileRequest PreviewFile { get; init; }
-
-    /// <summary>
-    /// Файл с клипом
-    /// </summary>
-    public UploadFileRequest ClipFile { get; init; }
+    // /// <summary>
+    // /// Файл с превью
+    // /// </summary>
+    // public UploadFileRequest PreviewFile { get; init; }
+    //
+    // /// <summary>
+    // /// Файл с клипом
+    // /// </summary>
+    // public UploadFileRequest ClipFile { get; init; }
 }

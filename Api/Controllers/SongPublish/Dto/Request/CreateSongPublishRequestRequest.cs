@@ -44,15 +44,15 @@ public record CreateSongPublishRequestRequest
     /// </summary>
     public Gender[] VocalGenderList { get; init; } = Array.Empty<Gender>();
 
-    /// <summary>
-    /// Нав свойство
-    /// </summary>
-    [MaxFileSize(30720)]
-    public UploadFileRequest SongFile { get; set; }
-
-    /// <summary>
-    /// Нав свойство
-    /// </summary>
-    [MaxFileSize(2048)]
-    public UploadFileRequest LogoFile { get; set; }
+    // /// <summary>
+    // /// Нав свойство
+    // /// </summary>
+    // [MaxFileSize(30720)]
+    // public UploadFileRequest SongFile { get; set; }
+    //
+    // /// <summary>
+    // /// Нав свойство
+    // /// </summary>
+    // [MaxFileSize(2048)]
+    // public UploadFileRequest LogoFile { get; set; }
 }

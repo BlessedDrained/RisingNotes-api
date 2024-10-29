@@ -6,9 +6,9 @@
 public enum PublishRequestStatus
 {
     /// <summary>
-    /// Значение по умолчанию
+    /// Требует загрузки файла
     /// </summary>
-    Unknown = 0,
+    NeedsSongFile = 0,
     
     /// <summary>
     /// На ревью

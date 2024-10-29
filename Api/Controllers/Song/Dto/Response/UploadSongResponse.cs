@@ -3,10 +3,10 @@
 /// <summary>
 /// Модель ответа на создание трека
 /// </summary>
-public record CreateSongResponse
+public record UploadSongResponse
 {
     /// <summary>
-    /// Идентификатор созданного трека
+    /// Идентификатор созданного черновика
     /// </summary>
     public Guid Id { get; init; }
 }

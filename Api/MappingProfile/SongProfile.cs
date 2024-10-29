@@ -14,8 +14,8 @@ public class SongProfile : Profile
     {
         CreateMap<UploadSongRequest, SongDal>()
             .ForMember(d => d.Name, o => o.MapFrom(s => s.SongName))
-            .ForMember(d => d.SongFile, o => o.MapFrom(s => s.SongFile))
-            .ForMember(d => d.LogoFile, o => o.MapFrom(s => s.SongLogo))
+            .ForMember(d => d.SongFile, o => o.Ignore())
+            .ForMember(d => d.LogoFile, o => o.Ignore())
             .ForMember(d => d.Id, o => o.Ignore())
             .ForMember(d => d.AuthorId, o => o.Ignore())
             .ForMember(d => d.Author, o => o.Ignore())

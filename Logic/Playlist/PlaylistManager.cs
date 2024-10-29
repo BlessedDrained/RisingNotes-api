@@ -151,7 +151,7 @@ public class PlaylistManager : IPlaylistManager
         //     await _fileManager.DeleteAsync(playlist.LogoFileId.Value);
         // }
 
-        await _fileManager.UploadAsync(file);
+        await _fileManager.UploadSingleAsync(file);
 
         playlist.LogoFile = file;
         playlist.LogoFileId = file.Id;

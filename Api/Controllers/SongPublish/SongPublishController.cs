@@ -1,4 +1,5 @@
-﻿using Api.Controllers.SongPublish.Dto.Request;
+﻿using Api.Controllers.Song.Dto.Request;
+using Api.Controllers.SongPublish.Dto.Request;
 using Api.Controllers.SongPublish.Dto.Response;
 using Api.Premanager.SongPublish;
 using Logic.SongPublish;
@@ -75,12 +76,7 @@ public class SongPublishController : PublicController
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastAuthor)]
     public async Task<IActionResult> GetUserRequestListAsync([FromQuery] GetPublishRequestListRequest request)
     {
-        var claim = User.Claims.FirstOrDefault(x => x.Type == ClaimTypeConstants.AuthorId);
-        if (claim == null)
-        {
-            return Unauthorized();
-        }
-        
+        var claim = User.Claims.First(x => x.Type == ClaimTypeConstants.AuthorId);
         var response = await _songPublishPremanager.GetListAsync(request, Guid.Parse(claim.Value));
 
         return Ok(response);
@@ -112,14 +108,61 @@ public class SongPublishController : PublicController
 
         return Ok(response);
     }
+    
+    /// <summary>
+    /// Загрузить логотип для песни
+    /// </summary>
+    [HttpPost("logo")]
+    [ProducesResponseType(204)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastAuthor)]
+    public async Task<IActionResult> UpdateLogoAsync([FromForm] UploadSongLogoRequest request)
+    {
+        var claim = User.Claims.First(x => x.Type == ClaimTypeConstants.AuthorId);
+        var authorId = Guid.Parse(claim.Value);
+        await _songPublishManager.UpdateLogoAsync(request.SongId, authorId, request.LogoFile);
+        
+        return NoContent();
+    }
+    
+    /// <summary>
+    /// Начать операцию по загрузке обновленного файла с клипом
+    /// </summary>
+    [HttpPost("{clipId:guid}/file/start-upload")]
+    [ProducesResponseType(typeof(StartSongFileUpdateResponse), 200)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastAuthor)]
+    public async Task<IActionResult> StartClipUpdateAsync([FromRoute] Guid clipId)
+    {
+        var claim = User.Claims.First(x => x.Type == ClaimTypeConstants.AuthorId);
+        var authorId = Guid.Parse(claim.Value);
+        var uploadId = await _songPublishManager.StartSongFileUpdateAsync(authorId, clipId);
 
+        return Ok(new StartSongFileUpdateResponse()
+        {
+            UploadId = uploadId
+        });
+    }
+
+    /// <summary>
+    /// Загрузить часть клипа
+    /// </summary>
+    [HttpPost("{clipId:guid}/file/upload-part")]
+    [ProducesResponseType(typeof(StartSongFileUpdateResponse), 200)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastAuthor)]
+    public async Task<IActionResult> UploadClipFilePartAsync([FromRoute] Guid clipId, [FromForm] UpdateSongFilePartRequest request)
+    {
+        var authorId = Guid.Parse(User.Claims.First(x => x.Type == ClaimTypeConstants.AuthorId).Value);
+        await _songPublishManager.UpdateSongFilePartAsync(request.UploadId, clipId, authorId, request.File, request.PartNumber, request.IsLastPart);
+
+        return NoContent();
+    }
+    
     /// <summary>
     /// Получить файл с треком из заявки
     /// </summary>
     [HttpGet("{requestId:guid}/file")]
     [ProducesResponseType(200)]
     [ProducesResponseType(206)]
-    public async Task<IActionResult> GetFileAsync([FromRoute] Guid requestId, [FromServices] ISongPublishManager songPublishManager)
+    public async Task<IActionResult> GetFileAsync([FromRoute] Guid requestId)
     {
         var file = await _songPublishManager.GetSongFileAsync(requestId);
         var contentType = ContentTypeHelper.GetContentTypeByFileExtension(file.Extension);
@@ -132,19 +175,9 @@ public class SongPublishController : PublicController
     /// </summary>
     [HttpGet("{requestId:guid}/logo")]
     [ProducesResponseType(200)]
-    public async Task<IActionResult> GetLogoAsync(
-        [FromRoute] Guid requestId)
-        // [FromQuery] int? width,
-        // [FromQuery] int? height,
-        // [FromServices] ILogoResizeService logoResizeService)
+    public async Task<IActionResult> GetLogoAsync([FromRoute] Guid requestId)
     {
-        // if (!width.HasValue && !height.HasValue)
-        // {
-        //     throw new InvalidImageSizeException();
-        // }
-
         var logo = await _songPublishManager.GetLogoAsync(requestId);
-        // var resized = await logoResizeService.ResizeAsync(logo, width, height);
         var contentType = ContentTypeHelper.GetContentTypeByFileExtension(logo.Extension);
 
         return File(logo.Content, contentType);

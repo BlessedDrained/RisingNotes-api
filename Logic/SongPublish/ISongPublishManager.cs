@@ -25,6 +25,21 @@ public interface ISongPublishManager
     Task ReplyAsAdminAsync(Guid requestId, PublishRequestStatus status, string comment);
 
     /// <summary>
+    /// Загрузить логотип песни
+    /// </summary>
+    Task UpdateLogoAsync(Guid requestId, Guid authorId, IFormFile file);
+
+    /// <summary>
+    /// Начать операцию по обновлению файла трека большого размера
+    /// </summary>
+    Task<string> StartSongFileUpdateAsync(Guid authorId, Guid publishRequestId);
+
+    /// <summary>
+    /// Загрузить часть песни
+    /// </summary>
+    Task UpdateSongFilePartAsync(string uploadId, Guid publishRequestId, Guid authorId, IFormFile file, int partNumber, bool isLastPart);
+
+    /// <summary>
     /// Получить файл логотипа
     /// </summary>
     Task<FileDal> GetLogoAsync(Guid requestId);

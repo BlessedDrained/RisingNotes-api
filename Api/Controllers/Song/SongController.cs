@@ -36,7 +36,7 @@ public class SongController : PublicController
     /// Добавить трек
     /// </summary>
     [HttpPost]
-    [ProducesResponseType(typeof(CreateSongResponse), 200)]
+    [ProducesResponseType(typeof(UploadSongResponse), 200)]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastAuthor)]
     public async Task<IActionResult> UploadAsync([FromForm] UploadSongRequest request)
     {
@@ -63,7 +63,7 @@ public class SongController : PublicController
 
         return Ok(response);
     }
-
+    
     /// <summary>
     /// Получить файл с треком
     /// </summary>
@@ -74,7 +74,7 @@ public class SongController : PublicController
     {
         var file = await _songManager.GetSongFileAsync(songId);
         var contentType = ContentTypeHelper.GetContentTypeByFileExtension(file.Extension);
-
+        
         return File(file.Content, contentType, enableRangeProcessing: true);
     }
 
@@ -85,17 +85,8 @@ public class SongController : PublicController
     [ProducesResponseType(200)]
     public async Task<IActionResult> GetLogoAsync(
         [FromRoute] Guid songId)
-        // [FromQuery] int? width,
-        // [FromQuery] int? height,
-        // [FromServices] ILogoResizeService logoResizeService)
     {
-        // if (!width.HasValue && !height.HasValue)
-        // {
-        //     throw new InvalidImageSizeException();
-        // }
-
         var logo = await _songManager.GetSongLogoAsync(songId);
-        // var resized = await logoResizeService.ResizeAsync(logo, width, height);
         var contentType = ContentTypeHelper.GetContentTypeByFileExtension(logo.Extension);
 
         return File(logo.Content, contentType);
@@ -121,7 +112,14 @@ public class SongController : PublicController
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastAuthor)]
     public async Task<IActionResult> UpdateLogoAsync([FromRoute] Guid songId, [FromForm] UploadFileRequest logoFile)
     {
-        var authorId = Guid.Parse(User.Claims.First(x => x.Type == ClaimTypeConstants.AuthorId).Value);
+        var claim = User.Claims.FirstOrDefault(x => x.Type == ClaimTypeConstants.AuthorId);
+        if (claim == null)
+        {
+            return Unauthorized();
+        }
+
+        var authorId = Guid.Parse(claim.Value);
+        
         await _songPremanager.UpdateLogoAsync(authorId, songId, logoFile);
 
         return NoContent();

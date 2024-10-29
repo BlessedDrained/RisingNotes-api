@@ -29,11 +29,9 @@ public class ClipPremanager : IClipPremanager
         using var log = new MethodLog(request, authorId);
         
         var clip = _mapper.Map<ClipDal>(request);
-        var clipFile = _mapper.Map<FileDal>(request.ClipFile);
-        var previewFile = _mapper.Map<FileDal>(request.PreviewFile);
         clip.UploaderId = authorId;
         
-        var id = await _clipManager.UploadAsync(clip, clipFile, previewFile);
+        var id = await _clipManager.CreateAsync(clip);
 
         var response = new UploadClipResponse()
         {

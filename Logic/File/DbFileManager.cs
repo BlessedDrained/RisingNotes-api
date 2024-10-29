@@ -17,7 +17,7 @@ public class DbFileManager : IFileManager
     }
 
     /// <inheritdoc />
-    public async Task<FileDal> UploadAsync(FileDal file)
+    public async Task<FileDal> UploadSingleAsync(FileDal file)
     {
         using var log = new MethodLog(file);
 
@@ -25,6 +25,24 @@ public class DbFileManager : IFileManager
         log.ReturnsValue(id);
 
         return file;
+    }
+
+    /// <inheritdoc />
+    public Task<string> StartMultipartUploadingOperationAsync(string key)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc />
+    public Task UploadFilePartAsync(string uploadId, string key, IFormFile file, int partNumber, bool isLastPart)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc />
+    public Task CompleteMultipartUploadAsync(string uploadId)
+    {
+        throw new NotSupportedException();
     }
 
     /// <inheritdoc />
@@ -39,8 +57,20 @@ public class DbFileManager : IFileManager
     }
 
     /// <inheritdoc />
+    public Task<FilePart> DownloadFilePartAsync(Guid fileId, int partNumber)
+    {
+        throw new NotSupportedException();
+    }
+    
+    /// <inheritdoc />
     public Task DeleteAsync(Guid id)
     {
         return _fileRepository.DeleteAsync(id);
+    }
+
+    /// <inheritdoc />
+    public Task<FileMetadata> GetFileMetadataAsync(Guid fileId)
+    {
+        throw new NotSupportedException();
     }
 }

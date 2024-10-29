@@ -29,51 +29,24 @@ public static class Startup
                     ValidateIssuerSigningKey = true,
                     RoleClaimType = ClaimTypes.Role,
                     NameClaimType = ClaimTypes.Name,
-                    // Audience = ApiScope
                     ValidAudience = "Api",
                     ValidIssuer = "http://localhost:5095",
                     IssuerSigningKey = JsonWebKey.Create(File.ReadAllText(jwtKeyFileName)),
                 };
-                // config.Events = new JwtBearerEvents()
-                // {
-                //     OnMessageReceived = context =>
-                //     {
-                //         if (!context.Request.Headers.TryGetValue("Authorization2", out var value))
-                //         {
-                //             context.NoResult();
-                //             return Task.CompletedTask;
-                //         }
-                //
-                //         var strValue = value.ToString();
-                //
-                //         if (strValue.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-                //         {
-                //             context.Token = strValue.Substring("Bearer ".Length).Trim();
-                //         }
-                //
-                //         if (string.IsNullOrWhiteSpace(context.Token))
-                //         {
-                //             context.NoResult();
-                //             return Task.CompletedTask;
-                //         }
-                //     
-                //         return Task.CompletedTask;
-                //     }
-                // };
                 config.RequireHttpsMetadata = false;
             });
 
         services.AddAuthorization(config =>
         {
             config.AddPolicy(PolicyConstant.RequireAtLeastUser,
-                config =>
-                    config.RequireRole(RoleConstants.User, RoleConstants.Author, RoleConstants.Admin));
+                cfg =>
+                    cfg.RequireRole(RoleConstants.User, RoleConstants.Author, RoleConstants.Admin));
 
-            config.AddPolicy(PolicyConstant.RequireAtLeastAuthor, config => 
-                config.RequireRole(RoleConstants.Author, RoleConstants.Admin));
+            config.AddPolicy(PolicyConstant.RequireAtLeastAuthor, cfg => 
+                cfg.RequireRole(RoleConstants.Author, RoleConstants.Admin).RequireClaim("authorId"));
 
-            config.AddPolicy(PolicyConstant.RequireAdmin, config => 
-                config.RequireRole(RoleConstants.Admin));
+            config.AddPolicy(PolicyConstant.RequireAdmin, cfg => 
+                cfg.RequireRole(RoleConstants.Admin).RequireRole("authorId"));
         });
 
         return services;

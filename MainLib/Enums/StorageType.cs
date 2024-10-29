@@ -14,7 +14,7 @@ public enum StorageType
     Database = 1,
     
     /// <summary>
-    /// Яндекс диск
+    /// S3-совместимое хранилище
     /// </summary>
-    YandexDisk = 2
+    S3Storage = 2
 }

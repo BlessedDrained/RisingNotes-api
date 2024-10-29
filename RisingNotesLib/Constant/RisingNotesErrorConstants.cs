@@ -79,4 +79,29 @@ public static class RisingNotesErrorConstants
     /// Плейлист не принадлежит данному пользователю
     /// </summary>
     public const int PlaylistDoesNotBelongToCurrentUser = 2014;
+
+    /// <summary>
+    /// В заявке на загрузку песни нет логотипа
+    /// </summary>
+    public const int SongPublishRequestHasNoLogo = 2015;
+
+    /// <summary>
+    /// В заявке на загрузку песни нет песни
+    /// </summary>
+    public const int SongPublishRequestHasNoFile = 2016;
+
+    /// <summary>
+    /// Текущий статус заявки не позволяет вносить изменения пользователю
+    /// </summary>
+    public const int CurrentSongPublishRequestStatusDoesNotAllowUserInteraction = 2017;
+
+    /// <summary>
+    /// Клип уже был загружен для данной песни
+    /// </summary>
+    public const int ClipHasAlreadyBeenLoadedForTheSongException = 2018;
+
+    /// <summary>
+    /// Данный клип не принадлежит данному автору
+    /// </summary>
+    public const int ClipDoesNotBelongToCurrentAuthor = 2019;
 }

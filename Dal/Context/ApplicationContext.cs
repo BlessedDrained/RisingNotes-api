@@ -23,6 +23,12 @@ public class ApplicationContext : IdentityDbContext<AppIdentityUser>
 {
     private readonly IConfiguration _configuration;
 
+    /// <inheritdoc/>
+    public ApplicationContext() : base()
+    {
+        
+    }
+    
     /// <inheritdoc />
     public ApplicationContext(DbContextOptions<ApplicationContext> options, IConfiguration configuration) : base(options)
     {

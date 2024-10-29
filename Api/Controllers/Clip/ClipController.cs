@@ -1,5 +1,6 @@
 ﻿using Api.Controllers.Clip.Dto.Request;
 using Api.Controllers.Clip.Dto.Response;
+using Api.Controllers.File.Dto.Request;
 using Api.Premanager.Clip;
 using Dal.MusicClip;
 using Logic.MusicClip;
@@ -38,16 +39,63 @@ public class ClipController : PublicController
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastAuthor)]
     public async Task<IActionResult> UploadAsync([FromForm] UploadClipRequest request)
     {
+        var claim = User.Claims.First(x => x.Type == ClaimTypeConstants.AuthorId);
+        var authorId = Guid.Parse(claim.Value);
+        var response = await _clipPremanager.UploadAsync(request, authorId);
+        
+        return CreatedAtAction("GetInfo", new {clipId = response.Id}, response);
+    }
+
+    /// <summary>
+    /// Обновить превью клипа
+    /// </summary>
+    [HttpPatch("{clipId:guid}/preview")]
+    [ProducesResponseType(204)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastAuthor)]
+    public async Task<IActionResult> UpdatePreviewAsync([FromRoute] Guid clipId, [FromForm] UploadFileRequest request)
+    {
         var claim = User.Claims.FirstOrDefault(x => x.Type == ClaimTypeConstants.AuthorId);
         if (claim == null)
         {
             return Unauthorized();
         }
-        
+
         var authorId = Guid.Parse(claim.Value);
-        var response = await _clipPremanager.UploadAsync(request, authorId);
-        
-        return CreatedAtAction("GetInfo", new {clipId = response.Id}, response);
+        await _clipManager.UpdatePreviewAsync(authorId, clipId, request.File);
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Начать операцию по загрузке обновленного файла с клипом
+    /// </summary>
+    [HttpPost("{clipId:guid}/file/start-upload")]
+    [ProducesResponseType(typeof(StartClipUpdateResponse), 200)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastAuthor)]
+    public async Task<IActionResult> StartClipUpdateAsync([FromRoute] Guid clipId)
+    {
+        var claim = User.Claims.First(x => x.Type == ClaimTypeConstants.AuthorId);
+        var authorId = Guid.Parse(claim.Value);
+        var uploadId = await _clipManager.StartClipFileUpdateAsync(authorId, clipId);
+
+        return Ok(new StartClipUpdateResponse()
+        {
+            UploadId = uploadId
+        });
+    }
+
+    /// <summary>
+    /// Загрузить часть клипа
+    /// </summary>
+    [HttpPost("{clipId:guid}/file/upload-part")]
+    [ProducesResponseType(typeof(StartClipUpdateResponse), 200)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = PolicyConstant.RequireAtLeastAuthor)]
+    public async Task<IActionResult> UploadClipFilePartAsync([FromRoute] Guid clipId, [FromForm] UploadClipFilePartRequest request)
+    {
+        var authorId = Guid.Parse(User.Claims.First(x => x.Type == ClaimTypeConstants.AuthorId).Value);
+        await _clipManager.UpdateClipFilePartAsync(request.UploadId, clipId, authorId, request.File, request.PartNumber, request.IsLastPart);
+
+        return NoContent();
     }
 
     /// <summary>
@@ -87,6 +135,28 @@ public class ClipController : PublicController
         var contentType = ContentTypeHelper.GetContentTypeByFileExtension(file.Extension);
 
         return File(file.Content, contentType, enableRangeProcessing: true);
+    }
+
+    /// <summary>
+    /// Служебный рест для получения информации о том, что клип можно получать по частям
+    /// </summary>
+    [HttpHead("{clipId:guid}/file")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(405)]
+    public async Task<IActionResult> GetClipFileMetadataAsync([FromRoute] Guid clipId)
+    {
+        var fileMetadata = await _clipManager.GetClipMetadataAsync(clipId);
+        
+        // если файл достаточно большой, будем качать по частям
+        if (fileMetadata.SizeBytes > 50 * 1024 * 1024 && fileMetadata.PartCount > 1)
+        {
+            Response.Headers.Add("accept-ranges", "bytes");
+            Response.Headers.Add("content-length", fileMetadata.SizeBytes.ToString());
+            return Ok();
+        }
+
+        // если файл маленький, т.е до 50 мб, то мы можем позволить себе скачать его за 1 раз
+        return new StatusCodeResult(405);
     }
 
     /// <summary>

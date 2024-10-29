@@ -1,9 +1,9 @@
-﻿namespace Dal.File.YandexDisk;
+﻿namespace Dal.File.S3;
 
 /// <summary>
 /// Сервис для взаимодействия с Яндекс диском
 /// </summary>
-public class YandexStorage : IFileStorage
+public class S3Storage : IFileStorage
 {
     /// <inheritdoc />
     public Task<Guid> UploadFileAsync(FileDal request)

@@ -20,9 +20,9 @@ public static class Startup
     {
         services.AddTransient<ISongManager, SongManager>();
 
-        if (configuration.GetValue<StorageType>("FileSettings:StorageType") == StorageType.YandexDisk)
+        if (configuration.GetValue<StorageType>("FileSettings:StorageType") == StorageType.S3Storage)
         {
-            services.AddTransient<IFileManager, YandexFileManager>();
+            services.AddTransient<IFileManager, S3FileManager>();
         }
         else
         {

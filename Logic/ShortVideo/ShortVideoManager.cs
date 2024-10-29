@@ -29,8 +29,8 @@ public class ShortVideoManager : IShortVideoManager
         var file = TagLib.File.Create(new FileAbstraction($"{clipFile.Name}.{clipFile.Extension}", clipFile.Content));
         clip.DurationMsec = Convert.ToInt32(file.Properties.Duration.TotalMilliseconds);
 
-        await _fileManager.UploadAsync(clipFile);
-        await _fileManager.UploadAsync(previewFile);
+        await _fileManager.UploadSingleAsync(clipFile);
+        await _fileManager.UploadSingleAsync(previewFile);
 
         clip.VideoFileId = clipFile.Id;
         clip.PreviewFileId = previewFile.Id;

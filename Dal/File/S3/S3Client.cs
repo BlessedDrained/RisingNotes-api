@@ -1,16 +1,16 @@
 ﻿using Amazon.S3;
 
-namespace Dal.File.YandexDisk;
+namespace Dal.File.S3;
 
 /// <summary>
 /// Обертка над <see cref="IAmazonS3"/> для прокидывания названия бакета
 /// </summary>
-public class YandexS3Client : IDisposable
+public class S3Client : IDisposable
 {
     public IAmazonS3 InnerClient { get; }
     public string BucketName { get; }
 
-    public YandexS3Client(AmazonS3Client innerClient, string bucketName)
+    public S3Client(AmazonS3Client innerClient, string bucketName)
     {
         InnerClient = innerClient;
         BucketName = bucketName;

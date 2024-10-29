@@ -91,7 +91,7 @@ public record SongPublishRequestDal : DalModel<Guid>
     /// <summary>
     /// Нав свойство
     /// </summary>
-    public FileDal SongFile { get; set; }
+    public FileDal? SongFile { get; set; }
 
     /// <summary>
     /// Нав свойство
@@ -101,5 +101,5 @@ public record SongPublishRequestDal : DalModel<Guid>
     /// <summary>
     /// Нав свойство
     /// </summary>
-    public FileDal LogoFile { get; set; }
+    public FileDal? LogoFile { get; set; }
 }

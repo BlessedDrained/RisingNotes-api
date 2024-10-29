@@ -2,7 +2,7 @@
 using Dal.BaseUser.Repository;
 using Dal.Context;
 using Dal.File.Repository;
-using Dal.File.YandexDisk;
+using Dal.File.S3;
 using Dal.MusicClip.Repository;
 using Dal.MusicClipComment.Repository;
 using Dal.PersistedGrant.Repository;
@@ -32,7 +32,7 @@ public static class Startup
         services.AddTransient<ISongCommentRepository, SongCommentRepository>();
         services.AddTransient<IUserRepository, UserRepository>();
         services.AddTransient<ISongPublishRequestRepository, SongPublishRequestRepository>();
-        services.AddSingleton<IYandexS3ClientFactory, YandexYandexS3ClientFactory>();
+        services.AddSingleton<IS3ClientFactory, S3ClientFactory>();
         services.AddTransient<IShortVideoRepository, ShortVideoRepository>();
         services.AddTransient<IShortVideoCommentRepository, ShortVideoCommentRepository>();
         services.AddTransient<IClipRepository, ClipRepository>();

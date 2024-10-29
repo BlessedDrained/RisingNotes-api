@@ -40,7 +40,7 @@ public class SongPublishPremanager : ISongPublishPremanager
         using var log = new MethodLog(userId, request);
         var requestDal = new SongPublishRequestDal()
         {
-            Status = PublishRequestStatus.Review
+            Status = PublishRequestStatus.NeedsSongFile
         };
 
         requestDal = _mapper.Map(request, requestDal);

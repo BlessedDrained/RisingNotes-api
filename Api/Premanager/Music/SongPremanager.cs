@@ -30,22 +30,28 @@ public class SongPremanager : ISongPremanager
     }
 
     /// <inheritdoc />
-    public async Task<CreateSongResponse> CreateAsync(UploadSongRequest request, Guid authorId)
+    public async Task<UploadSongResponse> CreateAsync(UploadSongRequest request, Guid authorId)
     {
         using var log = new MethodLog(request, authorId);
 
         var song = _mapper.Map<SongDal>(request);
-        var songFile = _mapper.Map<FileDal>(request.SongFile);
-        var logoFile = _mapper.Map<FileDal>(request.SongLogo);
         song.AuthorId = authorId;
 
-        var id = await _songManager.CreateAsync(song, songFile, logoFile);
+        var id = await _songManager.CreateAsync(song);
 
-        var response = new CreateSongResponse()
+        var response = new UploadSongResponse()
         {
             Id = id
         };
         return response;
+    }
+
+    /// <inheritdoc />
+    public async Task UploadLogoAsync(UploadSongLogoRequest request, Guid authorId)
+    {
+        using var log = new MethodLog(request);
+
+        await _songManager.UploadLogoAsync(request.SongId, authorId, request.LogoFile);
     }
 
     /// <inheritdoc />
